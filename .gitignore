@@ -11,3 +11,14 @@ Makefile.in
 /depcomp
 /install-sh
 /missing
+/configure.scan
+/autoscan.log
+/nbproject/private/
+/src/.deps/
+
+/nbproject
+/.cproject
+/.project
+Makefile
+config.log
+*.o
