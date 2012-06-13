@@ -37,16 +37,16 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     INTEGER = 258,
+     IDENTIFIER = 258,
      PLUS = 259,
-     MINUS = 260,
+     NUMBER = 260,
      NEWLINE = 261
    };
 #endif
 /* Tokens.  */
-#define INTEGER 258
+#define IDENTIFIER 258
 #define PLUS 259
-#define MINUS 260
+#define NUMBER 260
 #define NEWLINE 261
 
 
