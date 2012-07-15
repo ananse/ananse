@@ -1,4 +1,5 @@
-%token IDENTIFIER PLUS NUMBER NEWLINE
+%token IDENTIFIER PLUS MINUS NUMBER NEWLINE TIMES DIVIDES EQUALS
+%token OPEN_BRACKET CLOSE_BRACKET
 
 %{
     #include <stdio.h>
@@ -8,13 +9,26 @@
 program:    statement NEWLINE
     |       program statement NEWLINE
 
-statement:  expression { printf("%d", $1); }
+statement:  assignment 
     ;
 
-expression: NUMBER PLUS NUMBER  {$$ = $1 + $3;}
-    |       NUMBER '-' NUMBER   {$$ = $1 - $3;}
-    |       NUMBER              {$$ = $1;}
+assignment: IDENTIFIER EQUALS expression { printf("assignment %d", $3); }
+
+expression: expression PLUS multiply_expression  {$$ = $1 + $3;}
+    |       expression MINUS multiply_expression   {$$ = $1 - $3;}
+    |       multiply_expression              {$$ = $1;}
     ;
+
+multiply_expression:    multiply_expression TIMES primary { $$ = $1 * $3; }
+    |                   multiply_expression DIVIDES primary { $$ = $1 / $3; }
+    |                   primary {$$ = $1;}
+    ;
+
+primary :   OPEN_BRACKET expression CLOSE_BRACKET {$$ = $2;}
+    |       NUMBER                                  {$$ = $1;}
+    ;
+    
+
 %%
 
 int main()

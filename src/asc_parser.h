@@ -39,15 +39,27 @@
    enum yytokentype {
      IDENTIFIER = 258,
      PLUS = 259,
-     NUMBER = 260,
-     NEWLINE = 261
+     MINUS = 260,
+     NUMBER = 261,
+     NEWLINE = 262,
+     TIMES = 263,
+     DIVIDES = 264,
+     EQUALS = 265,
+     OPEN_BRACKET = 266,
+     CLOSE_BRACKET = 267
    };
 #endif
 /* Tokens.  */
 #define IDENTIFIER 258
 #define PLUS 259
-#define NUMBER 260
-#define NEWLINE 261
+#define MINUS 260
+#define NUMBER 261
+#define NEWLINE 262
+#define TIMES 263
+#define DIVIDES 264
+#define EQUALS 265
+#define OPEN_BRACKET 266
+#define CLOSE_BRACKET 267
 
 
 
