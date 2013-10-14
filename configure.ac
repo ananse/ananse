@@ -1,14 +1,10 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.68])
-AC_INIT([asc], [0.01], [jainooson@gmail.com])
-AM_INIT_AUTOMAKE()
+AC_PREREQ([2.69])
+AC_INIT(asc, 0.1.0-pre, jainooson@gmail.com)
 
 # Checks for programs.
-AC_PROG_CXX
-AC_PROG_LEX
-AC_PROG_YACC
 
 # Checks for libraries.
 
@@ -18,6 +14,4 @@ AC_PROG_YACC
 
 # Checks for library functions.
 
-
-AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
