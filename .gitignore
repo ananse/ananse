@@ -55,3 +55,4 @@ Makefile
 config.log
 *.o
 
+src/asc
