@@ -56,3 +56,7 @@ config.log
 *.o
 
 src/asc
+
+#Eclipse?
+.autotools
+.settings

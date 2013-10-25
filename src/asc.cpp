@@ -1,12 +1,19 @@
 #include <iostream>
 #include <unistd.h>
+#include <iostream>
+#include <string>
+#include "Parser.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
 
-int main()
+int main(int argc, char ** argv)
 {
-    std::cout<<"agoroscript compiler\nver "<<VERSION<<std::endl;
+    Parser parser;
+    std::string line;
+    std::cin>>line;
+    parser.setSource(line);
+    parser.parse();
 }
