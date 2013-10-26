@@ -1,13 +1,19 @@
-#include "Lexer.h"
 #include <cctype>
 #include <iostream>
 #include <cstdlib>
 
+#include "Lexer.h"
+
+void Lexer::tcc(std::string prefix)
+{
+    std::cout<<prefix<<": '"<<currentChar<<"' val :"<<(int)currentChar<<(currentChar == EOF ? " EOF" : "")<<" buffer: "<<bufferIndex<<std::endl;
+}
+
 Lexer::Lexer(std::string source)
 {
-	buffer = source;
+    buffer = source;
 	bufferIndex = 0;
-	getChar();
+    getChar();
 }
 
 Lexer::~Lexer()
@@ -15,38 +21,41 @@ Lexer::~Lexer()
 
 }
 
-char Lexer::getChar()
+void Lexer::getChar()
 {
 	if(bufferIndex < buffer.size())
 	{
-		lookahead = buffer[bufferIndex++];
+        currentChar = buffer[bufferIndex++];
 	}
     else
     {
-        lookahead = EOF;
+        currentChar = EOF;
     }
-	return lookahead;
 }
 
 Token Lexer::getNextToken()
 {
-	// Eat whitespace
-    while(isspace(lookahead)) getChar();
-    
+	// Eat whitespace        
+    while(isspace(currentChar))
+    {
+        getChar();
+    }
+
     // Match operators
-    if(lookahead == '+') return PLUS;
-    if(lookahead == '-') return MINUS;
+    if(currentChar == '+') { getChar(); return PLUS; }
+    if(currentChar == '-') { getChar(); return MINUS; }
 
     // Match integers
-    if(isdigit(lookahead))
+    if(isdigit(currentChar))
     {
     	std::string numberString;
-    	while(isdigit(lookahead))
-        {    
-    		numberString += lookahead;
+    	do
+        {
+    		numberString += currentChar;
             getChar();
-    	}
-        integerValue = strtoi(numberString.c_str());
+    	}while(isdigit(currentChar));
+        
+        integerValue = strtol(numberString.c_str(), NULL, 10);
         return INTEGER;
     }
 }

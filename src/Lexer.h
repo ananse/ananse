@@ -21,8 +21,9 @@ typedef enum {
 class Lexer
 {
 private:
-    char lookahead;
-    char getChar();
+    void tcc(std::string);
+    char currentChar;
+    void getChar();
     std::string buffer;
     int bufferIndex;
     int integerValue;

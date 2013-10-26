@@ -15,9 +15,15 @@ class Parser
 {
 private:
     Lexer * lexer;
-    void parseExpression();
     Token lookahead;
     bool match(Token token);
+    void getToken();
+    
+    void parseExpression();
+    void parseAddition();
+    void parseSubtraction();
+    
+    int temp;
 public:
     void setSource(std::string source);
     void parse();

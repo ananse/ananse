@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
 {
     Parser parser;
     std::string line;
-    std::cin>>line;
+    getline(std::cin, line);
     parser.setSource(line);
     parser.parse();
 }
