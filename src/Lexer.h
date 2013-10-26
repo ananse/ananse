@@ -30,9 +30,10 @@ private:
     
 public:
     Lexer(std::string);
+    virtual ~Lexer();    
+    
     Token getNextToken();
     int getIntegerValue();
-    ~Lexer();    
 };
 
 #endif	/* LEXER_H */

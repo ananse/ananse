@@ -2,6 +2,13 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "ExpressionTree.h"
+
+Parser::~Parser()
+{
+    
+}
+
 void Parser::setSource(std::string source)
 {
 	lexer = new Lexer(source);
@@ -43,9 +50,11 @@ bool Parser::match(Token token)
 
 void Parser::parseExpression()
 {
+    ExpressionTree * expression = new ExpressionTree();
+    
     if(lookahead == INTEGER)
     {
-        temp = lexer->getIntegerValue();
+        expression->setData(lexer->getIntegerValue());
         getToken();
         switch(lookahead)
         {
@@ -57,6 +66,8 @@ void Parser::parseExpression()
                 break;
         }
     }
+    
+    delete expression;
 }
 
 void Parser::parseAddition()
@@ -64,7 +75,7 @@ void Parser::parseAddition()
     getToken();
     if(match(INTEGER))
     {
-        std::cout<<(temp + lexer->getIntegerValue())<<std::endl;
+        
     }
 }
 
@@ -73,6 +84,6 @@ void Parser::parseSubtraction()
     getToken();
     if(match(INTEGER))
     {
-        std::cout<<(temp - lexer->getIntegerValue())<<std::endl;
+        
     }
 }

@@ -23,8 +23,8 @@ private:
     void parseAddition();
     void parseSubtraction();
     
-    int temp;
 public:
+    virtual ~Parser();
     void setSource(std::string source);
     void parse();
 };
