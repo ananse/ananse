@@ -14,12 +14,13 @@
 class Parser
 {
 private:
-	Lexer * lexer;
-	void parseExpression();
-        Token lookahead;
+    Lexer * lexer;
+    void parseExpression();
+    Token lookahead;
+    bool match(Token token);
 public:
-	void setSource(std::string source);
-	void parse();
+    void setSource(std::string source);
+    void parse();
 };
 
 #endif /* PARSER_H_ */

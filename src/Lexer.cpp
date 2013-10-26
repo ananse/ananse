@@ -1,6 +1,7 @@
 #include "Lexer.h"
 #include <cctype>
 #include <iostream>
+#include <cstdlib>
 
 Lexer::Lexer(std::string source)
 {
@@ -31,17 +32,21 @@ Token Lexer::getNextToken()
 {
 	// Eat whitespace
     while(isspace(lookahead)) getChar();
+    
+    // Match operators
+    if(lookahead == '+') return PLUS;
+    if(lookahead == '-') return MINUS;
 
     // Match integers
     if(isdigit(lookahead))
     {
     	std::string numberString;
-    	while(isdigit(lookahead)){
-            
+    	while(isdigit(lookahead))
+        {    
     		numberString += lookahead;
             getChar();
     	}
-        
+        integerValue = strtoi(numberString.c_str());
         return INTEGER;
     }
 }
@@ -49,10 +54,5 @@ Token Lexer::getNextToken()
 int Lexer::getIntegerValue()
 {
     return integerValue;
-}
-
-void Lexer::match(Token token)
-{
-    std::cerr<<"Unexpected input"<<std::endl;
 }
 

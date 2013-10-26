@@ -13,6 +13,8 @@
 
 typedef enum {
     INTEGER,
+    PLUS,
+    MINUS,
     IDENTIFIER
 } Token;
 
@@ -29,7 +31,6 @@ public:
     Lexer(std::string);
     Token getNextToken();
     int getIntegerValue();
-    void match(Token);
     ~Lexer();    
 };
 
