@@ -15,6 +15,8 @@ typedef enum {
     INTEGER,
     PLUS,
     MINUS,
+    MULTIPLY,
+    DIVIDE,
     IDENTIFIER
 } Token;
 

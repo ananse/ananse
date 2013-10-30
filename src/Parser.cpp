@@ -2,8 +2,6 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "ExpressionTree.h"
-
 Parser::~Parser()
 {
     
@@ -50,11 +48,9 @@ bool Parser::match(Token token)
 
 void Parser::parseExpression()
 {
-    ExpressionTree * expression = new ExpressionTree();
-    
-    if(lookahead == INTEGER)
-    {
-        expression->setData(lexer->getIntegerValue());
+    ExpressionTree * expression = parseTerm();
+
+    do{
         getToken();
         switch(lookahead)
         {
@@ -65,25 +61,58 @@ void Parser::parseExpression()
                 parseSubtraction();
                 break;
         }
-    }
+    } while(lookahead == PLUS || lookahead == MINUS);
     
     delete expression;
 }
 
-void Parser::parseAddition()
+ExpressionTree * Parser::parseTerm()
 {
-    getToken();
-    if(match(INTEGER))
-    {
-        
-    }
+    ExpressionTree * term = parseFactor();
+    do{
+        getToken();
+        switch(lookahead)
+        {
+            case MULTIPLY:
+                parseMultiplication();
+                break;
+            case DIVIDE:
+                parseDivision();
+                break;
+        }
+    } while(lookahead == MULTIPLY || lookahead == DIVIDE);  
+    
+    return term;
 }
 
-void Parser::parseSubtraction()
+ExpressionTree * Parser::parseFactor()
 {
+    ExpressionTree * factor = new ExpressionTree();
     getToken();
-    if(match(INTEGER))
+    if(lookahead == INTEGER) 
     {
-        
+        factor->setData(lexer->getIntegerValue());
     }
+    
+    return factor;
+}
+
+ExpressionTree * Parser::parseAddition()
+{
+    return parseTerm();
+}
+
+ExpressionTree * Parser::parseSubtraction()
+{
+    return parseTerm();
+}
+
+ExpressionTree * Parser::parseMultiplication()
+{
+    return parseFactor();
+}
+
+ExpressionTree * Parser::parseDivision()
+{
+    return parseFactor();
 }

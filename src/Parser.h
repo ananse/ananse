@@ -10,6 +10,7 @@
 
 #include <string>
 #include "Lexer.h"
+#include "ExpressionTree.h"
 
 class Parser
 {
@@ -19,9 +20,15 @@ private:
     bool match(Token token);
     void getToken();
     
+    // Expressions parsing
+    ExpressionTree * parseTerm();
+    ExpressionTree * parseFactor();
+    ExpressionTree * parseAddition();
+    ExpressionTree * parseSubtraction();
+    ExpressionTree * parseMultiplication();
+    ExpressionTree * parseDivision();
+    
     void parseExpression();
-    void parseAddition();
-    void parseSubtraction();
     
 public:
     virtual ~Parser();

@@ -8,10 +8,13 @@
 #ifndef GENERATOR_H
 #define	GENERATOR_H
 
+#include "ExpressionTree.h"
+
 class Generator {
 public:
     Generator();
     Generator(const Generator& orig);
+    virtual void emitExpression(ExpressionTree *);
     virtual ~Generator();
 private:
 

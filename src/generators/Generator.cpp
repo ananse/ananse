@@ -10,9 +10,10 @@
 Generator::Generator() {
 }
 
-Generator::Generator(const Generator& orig) {
-}
-
 Generator::~Generator() {
 }
 
+void Generator::emitExpression(ExpressionTree * expression)
+{
+    
+}
