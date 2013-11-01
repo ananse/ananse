@@ -17,7 +17,9 @@ typedef enum {
     MINUS,
     MULTIPLY,
     DIVIDE,
-    IDENTIFIER
+    IDENTIFIER,
+    BRACKET_OPEN,
+    BRACKET_CLOSE
 } Token;
 
 class Lexer

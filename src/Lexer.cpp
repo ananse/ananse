@@ -46,6 +46,8 @@ Token Lexer::getNextToken()
     if(currentChar == '-') { getChar(); return MINUS; }
     if(currentChar == '*') { getChar(); return MULTIPLY; }
     if(currentChar == '/') { getChar(); return DIVIDE; }    
+    if(currentChar == '(') { getChar(); return BRACKET_OPEN; }    
+    if(currentChar == ')') { getChar(); return BRACKET_CLOSE; }    
 
     // Match integers
     if(isdigit(currentChar))

@@ -7,14 +7,19 @@
 
 #include "ExpressionTree.h"
 #include <cstdlib>
+#include <iostream>
 
-ExpressionTree::ExpressionTree() {
+ExpressionTree::ExpressionTree() 
+{
+    std::cerr<<"Creating"<<left<<right<<std::endl;
     left = NULL;
     right = NULL;
     data = NULL;
 }
 
-ExpressionTree::~ExpressionTree() {
+ExpressionTree::~ExpressionTree() 
+{
+    std::cerr<<"Deleting"<<left<<right<<std::endl;
     if(left != NULL) delete left;
     if(right != NULL) delete right;
     if(data != NULL) free(data);
@@ -26,5 +31,20 @@ void ExpressionTree::setData(int integer)
     *integerData = integer;
     data = integerData;
     type = NODE_INTEGER;
+}
+
+void ExpressionTree::setData(NodeType nodeType)
+{
+    type = nodeType;
+}
+
+void ExpressionTree::setLeft(ExpressionTree * node)
+{
+    left = node;
+}
+
+void ExpressionTree::setRight(ExpressionTree * node)
+{
+    right = node;
 }
 

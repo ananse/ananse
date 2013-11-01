@@ -9,7 +9,7 @@
 #define	EXPRESSIONTREE_H
 
 typedef enum{
-    NODE_BIN_OP,
+    NODE_BIN_OPR_ADD,
     NODE_INTEGER
 } NodeType;
 
@@ -18,6 +18,9 @@ public:
     ExpressionTree();
     virtual ~ExpressionTree();
     void setData(int);
+    void setData(NodeType);
+    void setLeft(ExpressionTree*);
+    void setRight(ExpressionTree*);
 private:    
     ExpressionTree * left;
     ExpressionTree * right;
