@@ -48,3 +48,7 @@ void ExpressionTree::setRight(ExpressionTree * node)
     right = node;
 }
 
+NodeType ExpressionTree::getType()
+{
+    return type;
+}

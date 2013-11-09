@@ -10,14 +10,13 @@ Parser::~Parser()
 void Parser::setSource(std::string source)
 {
 	lexer = new Lexer(source);
-    //getToken();
 }
 
 void Parser::getToken()
 {
     lookahead = lexer->getNextToken();
-    
-    switch(lookahead)
+
+    /*switch(lookahead)
     {
         case INTEGER:
             std::cout<<"Integer"<<std::endl;
@@ -25,7 +24,7 @@ void Parser::getToken()
         case PLUS:
             std::cout<<"Plus"<<std::endl;
             break;
-    }
+    }*/
 }
 
 void Parser::parse()
@@ -60,8 +59,12 @@ void Parser::parseExpression()
                 expression->setLeft(opr);
                 expression->setRight(parseAddition());
                 break;
+                
             case MINUS:
-                parseSubtraction();
+                opr = new ExpressionTree();
+                opr->setData(NODE_BIN_OPR_SUBTRACT);
+                expression->setLeft(opr);
+                expression->setRight(parseSubtraction());
                 break;
         }
         getToken();
@@ -73,14 +76,23 @@ void Parser::parseExpression()
 ExpressionTree * Parser::parseTerm()
 {
     ExpressionTree * term = parseFactor();
+    ExpressionTree * opr;
+    
     do{
         switch(lookahead)
         {
             case MULTIPLY:
-                parseMultiplication();
+                opr = new ExpressionTree();
+                opr->setData(NODE_BIN_OPR_MULTIPLY);
+                term->setLeft(opr);
+                term->setRight(parseMultiplication());
                 break;
+                
             case DIVIDE:
-                parseDivision();
+                opr = new ExpressionTree();
+                opr->setData(NODE_BIN_OPR_DIVIDE);
+                term->setLeft(opr);
+                term->setRight(parseDivision());
                 break;
         }
         getToken();

@@ -9,7 +9,15 @@
 #define	EXPRESSIONTREE_H
 
 typedef enum{
+    SN_BIN_OP,
+    SN_INT
+} SimpleNodeType;
+
+typedef enum{
     NODE_BIN_OPR_ADD,
+    NODE_BIN_OPR_SUBTRACT,
+    NODE_BIN_OPR_MULTIPLY,
+    NODE_BIN_OPR_DIVIDE,
     NODE_INTEGER
 } NodeType;
 
@@ -21,6 +29,8 @@ public:
     void setData(NodeType);
     void setLeft(ExpressionTree*);
     void setRight(ExpressionTree*);
+    
+    NodeType getType();
 private:    
     ExpressionTree * left;
     ExpressionTree * right;

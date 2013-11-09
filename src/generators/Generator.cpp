@@ -15,5 +15,9 @@ Generator::~Generator() {
 
 void Generator::emitExpression(ExpressionTree * expression)
 {
-    
+    switch(expression->getType())
+    {
+        case NODE_INTEGER:
+            break;
+    }
 }
