@@ -2,6 +2,11 @@
 #include <iostream>
 #include <cstdlib>
 
+Parser::Parser()
+{
+    generator = new Generator();
+}
+
 Parser::~Parser()
 {
     
@@ -70,6 +75,7 @@ void Parser::parseExpression()
         getToken();
     } while(lookahead == PLUS || lookahead == MINUS);
     
+    std::cout<<generator->emitExpression(expression);
     delete expression;
 }
 

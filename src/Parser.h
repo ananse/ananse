@@ -11,6 +11,7 @@
 #include <string>
 #include "Lexer.h"
 #include "ExpressionTree.h"
+#include "generators/Generator.h"
 
 class Parser
 {
@@ -19,6 +20,7 @@ private:
     Token lookahead;
     bool match(Token token);
     void getToken();
+    Generator * generator;
     
     // Expressions parsing
     ExpressionTree * parseTerm();
@@ -31,6 +33,7 @@ private:
     void parseExpression();
     
 public:
+    Parser();
     virtual ~Parser();
     void setSource(std::string source);
     void parse();

@@ -11,7 +11,6 @@
 
 ExpressionTree::ExpressionTree() 
 {
-    std::cerr<<"Creating"<<left<<right<<std::endl;
     left = NULL;
     right = NULL;
     data = NULL;
@@ -19,7 +18,6 @@ ExpressionTree::ExpressionTree()
 
 ExpressionTree::~ExpressionTree() 
 {
-    std::cerr<<"Deleting"<<left<<right<<std::endl;
     if(left != NULL) delete left;
     if(right != NULL) delete right;
     if(data != NULL) free(data);
@@ -52,3 +50,29 @@ NodeType ExpressionTree::getType()
 {
     return type;
 }
+
+ExpressionTree * ExpressionTree::getLeft()
+{
+    return left;
+}
+
+ExpressionTree * ExpressionTree::getRight()
+{
+    return right;
+}
+
+bool ExpressionTree::hasLeft()
+{
+    return left != NULL;
+}
+
+bool ExpressionTree::hasRight()
+{
+    return right != NULL;
+}
+
+void * ExpressionTree::getData()
+{
+    return data;
+}
+

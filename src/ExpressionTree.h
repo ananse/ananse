@@ -29,8 +29,13 @@ public:
     void setData(NodeType);
     void setLeft(ExpressionTree*);
     void setRight(ExpressionTree*);
-    
+    ExpressionTree * getLeft();
+    ExpressionTree * getRight();
+    bool hasLeft();
+    bool hasRight();
     NodeType getType();
+    void * getData();
+    
 private:    
     ExpressionTree * left;
     ExpressionTree * right;

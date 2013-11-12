@@ -9,15 +9,16 @@
 #define	GENERATOR_H
 
 #include "ExpressionTree.h"
+#include <string>
 
 class Generator {
 public:
     Generator();
     Generator(const Generator& orig);
-    virtual void emitExpression(ExpressionTree *);
+    virtual std::string emitExpression(ExpressionTree *);
     virtual ~Generator();
 private:
-
+    const char * getExpressionNodeOperator(ExpressionTree *);
 };
 
 #endif	/* GENERATOR_H */
