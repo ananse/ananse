@@ -35,8 +35,6 @@ void Lexer::getChar()
 
 Token Lexer::getNextToken()
 {
-    tcc("Current char");
-    
 	// Eat whitespace        
     while(isspace(currentChar))
     {

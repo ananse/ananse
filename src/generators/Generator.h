@@ -8,17 +8,17 @@
 #ifndef GENERATOR_H
 #define	GENERATOR_H
 
-#include "ExpressionTree.h"
+#include "ExpressionNode.h"
 #include <string>
 
 class Generator {
 public:
     Generator();
     Generator(const Generator& orig);
-    virtual std::string emitExpression(ExpressionTree *);
+    virtual std::string emitExpression(ExpressionNode *);
     virtual ~Generator();
 private:
-    const char * getExpressionNodeOperator(ExpressionTree *);
+    const char * getExpressionNodeOperator(ExpressionNode *);
 };
 
 #endif	/* GENERATOR_H */

@@ -10,7 +10,7 @@
 
 #include <string>
 #include "Lexer.h"
-#include "ExpressionTree.h"
+#include "ExpressionNode.h"
 #include "generators/Generator.h"
 
 class Parser
@@ -23,14 +23,15 @@ private:
     Generator * generator;
     
     // Expressions parsing
-    ExpressionTree * parseTerm();
-    ExpressionTree * parseFactor();
-    ExpressionTree * parseAddition();
-    ExpressionTree * parseSubtraction();
-    ExpressionTree * parseMultiplication();
-    ExpressionTree * parseDivision();
+    ExpressionNode * parseTerm();
+    ExpressionNode * parseFactor();
+    ExpressionNode * parseAddition();
+    ExpressionNode * parseSubtraction();
+    ExpressionNode * parseMultiplication();
+    ExpressionNode * parseDivision();
+    ExpressionNode * parseExpression(bool emit);
+    ExpressionNode * parseExpression();
     
-    void parseExpression();
     
 public:
     Parser();

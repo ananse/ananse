@@ -15,18 +15,18 @@ Generator::Generator() {
 Generator::~Generator() {
 }
 
-const char * Generator::getExpressionNodeOperator(ExpressionTree* node)
+const char * Generator::getExpressionNodeOperator(ExpressionNode* node)
 {
     switch(node->getType())
     {
-        case NODE_BIN_OPR_ADD: return "+";
-        case NODE_BIN_OPR_SUBTRACT: return "-";
-        case NODE_BIN_OPR_MULTIPLY: return "*";
-        case NODE_BIN_OPR_DIVIDE: return "/";
+        case NODE_ADD: return "+";
+        case NODE_SUBTRACT: return "-";
+        case NODE_MULTIPLY: return "*";
+        case NODE_DIVIDE: return "/";
     }
 }
 
-std::string Generator::emitExpression(ExpressionTree * expressionNode)
+std::string Generator::emitExpression(ExpressionNode * expressionNode)
 {
     std::string expression;
     char buffer[1024];
@@ -36,22 +36,20 @@ std::string Generator::emitExpression(ExpressionTree * expressionNode)
     {
         case NODE_INTEGER:
             node = *((int*)expressionNode->getData());
-                
-            if(expressionNode->hasLeft())
-            {
-                sprintf(buffer,"%d", node);
-                expression ="(" + (
-                    (std::string)buffer + 
-                    (std::string)getExpressionNodeOperator(expressionNode->getLeft()) +  
-                    emitExpression(expressionNode->getRight()) +
-                    ")"
-                );
-            }
-            else
-            {
-                sprintf(buffer,"%d", node);
-                expression = (std::string) buffer;
-            }
+            sprintf(buffer,"%d", node);
+            expression = (std::string) buffer;
+            break;
+        
+        case NODE_ADD:
+        case NODE_SUBTRACT:
+        case NODE_DIVIDE:
+        case NODE_MULTIPLY:
+            expression = "(" + (
+                emitExpression(expressionNode->getLeft()) + 
+                (std::string)getExpressionNodeOperator(expressionNode) +  
+                emitExpression(expressionNode->getRight()) +
+                ")"
+            );
             break;
     }
     

@@ -1,29 +1,29 @@
 /* 
- * File:   ExpressionTree.cpp
+ * File:   ExpressionNode.cpp
  * Author: ekow
  * 
  * Created on 26 October 2013, 14:12
  */
 
-#include "ExpressionTree.h"
+#include "ExpressionNode.h"
 #include <cstdlib>
 #include <iostream>
 
-ExpressionTree::ExpressionTree() 
+ExpressionNode::ExpressionNode() 
 {
     left = NULL;
     right = NULL;
     data = NULL;
 }
 
-ExpressionTree::~ExpressionTree() 
+ExpressionNode::~ExpressionNode() 
 {
     if(left != NULL) delete left;
     if(right != NULL) delete right;
     if(data != NULL) free(data);
 }
 
-void ExpressionTree::setData(int integer)
+void ExpressionNode::setData(int integer)
 {
     int * integerData = new int;
     *integerData = integer;
@@ -31,47 +31,47 @@ void ExpressionTree::setData(int integer)
     type = NODE_INTEGER;
 }
 
-void ExpressionTree::setData(NodeType nodeType)
+void ExpressionNode::setData(NodeType nodeType)
 {
     type = nodeType;
 }
 
-void ExpressionTree::setLeft(ExpressionTree * node)
+void ExpressionNode::setLeft(ExpressionNode * node)
 {
     left = node;
 }
 
-void ExpressionTree::setRight(ExpressionTree * node)
+void ExpressionNode::setRight(ExpressionNode * node)
 {
     right = node;
 }
 
-NodeType ExpressionTree::getType()
+NodeType ExpressionNode::getType()
 {
     return type;
 }
 
-ExpressionTree * ExpressionTree::getLeft()
+ExpressionNode * ExpressionNode::getLeft()
 {
     return left;
 }
 
-ExpressionTree * ExpressionTree::getRight()
+ExpressionNode * ExpressionNode::getRight()
 {
     return right;
 }
 
-bool ExpressionTree::hasLeft()
+bool ExpressionNode::hasLeft()
 {
     return left != NULL;
 }
 
-bool ExpressionTree::hasRight()
+bool ExpressionNode::hasRight()
 {
     return right != NULL;
 }
 
-void * ExpressionTree::getData()
+void * ExpressionNode::getData()
 {
     return data;
 }
