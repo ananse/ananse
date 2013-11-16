@@ -21,7 +21,7 @@ void Parser::getToken()
 {
     lookahead = lexer->getNextToken();
 
-    /*switch(lookahead)
+    switch(lookahead)
     {
         case INTEGER:
             std::cout<<"Integer"<<std::endl;
@@ -29,7 +29,7 @@ void Parser::getToken()
         case PLUS:
             std::cout<<"Plus"<<std::endl;
             break;
-    }*/
+    }
 }
 
 void Parser::parse()
@@ -52,27 +52,33 @@ bool Parser::match(Token token)
 
 void Parser::parseExpression()
 {
-    ExpressionTree * expression = parseTerm();
-    ExpressionTree * opr;
+    ExpressionTree *expression = parseTerm();
+    ExpressionTree *opr, *right, *nextNode;
 
+    //std::cout<<(expression->hasRight() ? "Has Right" : "Nope")<<std::endl;
+    nextNode = expression->hasRight() ? expression->getRight() : expression;
+    
     do{
         switch(lookahead)
         {
             case PLUS:
                 opr = new ExpressionTree();
                 opr->setData(NODE_BIN_OPR_ADD);
-                expression->setLeft(opr);
-                expression->setRight(parseAddition());
+                nextNode->setLeft(opr);
+                right = parseTerm();
+                nextNode->setRight(right);
+                nextNode = right;
                 break;
                 
             case MINUS:
                 opr = new ExpressionTree();
                 opr->setData(NODE_BIN_OPR_SUBTRACT);
-                expression->setLeft(opr);
-                expression->setRight(parseSubtraction());
+                nextNode->setLeft(opr);
+                right = parseTerm();
+                nextNode->setRight(right);
+                nextNode = right;
                 break;
         }
-        getToken();
     } while(lookahead == PLUS || lookahead == MINUS);
     
     std::cout<<generator->emitExpression(expression);
@@ -82,7 +88,9 @@ void Parser::parseExpression()
 ExpressionTree * Parser::parseTerm()
 {
     ExpressionTree * term = parseFactor();
-    ExpressionTree * opr;
+    ExpressionTree * opr, * nextNode, * right;
+    
+    nextNode = term;
     
     do{
         switch(lookahead)
@@ -90,15 +98,19 @@ ExpressionTree * Parser::parseTerm()
             case MULTIPLY:
                 opr = new ExpressionTree();
                 opr->setData(NODE_BIN_OPR_MULTIPLY);
-                term->setLeft(opr);
-                term->setRight(parseMultiplication());
+                nextNode->setLeft(opr);
+                right = parseFactor();
+                nextNode->setRight(right);
+                nextNode = right;
                 break;
                 
             case DIVIDE:
                 opr = new ExpressionTree();
                 opr->setData(NODE_BIN_OPR_DIVIDE);
-                term->setLeft(opr);
-                term->setRight(parseDivision());
+                nextNode->setLeft(opr);
+                right = parseFactor();
+                nextNode->setRight(right);
+                nextNode = right;
                 break;
         }
         getToken();

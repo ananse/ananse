@@ -6,7 +6,7 @@
 
 void Lexer::tcc(std::string prefix)
 {
-    std::cout<<prefix<<": '"<<currentChar<<"' val :"<<(int)currentChar<<(currentChar == EOF ? " EOF" : "")<<" buffer: "<<bufferIndex<<std::endl;
+    std::cout<<prefix<<": '"<<currentChar<<"' val :"<<(int)currentChar<<(currentChar == EOF ? " EOF" : "")<<" buffer: "<<bufferIndex<<" of "<<buffer.size()<<std::endl;
 }
 
 Lexer::Lexer(std::string source)
@@ -35,12 +35,14 @@ void Lexer::getChar()
 
 Token Lexer::getNextToken()
 {
+    tcc("Current char");
+    
 	// Eat whitespace        
     while(isspace(currentChar))
     {
         getChar();
     }
-
+    
     // Match operators
     if(currentChar == '+') { getChar(); return PLUS; }
     if(currentChar == '-') { getChar(); return MINUS; }

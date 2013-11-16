@@ -21,27 +21,36 @@ const char * Generator::getExpressionNodeOperator(ExpressionTree* node)
     {
         case NODE_BIN_OPR_ADD: return "+";
         case NODE_BIN_OPR_SUBTRACT: return "-";
+        case NODE_BIN_OPR_MULTIPLY: return "*";
+        case NODE_BIN_OPR_DIVIDE: return "/";
     }
 }
 
 std::string Generator::emitExpression(ExpressionTree * expressionNode)
 {
-    std::string expression = "(";
+    std::string expression;
     char buffer[1024];
+    int node;
     
     switch(expressionNode->getType())
     {
         case NODE_INTEGER:
+            node = *((int*)expressionNode->getData());
+                
             if(expressionNode->hasLeft())
             {
-                int node = *((int*)expressionNode->getData());
                 sprintf(buffer,"%d", node);
-                expression +=(
+                expression ="(" + (
                     (std::string)buffer + 
                     (std::string)getExpressionNodeOperator(expressionNode->getLeft()) +  
                     emitExpression(expressionNode->getRight()) +
                     ")"
                 );
+            }
+            else
+            {
+                sprintf(buffer,"%d", node);
+                expression = (std::string) buffer;
             }
             break;
     }
