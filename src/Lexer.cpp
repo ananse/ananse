@@ -62,6 +62,23 @@ Token Lexer::getNextToken()
         integerValue = strtol(numberString.c_str(), NULL, 10);
         return INTEGER;
     }
+    
+    // Match identifiers and keywords
+    if(isalpha(currentChar))
+    {
+        std::string identString;
+        do
+        {
+            identString += currentChar;
+            getChar();
+        }while(isalnum(currentChar));
+        
+        identifierValue = identString;
+        
+        if      (identString == "dim")  return DIM;
+        else if (identString == "as")   return AS;
+        else                            return IDENTIFIER;
+    }
 }
 
 int Lexer::getIntegerValue()
@@ -69,3 +86,7 @@ int Lexer::getIntegerValue()
     return integerValue;
 }
 
+std::string Lexer::getIdentifierValue()
+{
+    return identifierValue;
+}

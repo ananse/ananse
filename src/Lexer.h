@@ -19,7 +19,9 @@ typedef enum {
     DIVIDE,
     IDENTIFIER,
     BRACKET_OPEN,
-    BRACKET_CLOSE
+    BRACKET_CLOSE,
+    DIM,
+    AS
 } Token;
 
 class Lexer
@@ -31,6 +33,7 @@ private:
     std::string buffer;
     int bufferIndex;
     int integerValue;
+    std::string identifierValue;
     
 public:
     Lexer(std::string);
@@ -38,6 +41,7 @@ public:
     
     Token getNextToken();
     int getIntegerValue();
+    std::string getIdentifierValue();
 };
 
 #endif	/* LEXER_H */

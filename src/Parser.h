@@ -22,6 +22,9 @@ private:
     void getToken();
     Generator * generator;
     
+    // Declarations and assignments
+    void parseDeclaration();
+    
     // Expressions parsing
     ExpressionNode * parseTerm();
     ExpressionNode * parseFactor();

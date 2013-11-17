@@ -15,13 +15,14 @@ Parser::~Parser()
 void Parser::setSource(std::string source)
 {
 	lexer = new Lexer(source);
+    getToken();
 }
 
 void Parser::getToken()
 {
     lookahead = lexer->getNextToken();
 
-    /*switch(lookahead)
+    switch(lookahead)
     {
         case INTEGER:
             std::cout<<"Integer"<<std::endl;
@@ -29,12 +30,16 @@ void Parser::getToken()
         case PLUS:
             std::cout<<"Plus"<<std::endl;
             break;
-    }*/
+        case DIM:
+            std::cout<<"Dim"<<std::endl;
+            break;
+    }
 }
 
 void Parser::parse()
 {
-	parseExpression(true);
+    parseDeclaration();
+	parseExpression();
 }
 
 bool Parser::match(Token token)
@@ -50,16 +55,38 @@ bool Parser::match(Token token)
     }
 }
 
+void Parser::parseDeclaration()
+{
+    if(lookahead == DIM)
+    {
+        std::string identifier;
+        std::string datatype;
+    
+        getToken();
+        match(IDENTIFIER);
+        identifier = lexer->getIdentifierValue();
+        getToken();
+        match(AS);
+        getToken();
+        match(IDENTIFIER);
+        datatype = lexer->getIdentifierValue();
+        
+        std::cout<<identifier<<" as "<<datatype<<std::endl;
+    }
+}
+
 ExpressionNode * Parser::parseExpression()
 {
     return parseExpression(false);
 }
 
-ExpressionNode * Parser::parseExpression(bool emit)
+ExpressionNode * Parser::parseExpression(bool dontEmit)
 {
     ExpressionNode *expression = parseTerm();
     ExpressionNode *left, *right;
 
+    if(expression == NULL) return NULL;
+    
     do{
         switch(lookahead)
         {
@@ -67,6 +94,7 @@ ExpressionNode * Parser::parseExpression(bool emit)
                 left = expression;
                 expression = new ExpressionNode();
                 expression->setData(NODE_ADD);
+                getToken();
                 right = parseTerm();
                 expression->setRight(right);
                 expression->setLeft(left);
@@ -76,6 +104,7 @@ ExpressionNode * Parser::parseExpression(bool emit)
                 left = expression;
                 expression = new ExpressionNode();
                 expression->setData(NODE_SUBTRACT);
+                getToken();
                 right = parseTerm();
                 expression->setRight(right);
                 expression->setLeft(left);
@@ -83,14 +112,17 @@ ExpressionNode * Parser::parseExpression(bool emit)
         }
     } while(lookahead == PLUS || lookahead == MINUS);
     
-    if(emit)
+    if(dontEmit)
     {
-        std::cout<<generator->emitExpression(expression);
-        delete expression;
+        return expression;
     }
     else
     {
-        return expression;
+        if(expression != NULL) 
+        {
+            std::cout<<generator->emitExpression(expression);
+            delete expression;
+        }
     }
 }
 
@@ -106,6 +138,7 @@ ExpressionNode * Parser::parseTerm()
                 left = term;
                 term = new ExpressionNode();
                 term->setData(NODE_MULTIPLY);
+                getToken();
                 right = parseFactor();
                 term->setRight(right);
                 term->setLeft(left);
@@ -115,11 +148,12 @@ ExpressionNode * Parser::parseTerm()
                 left = term;
                 term = new ExpressionNode();
                 term->setData(NODE_DIVIDE);
+                getToken();
                 right = parseFactor();
                 term->setRight(right);
-                term->setLeft(left);                break;
+                term->setLeft(left);                
+                break;
         }
-        getToken();
     } while(lookahead == MULTIPLY || lookahead == DIVIDE);  
     
     return term;
@@ -127,21 +161,22 @@ ExpressionNode * Parser::parseTerm()
 
 ExpressionNode * Parser::parseFactor()
 {
-    ExpressionNode * factor;
-    getToken();
+    ExpressionNode * factor = NULL;
     switch(lookahead) 
     {
         case INTEGER:
             factor = new ExpressionNode();
             factor->setData(lexer->getIntegerValue());
+            getToken();
             break;
         
         case BRACKET_OPEN:
-            factor = parseExpression();
+            factor = parseExpression(true);
             match(BRACKET_CLOSE);
+            getToken();
             break;
     }
-    
+    std::cout<<factor<<std::endl;
     return factor;
 }
 
