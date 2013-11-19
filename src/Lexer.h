@@ -12,6 +12,8 @@
 #include <fstream>
 
 typedef enum {
+    NEW_LINE,
+    END,
     INTEGER,
     PLUS,
     MINUS,
@@ -31,6 +33,7 @@ private:
     char currentChar;
     void getChar();
     std::string buffer;
+    std::ifstream sourceFile;
     int bufferIndex;
     int integerValue;
     std::string identifierValue;

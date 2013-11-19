@@ -1,5 +1,7 @@
+
 #include <cctype>
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 
 #include "Lexer.h"
@@ -11,8 +13,7 @@ void Lexer::tcc(std::string prefix)
 
 Lexer::Lexer(std::string source)
 {
-    buffer = source;
-	bufferIndex = 0;
+    sourceFile.open(source.c_str());
     getChar();
 }
 
@@ -23,31 +24,29 @@ Lexer::~Lexer()
 
 void Lexer::getChar()
 {
-	if(bufferIndex < buffer.size())
-	{
-        currentChar = buffer[bufferIndex++];
-	}
+    if(sourceFile.good())
+        currentChar = sourceFile.get();
     else
-    {
-        currentChar = EOF;
-    }
+        currentChar = EOF;    
 }
 
 Token Lexer::getNextToken()
 {
 	// Eat whitespace        
-    while(isspace(currentChar))
+    while(isspace(currentChar) && currentChar != '\n' && currentChar != EOF)
     {
         getChar();
     }
     
     // Match operators
-    if(currentChar == '+') { getChar(); return PLUS; }
-    if(currentChar == '-') { getChar(); return MINUS; }
-    if(currentChar == '*') { getChar(); return MULTIPLY; }
-    if(currentChar == '/') { getChar(); return DIVIDE; }    
-    if(currentChar == '(') { getChar(); return BRACKET_OPEN; }    
-    if(currentChar == ')') { getChar(); return BRACKET_CLOSE; }    
+    if(currentChar == '+' ) { getChar(); return PLUS; }
+    if(currentChar == '-' ) { getChar(); return MINUS; }
+    if(currentChar == '*' ) { getChar(); return MULTIPLY; }
+    if(currentChar == '/' ) { getChar(); return DIVIDE; }    
+    if(currentChar == '(' ) { getChar(); return BRACKET_OPEN; }    
+    if(currentChar == ')' ) { getChar(); return BRACKET_CLOSE; }    
+    if(currentChar == '\n') { getChar(); return NEW_LINE; }
+    if(currentChar == EOF) { getChar(); return END; }
 
     // Match integers
     if(isdigit(currentChar))
@@ -75,9 +74,9 @@ Token Lexer::getNextToken()
         
         identifierValue = identString;
         
-        if      (identString == "dim")  return DIM;
-        else if (identString == "as")   return AS;
-        else                            return IDENTIFIER;
+        if (identString == "dim") return DIM;
+        else if (identString == "as")  return AS;
+        else return IDENTIFIER;
     }
 }
 

@@ -11,9 +11,8 @@
 
 int main(int argc, char ** argv)
 {
+    
     Parser parser;
-    std::string line;
-    getline(std::cin, line);
-    parser.setSource(line);
+    parser.setSource((std::string)argv[1]);
     parser.parse();
 }

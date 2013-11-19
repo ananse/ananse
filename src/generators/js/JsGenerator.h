@@ -2,16 +2,20 @@
  * File:   JsGenerator.h
  * Author: ekow
  *
- * Created on 26 October 2013, 15:16
+ * Created on 19 November 2013, 19:15
  */
 
 #ifndef JSGENERATOR_H
 #define	JSGENERATOR_H
 
-class JsGenerator {
+#include <string>
+#include "../Generator.h"
+
+class JsGenerator : public Generator{
 public:
     JsGenerator();
     JsGenerator(const JsGenerator& orig);
+    virtual std::string emitDeclaration(std::string identifier, std::string datatype);
     virtual ~JsGenerator();
 private:
 
