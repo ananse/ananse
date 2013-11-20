@@ -19,6 +19,8 @@ typedef enum {
     MINUS,
     MULTIPLY,
     DIVIDE,
+    EQUALS,
+    COMMA,
     IDENTIFIER,
     BRACKET_OPEN,
     BRACKET_CLOSE,

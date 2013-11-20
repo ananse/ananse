@@ -32,7 +32,6 @@ private:
     ExpressionNode * parseSubtraction();
     ExpressionNode * parseMultiplication();
     ExpressionNode * parseDivision();
-    ExpressionNode * parseExpression(bool emit);
     ExpressionNode * parseExpression();
     
     

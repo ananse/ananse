@@ -73,26 +73,43 @@ void Parser::parseDeclaration()
     {
         std::string identifier;
         std::string datatype;
+        std::string value;
+    
+        do{
+            getToken();
+            match(IDENTIFIER);
+            identifier = lexer->getIdentifierValue();
+            getToken();
 
-        getToken();
-        match(IDENTIFIER);
-        identifier = lexer->getIdentifierValue();
-        getToken();
-        match(AS);
-        getToken();
-        match(IDENTIFIER);
-        datatype = lexer->getIdentifierValue();
-
-        std::cout<<generator->emitDeclaration(identifier, datatype)<<std::endl;
+            switch(lookahead)
+            {
+                case AS:
+                    getToken();
+                    match(IDENTIFIER);
+                    datatype = lexer->getIdentifierValue();
+                    getToken();
+                    break;                
+            }
+            
+            if(lookahead == EQUALS)
+            {
+                getToken();
+                value = generator->emitExpression(parseExpression());
+            }
+            
+            std::cout<<generator->emitDeclaration(identifier, datatype, value)<<std::endl;
+        }
+        while(lookahead == COMMA);
+        
     }
 }
 
-ExpressionNode * Parser::parseExpression()
+/*ExpressionNode * Parser::parseExpression()
 {
     return parseExpression(false);
-}
+}*/
 
-ExpressionNode * Parser::parseExpression(bool dontEmit)
+ExpressionNode * Parser::parseExpression()
 {
     ExpressionNode *expression = parseTerm();
     ExpressionNode *left, *right;
@@ -125,18 +142,7 @@ ExpressionNode * Parser::parseExpression(bool dontEmit)
         }
     } while (lookahead == PLUS || lookahead == MINUS);
 
-    if (dontEmit)
-    {
-        return expression;
-    } 
-    else
-    {
-        if (expression != NULL)
-        {
-            std::cout << generator->emitExpression(expression);
-            delete expression;
-        }
-    }
+    return expression;
 }
 
 ExpressionNode * Parser::parseTerm()
@@ -185,12 +191,11 @@ ExpressionNode * Parser::parseFactor()
             break;
 
         case BRACKET_OPEN:
-            factor = parseExpression(true);
+            factor = parseExpression();
             match(BRACKET_CLOSE);
             getToken();
             break;
     }
-    std::cout << factor << std::endl;
     return factor;
 }
 

@@ -13,14 +13,16 @@ JsGenerator::JsGenerator()
 
 JsGenerator::JsGenerator(const JsGenerator& orig)
 {
+    
 }
 
 JsGenerator::~JsGenerator()
 {
+    
 }
 
-std::string JsGenerator::emitDeclaration(std::string identifier, std::string datatype)
+std::string JsGenerator::emitDeclaration(std::string identifier, std::string datatype, std::string value)
 {
-    return (std::string)"var " + identifier + ";";
+    return (std::string)"var " + identifier + (value == "" ? "" : " = " + value) + ";";
 }
 
