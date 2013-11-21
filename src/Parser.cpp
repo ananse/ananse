@@ -22,36 +22,24 @@ void Parser::setSource(std::string source)
 void Parser::getToken()
 {
     lookahead = lexer->getNextToken();
-
-    /*switch (lookahead)
-    {
-        case INTEGER:
-            std::cout << "Integer - "<<lexer->getIntegerValue()<< std::endl;
-            break;
-        case PLUS:
-            std::cout << "Plus" << std::endl;
-            break;
-        case DIM:
-            std::cout << "Dim" << std::endl;
-            break;
-        case NEW_LINE:
-            std::cout << "New Line"<<std::endl;
-            break;
-    }*/
 }
 
 void Parser::parse()
 {
+    int i = 0;
     do
     {
         parseDeclaration();
-        //parseExpression();
         
+        if(lookahead != NEW_LINE && lookahead != END)
+        {
+            std::cerr<< "Unexpected token '" << lexer->getTokenString() <<"'"<< std::endl;
+            exit(1);
+        }
         getToken();
-        if(lookahead == NEW_LINE) getToken();
         if(lookahead == END) break;
-        
-    }while(true);
+        i++;
+    }while(i < 100);
 }
 
 bool Parser::match(Token token)
@@ -88,7 +76,12 @@ void Parser::parseDeclaration()
                     match(IDENTIFIER);
                     datatype = lexer->getIdentifierValue();
                     getToken();
-                    break;                
+                    break;
+                    
+                case PERCENT:
+                    datatype = "integer";
+                    getToken();
+                    break;
             }
             
             if(lookahead == EQUALS)
@@ -100,14 +93,8 @@ void Parser::parseDeclaration()
             std::cout<<generator->emitDeclaration(identifier, datatype, value)<<std::endl;
         }
         while(lookahead == COMMA);
-        
     }
 }
-
-/*ExpressionNode * Parser::parseExpression()
-{
-    return parseExpression(false);
-}*/
 
 ExpressionNode * Parser::parseExpression()
 {

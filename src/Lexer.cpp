@@ -27,7 +27,7 @@ void Lexer::getChar()
     if(sourceFile.good())
         currentChar = sourceFile.get();
     else
-        currentChar = EOF;    
+        currentChar = EOF;      
 }
 
 Token Lexer::getNextToken()
@@ -48,6 +48,8 @@ Token Lexer::getNextToken()
     if(currentChar == '\n') { getChar(); return NEW_LINE; }
     if(currentChar == '=')  { getChar(); return EQUALS; }
     if(currentChar == ',')  { getChar(); return COMMA; }
+    if(currentChar == '%')  { getChar(); return PERCENT; }
+    if(currentChar == '&')  { getChar(); return AMPERSAND; }
     if(currentChar == EOF) { getChar(); return END; }
 
     // Match integers
@@ -61,6 +63,7 @@ Token Lexer::getNextToken()
     	}while(isdigit(currentChar));
         
         integerValue = strtol(numberString.c_str(), NULL, 10);
+        tokenString = numberString;
         return INTEGER;
     }
     
@@ -70,16 +73,20 @@ Token Lexer::getNextToken()
         std::string identString;
         do
         {
-            identString += currentChar;
+            identString += tolower(currentChar);
             getChar();
         }while(isalnum(currentChar));
         
         identifierValue = identString;
-        
+        tokenString = identString;
         if (identString == "dim") return DIM;
         else if (identString == "as")  return AS;
         else return IDENTIFIER;
     }
+    
+    // Return an unknown token for whatever else is there
+    tokenString = currentChar;
+    return UNKNOWN;
 }
 
 int Lexer::getIntegerValue()
@@ -90,4 +97,83 @@ int Lexer::getIntegerValue()
 std::string Lexer::getIdentifierValue()
 {
     return identifierValue;
+}
+
+std::string Lexer::getTokenString()
+{
+    return tokenString;
+}
+
+std::string Lexer::describeToken(Token token)
+{
+    switch (token)
+    {
+        case NEW_LINE:
+            return "new line";
+            break;
+            
+        case END:
+            return "end of file";
+            break;
+            
+        case INTEGER:
+            return "integer";
+            break;
+            
+        case PLUS:
+            return "plus";
+            break;
+            
+        case MINUS:
+            return "minus";
+            break;
+    
+        case MULTIPLY:
+            return "multiply";
+            break;
+    
+        case DIVIDE:
+            return "divide";
+            break;
+            
+        case EQUALS:
+            return "equals";
+            break;
+            
+        case COMMA:
+            return "comma";
+            break;
+            
+        case IDENTIFIER:
+            return "identifier";
+            break;
+            
+        case BRACKET_OPEN:
+            return "bracket open";
+            break;
+            
+        case BRACKET_CLOSE:
+            return "bracket close";
+            break;
+    
+        case DIM:
+            return "dim";
+            break;
+    
+        case AS:
+            return "as";
+            break;
+    
+        case PERCENT:
+            return "percent";
+            break;
+            
+        case AMPERSAND:
+            return "ampersand";
+            break;
+            
+        case UNKNOWN:
+            return "unknown";
+            break;
+    }    
 }

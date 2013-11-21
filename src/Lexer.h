@@ -25,7 +25,10 @@ typedef enum {
     BRACKET_OPEN,
     BRACKET_CLOSE,
     DIM,
-    AS
+    AS,
+    PERCENT,
+    AMPERSAND,
+    UNKNOWN
 } Token;
 
 class Lexer
@@ -39,6 +42,7 @@ private:
     int bufferIndex;
     int integerValue;
     std::string identifierValue;
+    std::string tokenString;
     
 public:
     Lexer(std::string);
@@ -47,6 +51,8 @@ public:
     Token getNextToken();
     int getIntegerValue();
     std::string getIdentifierValue();
+    static std::string describeToken(Token);
+    std::string getTokenString();
 };
 
 #endif	/* LEXER_H */
