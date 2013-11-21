@@ -54,8 +54,13 @@ Makefile.in
 Makefile
 config.log
 *.o
+*.a
 
+#binaries
 src/asc
+
+#tests
+tests/lexer_test
 
 #Eclipse?
 .autotools
