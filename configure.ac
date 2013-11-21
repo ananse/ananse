@@ -16,8 +16,10 @@ AC_PROG_CXX
 AC_CHECK_HEADERS([unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_HEADER_STDBOOL
 
 # Checks for library functions.
+AC_CHECK_FUNCS([strtol])
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
