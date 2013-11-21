@@ -60,3 +60,5 @@ src/asc
 #Eclipse?
 .autotools
 .settings
+
+gtest
