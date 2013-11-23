@@ -22,6 +22,12 @@ AC_CHECK_HEADER_STDBOOL
 # Checks for library functions.
 AC_CHECK_FUNCS([strtol])
 
+AC_ARG_WITH(
+    [googletest],
+    [AS_HELP_STRING([--with-googletest])],
+    [AC_SUBST([GTEST], ["$with_googletest"])]
+)
+
 AC_CONFIG_FILES([Makefile
                  src/Makefile
                  tests/Makefile])

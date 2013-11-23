@@ -48,7 +48,8 @@ Makefile.in
 *.o
 *~
 test-driver
-
+tests/*.log
+tests/*.trs
 /nbproject
 /.cproject
 /.project
