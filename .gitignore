@@ -1,7 +1,3 @@
-# http://www.gnu.org/software/automake
-
-Makefile.in
-
 # http://www.gnu.org/software/autoconf
 
 /autom4te.cache
@@ -17,10 +13,7 @@ Makefile.in
 
 
 /Makefile
-/Makefile.in
-/aclocal.m4
-/autom4te.cache/
-/config.*
+/config.h.in
 /configure
 /depcomp
 /install-sh
@@ -36,7 +29,6 @@ Makefile.in
 *~
 
 /Makefile
-/Makefile.in
 /aclocal.m4
 /autom4te.cache/
 /config.*
