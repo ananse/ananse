@@ -3,6 +3,7 @@ before_install:
     - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
     - unzip gtest-1.7.0.zip
     - aclocal
+    - autoheader
     - automake --force-missing --add-missing
     - autoconf
 script: ./configure --with-googletest=../gtest-1.7.0 && make check
