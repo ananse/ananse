@@ -9,6 +9,7 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_RANLIB
 
 # Checks for libraries.
 
@@ -22,5 +23,6 @@ AC_CHECK_HEADER_STDBOOL
 AC_CHECK_FUNCS([strtol])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+                 src/Makefile
+                 tests/Makefile])
 AC_OUTPUT

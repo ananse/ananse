@@ -47,6 +47,7 @@ Makefile.in
 .dirstamp
 *.o
 *~
+test-driver
 
 /nbproject
 /.cproject
