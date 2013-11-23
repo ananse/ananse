@@ -28,6 +28,8 @@ AC_ARG_WITH(
     [AC_SUBST([GTEST], ["$with_googletest"])]
 )
 
+AM_CONDITIONAL([HAVE_GTEST], [test x$with_googletest != x] )
+
 AC_CONFIG_FILES([Makefile
                  src/Makefile
                  tests/Makefile])
