@@ -17,7 +17,7 @@ AC_PROG_RANLIB
 AC_CHECK_HEADERS([unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
+m4_pattern_allow([AC_CHECK_HEADER_STDBOOL])
 
 # Checks for library functions.
 AC_CHECK_FUNCS([strtol])
