@@ -1,5 +1,4 @@
-# http://www.gnu.org/software/autoconf
-
+*Makefile.in
 /autom4te.cache
 /aclocal.m4
 /compile
@@ -10,33 +9,19 @@
 /configure.scan
 /autoscan.log
 /src/.deps/
-
-
-/Makefile
+*Makefile
 /config.h.in
-/configure
-/depcomp
-/install-sh
+/config.status
 /libtool
 /ltmain.sh
 /m4/
-/missing
 /stamp-h?
 .deps/
 .dirstamp
 .libs/
 *.l[ao]
 *~
-
-/Makefile
-/aclocal.m4
-/autom4te.cache/
-/config.*
-/configure
-/m4/
-/stamp-h?
-.deps/
-.dirstamp
+/config.h
 *.o
 *~
 test-driver
@@ -45,9 +30,7 @@ tests/*.trs
 /nbproject
 /.cproject
 /.project
-Makefile
 config.log
-*.o
 *.a
 
 #binaries
@@ -60,4 +43,3 @@ tests/lexer_test
 .autotools
 .settings
 
-gtest
