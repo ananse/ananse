@@ -28,6 +28,9 @@ typedef enum {
     AS,
     PERCENT,
     AMPERSAND,
+    EXCLAMATION,
+    HASH,
+    DOLLAR,
     UNKNOWN
 } Token;
 
@@ -38,11 +41,14 @@ private:
     char currentChar;
     void getChar();
     std::string buffer;
-    std::ifstream sourceFile;
+    std::ifstream sourceStream;
+    std::string sourceFile;
     int bufferIndex;
     int integerValue;
     std::string identifierValue;
     std::string tokenString;
+    long line;
+    long column;
     
 public:
     Lexer(std::string);
@@ -53,6 +59,9 @@ public:
     std::string getIdentifierValue();
     static std::string describeToken(Token);
     std::string getTokenString();
+    std::string getSourceFile();
+    long getLine();
+    long getColumn();
 };
 
 #endif	/* LEXER_H */

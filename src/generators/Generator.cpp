@@ -55,3 +55,13 @@ std::string Generator::emitExpression(ExpressionNode * expressionNode)
     
     return expression;
 }
+
+std::string Generator::emitAssignment()
+{
+    return " = ";
+} 
+
+std::string Generator::emitEndOfStatement()
+{
+    return ";\n";
+}

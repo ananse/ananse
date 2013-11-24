@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include "generators/js/JsGenerator.h"
+#include "LexerException.h"
 
 Parser::Parser()
 {
@@ -13,9 +14,29 @@ Parser::~Parser()
 
 }
 
+void Parser::out(std::string type, std::string message)
+{
+    std::cerr<<
+        lexer->getSourceFile()<<":"<<lexer->getLine()<<":"<<lexer->getColumn()<<
+        ": "<<type<<": "<<message<<std::endl;
+}
+
+void Parser::error(std::string message)
+{
+    out("error", message);
+    exit(1);
+}
+
 void Parser::setSource(std::string source)
 {
-    lexer = new Lexer(source);
+    try{
+        lexer = new Lexer(source);
+    }
+    catch(LexerException * e)
+    {
+        std::cerr<<"Could not open file "<<source<<std::endl;
+        exit(1);
+    }
     getToken();
 }
 
@@ -26,20 +47,24 @@ void Parser::getToken()
 
 void Parser::parse()
 {
-    int i = 0;
     do
     {
         parseDeclaration();
+        parseIdentifierStatements();
         
+        // Detect newlines or EOFs
         if(lookahead != NEW_LINE && lookahead != END)
         {
-            std::cerr<< "Unexpected token '" << lexer->getTokenString() <<"'"<< std::endl;
-            exit(1);
+            error("Unexpected token '" + lexer->getTokenString() + "'");
         }
+        
+        // Get the next token
         getToken();
+        
+        // Detect EOFs
         if(lookahead == END) break;
-        i++;
-    }while(i < 100);
+        
+    }while(true);
 }
 
 bool Parser::match(Token token)
@@ -50,8 +75,7 @@ bool Parser::match(Token token)
     } 
     else
     {
-        std::cerr << "Unexpected input" << std::endl;
-        exit(1);
+        error("Unexpected " + Lexer::describeToken(lookahead) + " '" + lexer->getTokenString() + "'. Expected " + Lexer::describeToken(token) + ".");
     }
 }
 
@@ -82,17 +106,57 @@ void Parser::parseDeclaration()
                     datatype = "integer";
                     getToken();
                     break;
+                    
+                case AMPERSAND:
+                    datatype = "long";
+                    getToken();
+                    break;
+                    
+                case EXCLAMATION:
+                    datatype = "single";
+                    getToken();
+                    break;
+                    
+                case HASH:
+                    datatype = "double";
+                    getToken();
+                    break;
             }
             
-            if(lookahead == EQUALS)
-            {
-                getToken();
-                value = generator->emitExpression(parseExpression());
-            }
-            
-            std::cout<<generator->emitDeclaration(identifier, datatype, value)<<std::endl;
+            std::cout<<generator->emitDeclaration(identifier, datatype);
+            parseAssignment();
+            std::cout<<generator->emitEndOfStatement();                        
         }
         while(lookahead == COMMA);
+    }
+}
+
+void Parser::parseAssignment()
+{
+    if(lookahead == EQUALS)
+    {
+        getToken();
+        std::cout<<generator->emitAssignment();
+        std::cout<<generator->emitExpression(parseExpression());
+    }
+
+}
+
+void Parser::parseIdentifierStatements()
+{
+    std::string identifier;
+    if(lookahead == IDENTIFIER)
+    {
+        identifier = lexer->getIdentifierValue();
+        getToken();
+        switch(lookahead)
+        {
+            case EQUALS:
+                std::cout<<identifier;
+                parseAssignment();
+                std::cout<<generator->emitEndOfStatement();
+                break;
+        }
     }
 }
 

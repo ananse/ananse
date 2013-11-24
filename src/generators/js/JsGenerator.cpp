@@ -21,8 +21,8 @@ JsGenerator::~JsGenerator()
     
 }
 
-std::string JsGenerator::emitDeclaration(std::string identifier, std::string datatype, std::string value)
+std::string JsGenerator::emitDeclaration(std::string identifier, std::string datatype)
 {
-    return (std::string)"var " + identifier + (value == "" ? "" : " = " + value) + ";";
+    return (std::string)"var " + identifier;
 }
 

@@ -15,7 +15,7 @@ class JsGenerator : public Generator{
 public:
     JsGenerator();
     JsGenerator(const JsGenerator& orig);
-    virtual std::string emitDeclaration(std::string identifier, std::string datatype, std::string value);
+    virtual std::string emitDeclaration(std::string identifier, std::string datatype);
     virtual ~JsGenerator();
 private:
 

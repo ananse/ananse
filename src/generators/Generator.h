@@ -16,7 +16,9 @@ public:
     Generator();
     Generator(const Generator& orig);
     virtual std::string emitExpression(ExpressionNode *);
-    virtual std::string emitDeclaration(std::string identifier, std::string datatype, std::string value) = 0;
+    virtual std::string emitDeclaration(std::string identifier, std::string datatype) = 0;
+    virtual std::string emitAssignment();
+    virtual std::string emitEndOfStatement();
     virtual ~Generator();
 private:
     const char * getExpressionNodeOperator(ExpressionNode *);

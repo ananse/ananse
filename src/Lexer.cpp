@@ -1,19 +1,27 @@
 
 #include <cctype>
 #include <iostream>
-#include <fstream>
 #include <cstdlib>
-
 #include "Lexer.h"
+#include "LexerException.h"
 
 void Lexer::tcc(std::string prefix)
 {
     std::cout<<prefix<<": '"<<currentChar<<"' val :"<<(int)currentChar<<(currentChar == EOF ? " EOF" : "")<<" buffer: "<<bufferIndex<<" of "<<buffer.size()<<std::endl;
 }
 
-Lexer::Lexer(std::string source)
+Lexer::Lexer(std::string sourceFile)
 {
-    sourceFile.open(source.c_str());
+    sourceStream.open(sourceFile.c_str());
+    
+    if(!sourceStream.is_open())
+    {
+        throw new LexerException();
+    }
+    
+    this->sourceFile = sourceFile;
+    line = 1;
+    column = 0;
     getChar();
 }
 
@@ -24,10 +32,15 @@ Lexer::~Lexer()
 
 void Lexer::getChar()
 {
-    if(sourceFile.good())
-        currentChar = sourceFile.get();
+    if(sourceStream.good())
+    {
+        currentChar = sourceStream.get();
+        column++;
+    }
     else
+    {
         currentChar = EOF;      
+    }
 }
 
 Token Lexer::getNextToken()
@@ -38,6 +51,13 @@ Token Lexer::getNextToken()
         getChar();
     }
     
+    if(currentChar == '\n') 
+    { 
+        line++;
+        getChar(); 
+        return NEW_LINE; 
+    }
+    
     // Match operators
     if(currentChar == '+' ) { getChar(); return PLUS; }
     if(currentChar == '-' ) { getChar(); return MINUS; }
@@ -45,11 +65,13 @@ Token Lexer::getNextToken()
     if(currentChar == '/' ) { getChar(); return DIVIDE; }    
     if(currentChar == '(' ) { getChar(); return BRACKET_OPEN; }    
     if(currentChar == ')' ) { getChar(); return BRACKET_CLOSE; }    
-    if(currentChar == '\n') { getChar(); return NEW_LINE; }
     if(currentChar == '=')  { getChar(); return EQUALS; }
     if(currentChar == ',')  { getChar(); return COMMA; }
     if(currentChar == '%')  { getChar(); return PERCENT; }
     if(currentChar == '&')  { getChar(); return AMPERSAND; }
+    if(currentChar == '!')  { getChar(); return EXCLAMATION; }
+    if(currentChar == '#')  { getChar(); return HASH; }
+    if(currentChar == '$')  { getChar(); return DOLLAR; }
     if(currentChar == EOF) { getChar(); return END; }
 
     // Match integers
@@ -176,4 +198,19 @@ std::string Lexer::describeToken(Token token)
             return "unknown";
             break;
     }    
+}
+
+std::string Lexer::getSourceFile()
+{
+    return sourceFile;
+}
+
+long Lexer::getColumn()
+{
+    return column;
+}
+
+long Lexer::getLine()
+{
+    return line;
 }

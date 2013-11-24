@@ -16,6 +16,8 @@
 class Parser
 {
 private:
+    void out(std::string type, std::string message);
+    void error(std::string message);
     Lexer * lexer;
     Token lookahead;
     bool match(Token token);
@@ -24,6 +26,8 @@ private:
     
     // Declarations and assignments
     void parseDeclaration();
+    void parseAssignment();
+    void parseIdentifierStatements();
     
     // Expressions parsing
     ExpressionNode * parseTerm();
