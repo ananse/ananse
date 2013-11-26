@@ -124,12 +124,12 @@ void Parser::parseDeclaration()
                     break;
             }
             
-            std::cout<<generator->emitDeclaration(identifier, datatype);
             switch(symbolTable->insert(identifier, datatype))
             {
                 case EXISTS:
                     error("Cannot redeclare variable " + identifier);
             }
+            std::cout<<generator->emitDeclaration(identifier, datatype);
             parseAssignment();
             std::cout<<generator->emitEndOfStatement();                        
         }
