@@ -45,7 +45,8 @@ void Lexer::getChar()
 
 Token Lexer::getNextToken()
 {
-	// Eat whitespace        
+	// Eat whitespace    
+    tokenString = "";
     while(isspace(currentChar) && currentChar != '\n' && currentChar != EOF)
     {
         getChar();
@@ -54,6 +55,7 @@ Token Lexer::getNextToken()
     if(currentChar == '\n') 
     { 
         line++;
+        column = 0;
         getChar(); 
         return NEW_LINE; 
     }

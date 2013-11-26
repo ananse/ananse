@@ -31,6 +31,7 @@ void Parser::setSource(std::string source)
 {
     try{
         lexer = new Lexer(source);
+        symbolTable = new SymbolTable();
     }
     catch(LexerException * e)
     {
@@ -124,6 +125,11 @@ void Parser::parseDeclaration()
             }
             
             std::cout<<generator->emitDeclaration(identifier, datatype);
+            switch(symbolTable->insert(identifier, datatype))
+            {
+                case EXISTS:
+                    error("Cannot redeclare variable " + identifier);
+            }
             parseAssignment();
             std::cout<<generator->emitEndOfStatement();                        
         }

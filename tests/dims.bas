@@ -8,6 +8,7 @@ dim d as integer = 5
 dim longvar as integer = 5, jim = 7
 dim e%
 dim q!
+dim q#
 
 e=5
 
