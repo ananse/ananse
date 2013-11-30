@@ -11,14 +11,20 @@
 class Parser
 {
 private:
-    void out(std::string type, std::string message);
-    void error(std::string message);
     Lexer * lexer;
     SymbolTable * symbolTable;
     Token lookahead;
+    Generator * generator;
+    
     bool match(Token token);
     void getToken();
-    Generator * generator;
+
+    void out(std::string type, std::string message);
+    void error(std::string message);
+    
+    Symbol * lookupSymbol(std::string identifier);
+    Symbol * insertSymbol(std::string identifier, std::string type);
+    Symbol * currentSymbol;
     
     // Declarations and assignments
     void parseDeclaration();

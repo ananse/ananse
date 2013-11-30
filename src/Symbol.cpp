@@ -19,3 +19,18 @@ Symbol::~Symbol()
 {
 }
 
+void Symbol::setDataType(std::string type)
+{
+    this->dataType = type;
+}
+
+std::string Symbol::getDataType()
+{
+    return this->dataType;
+}
+
+std::string Symbol::getIdentifier()
+{
+    
+}
+

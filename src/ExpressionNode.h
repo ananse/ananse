@@ -8,6 +8,8 @@
 #ifndef EXPRESSIONNODE_H
 #define	EXPRESSIONNODE_H
 
+#include <string>
+
 typedef enum{
     SIMPLE_NODE_BINARY_OPERATOR,
     SIMPLE_NODE_INTEGER
@@ -35,11 +37,14 @@ public:
     bool hasRight();
     NodeType getType();
     void * getData();
+    std::string getDataType();
+    void setDataType(std::string dataType);
     
 private:    
     ExpressionNode * left;
     ExpressionNode * right;
     NodeType type;
+    std::string dataType;
     void * data;
 };
 

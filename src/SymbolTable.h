@@ -22,16 +22,19 @@ class SymbolTable {
 public:
     SymbolTable();
     SymbolTable(const SymbolTable& orig);
-    SymbolStatus insert(std::string symbol, std::string type);
-    Symbol * lookup(char * identifier);
+    Symbol * insert(std::string symbol, std::string type);
+    Symbol * lookup(std::string identifier);
     int exists(char * identifier);
     void enterScope(char * scope);
     void exitScope();
     virtual ~SymbolTable();
     void setLexer(Lexer * lexer);
+    SymbolStatus getStatus();
 private:
     google::dense_hash_map<std::string, Symbol *> table;
     Lexer * lexer;
+    SymbolStatus status;
+    
 };
 
 #endif	/* SYMBOLTABLE_H */

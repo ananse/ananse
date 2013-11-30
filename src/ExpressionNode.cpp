@@ -76,3 +76,12 @@ void * ExpressionNode::getData()
     return data;
 }
 
+std::string ExpressionNode::getDataType()
+{
+    return dataType;
+}
+
+void ExpressionNode::setDataType(std::string dataType)
+{
+    this->dataType = dataType;
+}

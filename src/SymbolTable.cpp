@@ -21,22 +21,44 @@ SymbolTable::~SymbolTable()
 {
 }
 
-SymbolStatus SymbolTable::insert(std::string identifier, std::string type)
+Symbol * SymbolTable::lookup(std::string identifier)
 {
     google::dense_hash_map<std::string, Symbol *>::iterator iterator = table.find(identifier);
     if(table.end() == iterator)
     {
-        table[identifier] = new Symbol();
-        return ADDED;
+        return NULL;
     }
     else
     {
-        return EXISTS;
+        return table[identifier];
+    }
+}
+
+Symbol * SymbolTable::insert(std::string identifier, std::string type)
+{
+    google::dense_hash_map<std::string, Symbol *>::iterator iterator = table.find(identifier);
+    if(table.end() == iterator)
+    {
+        Symbol * symbol = new Symbol();
+        symbol->setDataType(type);
+        table[identifier] = symbol;
+        status = ADDED;
+        return symbol;
+    }
+    else
+    {
+        status = EXISTS;
+        return NULL;
     }
 }
 
 void SymbolTable::setLexer(Lexer* lexer)
 {
     this->lexer = lexer;
+}
+
+SymbolStatus SymbolTable::getStatus()
+{
+    return status;
 }
 

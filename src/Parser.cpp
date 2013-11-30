@@ -27,6 +27,23 @@ void Parser::error(std::string message)
     exit(1);
 }
 
+Symbol * Parser::insertSymbol(std::string identifier, std::string type)
+{
+    Symbol * symbol = symbolTable->insert(identifier, type);
+    switch(symbolTable->getStatus())
+    {
+        case ADDED:
+            return symbol;
+        case EXISTS:
+            error(identifier + " has already been declared");
+    }
+}
+
+Symbol * Parser::lookupSymbol(std::string identifier)
+{
+    Symbol * symbol = symbolTable->lookup(identifier);
+}
+
 void Parser::setSource(std::string source)
 {
     try{
@@ -124,11 +141,7 @@ void Parser::parseDeclaration()
                     break;
             }
             
-            switch(symbolTable->insert(identifier, datatype))
-            {
-                case EXISTS:
-                    error("Cannot redeclare variable " + identifier);
-            }
+            insertSymbol(identifier, datatype);
             std::cout<<generator->emitDeclaration(identifier, datatype);
             parseAssignment();
             std::cout<<generator->emitEndOfStatement();                        
@@ -143,7 +156,20 @@ void Parser::parseAssignment()
     {
         getToken();
         std::cout<<generator->emitAssignment();
-        std::cout<<generator->emitExpression(parseExpression());
+        ExpressionNode * expression = parseExpression();
+        if(expression->getDataType() == currentSymbol->getDataType())
+        {
+            std::cout<<generator->emitExpression(expression);
+        }
+        else
+        {
+            error(
+                "Cannot assign value of type " + 
+                expression->getDataType() + 
+                " to variable " + currentSymbol->getIdentifier() + 
+                " of type " + currentSymbol->getDataType()
+            );
+        }
     }
 
 }
@@ -154,6 +180,7 @@ void Parser::parseIdentifierStatements()
     if(lookahead == IDENTIFIER)
     {
         identifier = lexer->getIdentifierValue();
+        currentSymbol = lookupSymbol(identifier);
         getToken();
         switch(lookahead)
         {
@@ -219,6 +246,12 @@ ExpressionNode * Parser::parseTerm()
                 right = parseFactor();
                 term->setRight(right);
                 term->setLeft(left);
+                
+                if(left->getDataType() == "integer")
+                {
+                    if(right->getDataType() == "integer") term->setDataType("integer");
+                }
+                
                 break;
 
             case DIVIDE:
@@ -229,6 +262,11 @@ ExpressionNode * Parser::parseTerm()
                 right = parseFactor();
                 term->setRight(right);
                 term->setLeft(left);
+                
+                if(left->getDataType() == "integer")
+                {
+                    if(right->getDataType() == "integer") term->setDataType("integer");
+                }                
                 break;
         }
     } while (lookahead == MULTIPLY || lookahead == DIVIDE);
@@ -244,6 +282,7 @@ ExpressionNode * Parser::parseFactor()
         case INTEGER:
             factor = new ExpressionNode();
             factor->setData(lexer->getIntegerValue());
+            factor->setDataType("integer");
             getToken();
             break;
 

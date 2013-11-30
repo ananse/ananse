@@ -15,8 +15,13 @@ public:
     Symbol();
     Symbol(const Symbol& orig);
     virtual ~Symbol();
+    void setDataType(std::string);
+    std::string getDataType();
+    std::string getIdentifier();
 private:
     google::dense_hash_map<const char*, Symbol*> table;
+    std::string dataType;
+    std::string identifier;
     Symbol * parent;
 };
 

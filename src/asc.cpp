@@ -11,7 +11,6 @@
 
 int main(int argc, char ** argv)
 {
-    
     Parser parser;
     parser.setSource((std::string)argv[1]);
     parser.parse();
