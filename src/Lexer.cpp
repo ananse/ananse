@@ -76,19 +76,38 @@ Token Lexer::getNextToken()
     if(currentChar == '$')  { getChar(); return DOLLAR; }
     if(currentChar == EOF) { getChar(); return END; }
 
-    // Match integers
+    // Match numbers
     if(isdigit(currentChar))
     {
+        bool dotSeen = false;
     	std::string numberString;
+        
     	do
         {
+            if(currentChar == '.')
+            {
+                if(dotSeen)
+                    break;
+                else
+                    dotSeen = true; 
+            }
     		numberString += currentChar;
             getChar();
-    	}while(isdigit(currentChar));
+    	}
+        while(isdigit(currentChar) || currentChar == '.');
         
-        integerValue = strtol(numberString.c_str(), NULL, 10);
         tokenString = numberString;
-        return INTEGER;
+        
+        if(dotSeen)
+        {
+            singleValue = strtod(numberString.c_str(), NULL);
+            return SINGLE;
+        }
+        else
+        {
+            integerValue = strtol(numberString.c_str(), NULL, 10);
+            return INTEGER;
+        }        
     }
     
     // Match identifiers and keywords
@@ -113,7 +132,12 @@ Token Lexer::getNextToken()
     return UNKNOWN;
 }
 
-int Lexer::getIntegerValue()
+double Lexer::getSingleValue()
+{
+    return singleValue;
+}
+
+long Lexer::getIntegerValue()
 {
     return integerValue;
 }

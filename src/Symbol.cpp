@@ -26,11 +26,15 @@ void Symbol::setDataType(std::string type)
 
 std::string Symbol::getDataType()
 {
-    return this->dataType;
+    return dataType;
 }
 
 std::string Symbol::getIdentifier()
 {
-    
+    return identifier;
 }
 
+void Symbol::setIdentifier(std::string identifier)
+{
+    this->identifier = identifier;
+}

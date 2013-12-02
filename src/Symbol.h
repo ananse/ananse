@@ -16,6 +16,7 @@ public:
     Symbol(const Symbol& orig);
     virtual ~Symbol();
     void setDataType(std::string);
+    void setIdentifier(std::string);
     std::string getDataType();
     std::string getIdentifier();
 private:

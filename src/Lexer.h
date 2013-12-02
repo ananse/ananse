@@ -15,6 +15,7 @@ typedef enum {
     NEW_LINE,
     END,
     INTEGER,
+    SINGLE,
     PLUS,
     MINUS,
     MULTIPLY,
@@ -44,7 +45,8 @@ private:
     std::ifstream sourceStream;
     std::string sourceFile;
     int bufferIndex;
-    int integerValue;
+    long int integerValue;
+    double singleValue;
     std::string identifierValue;
     std::string tokenString;
     long line;
@@ -55,7 +57,8 @@ public:
     virtual ~Lexer();    
     
     Token getNextToken();
-    int getIntegerValue();
+    long getIntegerValue();
+    double getSingleValue();
     std::string getIdentifierValue();
     static std::string describeToken(Token);
     std::string getTokenString();

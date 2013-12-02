@@ -41,7 +41,7 @@ Symbol * Parser::insertSymbol(std::string identifier, std::string type)
 
 Symbol * Parser::lookupSymbol(std::string identifier)
 {
-    Symbol * symbol = symbolTable->lookup(identifier);
+    return symbolTable->lookup(identifier);
 }
 
 void Parser::setSource(std::string source)
@@ -141,7 +141,7 @@ void Parser::parseDeclaration()
                     break;
             }
             
-            insertSymbol(identifier, datatype);
+            currentSymbol = insertSymbol(identifier, datatype);
             std::cout<<generator->emitDeclaration(identifier, datatype);
             parseAssignment();
             std::cout<<generator->emitEndOfStatement();                        
@@ -157,8 +157,14 @@ void Parser::parseAssignment()
         getToken();
         std::cout<<generator->emitAssignment();
         ExpressionNode * expression = parseExpression();
+        
         if(expression->getDataType() == currentSymbol->getDataType())
         {
+            std::cout<<generator->emitExpression(expression);
+        }
+        else if(currentSymbol->getDataType() == "")
+        {
+            currentSymbol->setDataType(expression->getDataType());
             std::cout<<generator->emitExpression(expression);
         }
         else
@@ -283,6 +289,13 @@ ExpressionNode * Parser::parseFactor()
             factor = new ExpressionNode();
             factor->setData(lexer->getIntegerValue());
             factor->setDataType("integer");
+            getToken();
+            break;
+            
+        case SINGLE:
+            factor = new ExpressionNode();
+            factor->setData(lexer->getSingleValue());
+            factor->setDataType("single");
             getToken();
             break;
 

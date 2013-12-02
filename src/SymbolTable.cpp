@@ -6,7 +6,6 @@
  */
 
 #include "SymbolTable.h"
-#include <iostream>
 
 SymbolTable::SymbolTable()
 {
@@ -41,6 +40,7 @@ Symbol * SymbolTable::insert(std::string identifier, std::string type)
     {
         Symbol * symbol = new Symbol();
         symbol->setDataType(type);
+        symbol->setIdentifier(identifier);
         table[identifier] = symbol;
         status = ADDED;
         return symbol;
