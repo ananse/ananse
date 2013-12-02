@@ -39,6 +39,7 @@ private:
     ExpressionNode * parseDivision();
     ExpressionNode * parseExpression();
     
+    static bool isNumeric(std::string datatype);
     
 public:
     Parser();

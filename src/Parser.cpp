@@ -11,7 +11,7 @@ Parser::Parser()
 
 Parser::~Parser()
 {
-
+    delete generator;
 }
 
 void Parser::out(std::string type, std::string message)
@@ -33,6 +33,10 @@ Symbol * Parser::insertSymbol(std::string identifier, std::string type)
     switch(symbolTable->getStatus())
     {
         case ADDED:
+            if(type == "integer")
+            {
+                symbol->setAsNumber();
+            }
             return symbol;
         case EXISTS:
             error(identifier + " has already been declared");
@@ -121,22 +125,7 @@ void Parser::parseDeclaration()
                     break;
                     
                 case PERCENT:
-                    datatype = "integer";
-                    getToken();
-                    break;
-                    
-                case AMPERSAND:
-                    datatype = "long";
-                    getToken();
-                    break;
-                    
-                case EXCLAMATION:
-                    datatype = "single";
-                    getToken();
-                    break;
-                    
-                case HASH:
-                    datatype = "double";
+                    datatype = "number";
                     getToken();
                     break;
             }
@@ -158,10 +147,14 @@ void Parser::parseAssignment()
         std::cout<<generator->emitAssignment();
         ExpressionNode * expression = parseExpression();
         
-        if(expression->getDataType() == currentSymbol->getDataType())
+        if(isNumeric(expression->getDataType()) && isNumeric(currentSymbol->getDataType()))
         {
             std::cout<<generator->emitExpression(expression);
         }
+        else if(expression->getDataType() == currentSymbol->getDataType())
+        {
+            std::cout<<generator->emitExpression(expression);
+        }        
         else if(currentSymbol->getDataType() == "")
         {
             currentSymbol->setDataType(expression->getDataType());
@@ -308,3 +301,15 @@ ExpressionNode * Parser::parseFactor()
     return factor;
 }
 
+bool Parser::isNumeric(std::string datatype)
+{
+    if(datatype == "integer" || datatype == "single" || datatype == "double"  || 
+       datatype == "long"    || datatype == "number")
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

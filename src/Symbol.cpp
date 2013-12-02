@@ -38,3 +38,8 @@ void Symbol::setIdentifier(std::string identifier)
 {
     this->identifier = identifier;
 }
+
+void Symbol::setAsNumber()
+{
+    isNumber = true;
+}
