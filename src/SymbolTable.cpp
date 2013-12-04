@@ -10,6 +10,7 @@
 SymbolTable::SymbolTable()
 {
     table.set_empty_key("");
+    types.set_empty_key("");
 }
 
 SymbolTable::SymbolTable(const SymbolTable& orig)
@@ -60,5 +61,23 @@ void SymbolTable::setLexer(Lexer* lexer)
 SymbolStatus SymbolTable::getStatus()
 {
     return status;
+}
+
+void SymbolTable::addType(std::string type, std::string details)
+{
+    types[type] = details;
+}
+
+bool SymbolTable::vaildateType(std::string type)
+{
+    google::dense_hash_map<std::string, std::string>::iterator iterator = types.find(type);
+    if(types.end() == iterator)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 

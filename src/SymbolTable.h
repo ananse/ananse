@@ -24,6 +24,8 @@ public:
     SymbolTable(const SymbolTable& orig);
     Symbol * insert(std::string symbol, std::string type);
     Symbol * lookup(std::string identifier);
+    void addType(std::string, std::string);
+    bool vaildateType(std::string);
     int exists(char * identifier);
     void enterScope(char * scope);
     void exitScope();
@@ -32,6 +34,7 @@ public:
     SymbolStatus getStatus();
 private:
     google::dense_hash_map<std::string, Symbol *> table;
+    google::dense_hash_map<std::string, std::string> types;
     Lexer * lexer;
     SymbolStatus status;
     

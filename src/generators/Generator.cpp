@@ -30,14 +30,25 @@ std::string Generator::emitExpression(ExpressionNode * expressionNode)
 {
     std::string expression;
     char buffer[1024];
-    int node;
+    long integerNode;
+    double floatNode;
     
     switch(expressionNode->getType())
     {
         case NODE_INTEGER:
-            node = *((int*)expressionNode->getData());
-            sprintf(buffer,"%d", node);
+            integerNode = expressionNode->getIntegerValue();
+            sprintf(buffer,"%d", integerNode);
             expression = (std::string) buffer;
+            break;
+            
+        case NODE_FLOAT:
+            floatNode = expressionNode->getFloatValue();
+            sprintf(buffer,"%f", floatNode);
+            expression = (std::string) buffer;
+            break;
+            
+        case NODE_IDENTIFIER:
+            expression = expressionNode->getIdentifierValue();
             break;
         
         case NODE_ADD:

@@ -11,26 +11,27 @@
 #include <string>
 
 typedef enum{
-    SIMPLE_NODE_BINARY_OPERATOR,
-    SIMPLE_NODE_INTEGER
-} SimpleNodeType;
-
-typedef enum{
     NODE_ADD,
     NODE_SUBTRACT,
     NODE_MULTIPLY,
     NODE_DIVIDE,
-    NODE_INTEGER
+    NODE_INTEGER,
+    NODE_FLOAT,
+    NODE_IDENTIFIER
 } NodeType;
 
 class ExpressionNode {
 public:
     ExpressionNode();
     virtual ~ExpressionNode();
-    void setData(int);
-    void setData(NodeType);
+    void setIntegerValue(long);
+    void setFloatValue(double);
+    void setNodeType(NodeType);
     void setLeft(ExpressionNode*);
     void setRight(ExpressionNode*);
+    void setDataType(std::string dataType);
+    void setIdentifierValue(std::string identifier);
+    
     ExpressionNode * getLeft();
     ExpressionNode * getRight();
     bool hasLeft();
@@ -38,14 +39,18 @@ public:
     NodeType getType();
     void * getData();
     std::string getDataType();
-    void setDataType(std::string dataType);
+    long getIntegerValue();
+    double getFloatValue();
+    std::string getIdentifierValue();
     
 private:    
     ExpressionNode * left;
     ExpressionNode * right;
     NodeType type;
     std::string dataType;
-    void * data;
+    std::string identifierValue;
+    long integerValue;
+    double floatValue;
 };
 
 #endif	/* EXPRESSIONNODE_H */

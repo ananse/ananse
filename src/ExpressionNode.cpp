@@ -13,25 +13,28 @@ ExpressionNode::ExpressionNode()
 {
     left = NULL;
     right = NULL;
-    data = NULL;
 }
 
 ExpressionNode::~ExpressionNode() 
 {
     if(left != NULL) delete left;
     if(right != NULL) delete right;
-    if(data != NULL) free(data);
 }
 
-void ExpressionNode::setData(int integer)
+void ExpressionNode::setIntegerValue(long integer)
 {
-    int * integerData = new int;
-    *integerData = integer;
-    data = integerData;
+    integerValue = integer;
     type = NODE_INTEGER;
 }
 
-void ExpressionNode::setData(NodeType nodeType)
+void ExpressionNode::setFloatValue(double floatValue)
+{
+    this->floatValue = floatValue;
+    type = NODE_FLOAT;
+}
+
+
+void ExpressionNode::setNodeType(NodeType nodeType)
 {
     type = nodeType;
 }
@@ -71,11 +74,6 @@ bool ExpressionNode::hasRight()
     return right != NULL;
 }
 
-void * ExpressionNode::getData()
-{
-    return data;
-}
-
 std::string ExpressionNode::getDataType()
 {
     return dataType;
@@ -84,4 +82,25 @@ std::string ExpressionNode::getDataType()
 void ExpressionNode::setDataType(std::string dataType)
 {
     this->dataType = dataType;
+}
+
+long ExpressionNode::getIntegerValue()
+{
+    return integerValue;
+}
+
+double ExpressionNode::getFloatValue()
+{
+    return floatValue;
+}
+
+void ExpressionNode::setIdentifierValue(std::string identifierValue)
+{
+    this->identifierValue = identifierValue;
+    type = NODE_IDENTIFIER;
+}
+
+std::string ExpressionNode::getIdentifierValue()
+{
+    return identifierValue;
 }

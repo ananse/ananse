@@ -40,6 +40,7 @@ private:
     ExpressionNode * parseExpression();
     
     static bool isNumeric(std::string datatype);
+    std::string resolveNumericTypes(std::string left, std::string right);
     
 public:
     Parser();

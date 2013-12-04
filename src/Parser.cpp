@@ -53,6 +53,7 @@ void Parser::setSource(std::string source)
     try{
         lexer = new Lexer(source);
         symbolTable = new SymbolTable();
+        symbolTable->addType("number", "primitive");
     }
     catch(LexerException * e)
     {
@@ -128,6 +129,11 @@ void Parser::parseDeclaration()
                     datatype = "number";
                     getToken();
                     break;
+            }
+            
+            if(!symbolTable->vaildateType(datatype) && datatype != "")
+            {
+                error("Unknown data type `" + datatype + "`");
             }
             
             currentSymbol = insertSymbol(identifier, datatype);
@@ -206,21 +212,23 @@ ExpressionNode * Parser::parseExpression()
             case PLUS:
                 left = expression;
                 expression = new ExpressionNode();
-                expression->setData(NODE_ADD);
+                expression->setNodeType(NODE_ADD);
                 getToken();
                 right = parseTerm();
                 expression->setRight(right);
                 expression->setLeft(left);
+                expression->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));
                 break;
 
             case MINUS:
                 left = expression;
                 expression = new ExpressionNode();
-                expression->setData(NODE_SUBTRACT);
+                expression->setNodeType(NODE_SUBTRACT);
                 getToken();
                 right = parseTerm();
                 expression->setRight(right);
                 expression->setLeft(left);
+                expression->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));
                 break;
         }
     } while (lookahead == PLUS || lookahead == MINUS);
@@ -240,32 +248,23 @@ ExpressionNode * Parser::parseTerm()
             case MULTIPLY:
                 left = term;
                 term = new ExpressionNode();
-                term->setData(NODE_MULTIPLY);
+                term->setNodeType(NODE_MULTIPLY);
                 getToken();
                 right = parseFactor();
                 term->setRight(right);
                 term->setLeft(left);
-                
-                if(left->getDataType() == "integer")
-                {
-                    if(right->getDataType() == "integer") term->setDataType("integer");
-                }
-                
+                term->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));
                 break;
 
             case DIVIDE:
                 left = term;
                 term = new ExpressionNode();
-                term->setData(NODE_DIVIDE);
+                term->setNodeType(NODE_DIVIDE);
                 getToken();
                 right = parseFactor();
                 term->setRight(right);
                 term->setLeft(left);
-                
-                if(left->getDataType() == "integer")
-                {
-                    if(right->getDataType() == "integer") term->setDataType("integer");
-                }                
+                term->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));                
                 break;
         }
     } while (lookahead == MULTIPLY || lookahead == DIVIDE);
@@ -280,15 +279,22 @@ ExpressionNode * Parser::parseFactor()
     {
         case INTEGER:
             factor = new ExpressionNode();
-            factor->setData(lexer->getIntegerValue());
+            factor->setIntegerValue(lexer->getIntegerValue());
             factor->setDataType("integer");
             getToken();
             break;
             
         case SINGLE:
             factor = new ExpressionNode();
-            factor->setData(lexer->getSingleValue());
+            factor->setFloatValue(lexer->getSingleValue());
             factor->setDataType("single");
+            getToken();
+            break;
+            
+        case IDENTIFIER:
+            factor = new ExpressionNode();
+            factor->setIdentifierValue(lexer->getIdentifierValue());
+            factor->setDataType(lookupSymbol(lexer->getIdentifierValue())->getDataType());
             getToken();
             break;
 
@@ -312,4 +318,17 @@ bool Parser::isNumeric(std::string datatype)
     {
         return false;
     }
+}
+
+std::string Parser::resolveNumericTypes(std::string left, std::string right)
+{
+    if(left == "integer")
+    {
+        if(right == "integer") return "integer";
+        if(right == "single") return "single";
+    }
+    else if(left == "single")
+    {
+        if(right == "single" || right == "integer") return "single";
+    }    
 }

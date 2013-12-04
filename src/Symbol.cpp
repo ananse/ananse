@@ -43,3 +43,8 @@ void Symbol::setAsNumber()
 {
     isNumber = true;
 }
+
+std::string Symbol::getNumberType()
+{
+    return numberType;
+}
