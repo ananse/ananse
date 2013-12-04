@@ -19,10 +19,10 @@ const char * Generator::getExpressionNodeOperator(ExpressionNode* node)
 {
     switch(node->getType())
     {
-        case NODE_ADD: return "+";
-        case NODE_SUBTRACT: return "-";
-        case NODE_MULTIPLY: return "*";
-        case NODE_DIVIDE: return "/";
+        case NODE_ADD: return " + ";
+        case NODE_SUBTRACT: return " - ";
+        case NODE_MULTIPLY: return " * ";
+        case NODE_DIVIDE: return " / ";
     }
 }
 

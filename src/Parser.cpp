@@ -45,7 +45,12 @@ Symbol * Parser::insertSymbol(std::string identifier, std::string type)
 
 Symbol * Parser::lookupSymbol(std::string identifier)
 {
-    return symbolTable->lookup(identifier);
+    Symbol * symbol = symbolTable->lookup(identifier);
+    if(symbol == NULL)
+    {
+        error("Unknown identifier `" + identifier + "`");
+    }
+    return symbol;
 }
 
 void Parser::setSource(std::string source)
