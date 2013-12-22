@@ -4,14 +4,15 @@
 #include "generators/js/JsGenerator.h"
 #include "LexerException.h"
 
-Parser::Parser()
+Parser::Parser(Generator * generator, std::string source)
 {
-    generator = new JsGenerator();
+    this->generator = generator;
+    setSource(source);
 }
 
 Parser::~Parser()
 {
-    delete generator;
+    
 }
 
 void Parser::out(std::string type, std::string message)

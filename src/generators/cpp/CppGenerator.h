@@ -8,10 +8,15 @@
 #ifndef CPPGENERATOR_H
 #define	CPPGENERATOR_H
 
-class CppGenerator {
+#include <string>
+#include "../Generator.h"
+
+class CppGenerator : public Generator
+{
 public:
     CppGenerator();
     CppGenerator(const CppGenerator& orig);
+    virtual std::string emitDeclaration(std::string identifier, std::string datatype);
     virtual ~CppGenerator();
 private:
 

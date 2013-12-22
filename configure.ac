@@ -21,6 +21,7 @@ m4_pattern_allow([AC_CHECK_HEADER_STDBOOL])
 
 # Checks for library functions.
 AC_CHECK_FUNCS([strtol])
+AC_FUNC_STRTOD
 
 AC_ARG_WITH(
     [googletest],

@@ -41,11 +41,11 @@ private:
     
     static bool isNumeric(std::string datatype);
     std::string resolveNumericTypes(std::string left, std::string right);
+    void setSource(std::string source);
     
 public:
-    Parser();
+    Parser(Generator * generator, std::string source);
     virtual ~Parser();
-    void setSource(std::string source);
     void parse();
 };
 
