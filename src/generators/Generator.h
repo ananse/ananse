@@ -10,18 +10,23 @@
 
 #include "ExpressionNode.h"
 #include <string>
+#include <fstream>
 
 class Generator {
 public:
     Generator();
     Generator(const Generator& orig);
-    virtual std::string emitExpression(ExpressionNode *);
-    virtual std::string emitDeclaration(std::string identifier, std::string datatype) = 0;
-    virtual std::string emitAssignment();
-    virtual std::string emitEndOfStatement();
+    virtual void emitExpression(ExpressionNode *);
+    virtual void emitDeclaration(std::string identifier, std::string datatype) = 0;
+    virtual void emitAssignment();
+    virtual void emitEndOfStatement();
     virtual ~Generator();
+    void openOutput(std::string path);
+    void write(std::string code);
+    void closeOutput();
 private:
     const char * getExpressionNodeOperator(ExpressionNode *);
+    std::ofstream file;
 };
 
 #endif	/* GENERATOR_H */

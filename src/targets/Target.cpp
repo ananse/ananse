@@ -24,5 +24,6 @@ void Target::addSource(std::string source)
 {
     Parser * parser = new Parser(generator, source);
     parser->parse();
+    delete parser;
 }
 

@@ -7,12 +7,15 @@
 Parser::Parser(Generator * generator, std::string source)
 {
     this->generator = generator;
-    setSource(source);
+    symbolTable = new SymbolTable();
+    setSource(source);    
+    generator->openOutput("out.cpp");
 }
 
 Parser::~Parser()
 {
-    
+    generator->closeOutput();
+    delete symbolTable;
 }
 
 void Parser::out(std::string type, std::string message)
@@ -57,9 +60,8 @@ Symbol * Parser::lookupSymbol(std::string identifier)
 void Parser::setSource(std::string source)
 {
     try{
-        lexer = new Lexer(source);
-        symbolTable = new SymbolTable();
-        symbolTable->addType("number", "primitive");
+        lexer = new Lexer(source);        
+        symbolTable->addType("number", "primitive");        
     }
     catch(LexerException * e)
     {
@@ -143,9 +145,9 @@ void Parser::parseDeclaration()
             }
             
             currentSymbol = insertSymbol(identifier, datatype);
-            std::cout<<generator->emitDeclaration(identifier, datatype);
+            generator->emitDeclaration(identifier, datatype);
             parseAssignment();
-            std::cout<<generator->emitEndOfStatement();                        
+            generator->emitEndOfStatement();                        
         }
         while(lookahead == COMMA);
     }
@@ -156,21 +158,21 @@ void Parser::parseAssignment()
     if(lookahead == EQUALS)
     {
         getToken();
-        std::cout<<generator->emitAssignment();
+        generator->emitAssignment();
         ExpressionNode * expression = parseExpression();
         
         if(isNumeric(expression->getDataType()) && isNumeric(currentSymbol->getDataType()))
         {
-            std::cout<<generator->emitExpression(expression);
+            generator->emitExpression(expression);
         }
         else if(expression->getDataType() == currentSymbol->getDataType())
         {
-            std::cout<<generator->emitExpression(expression);
+            generator->emitExpression(expression);
         }        
         else if(currentSymbol->getDataType() == "")
         {
             currentSymbol->setDataType(expression->getDataType());
-            std::cout<<generator->emitExpression(expression);
+            generator->emitExpression(expression);
         }
         else
         {
@@ -196,10 +198,10 @@ void Parser::parseIdentifierStatements()
         switch(lookahead)
         {
             case EQUALS:
-                std::cout<<identifier;
+                generator->write(identifier);
                 parseAssignment();
-                std::cout<<generator->emitEndOfStatement();
-                break;
+                generator->emitEndOfStatement();
+            break;
         }
     }
 }

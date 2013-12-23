@@ -16,7 +16,7 @@ class CppGenerator : public Generator
 public:
     CppGenerator();
     CppGenerator(const CppGenerator& orig);
-    virtual std::string emitDeclaration(std::string identifier, std::string datatype);
+    virtual void emitDeclaration(std::string identifier, std::string datatype);
     virtual ~CppGenerator();
 private:
 

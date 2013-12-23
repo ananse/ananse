@@ -6,6 +6,7 @@
  */
 
 #include "CppGenerator.h"
+#include <iostream>
 
 CppGenerator::CppGenerator() 
 {
@@ -22,13 +23,13 @@ CppGenerator::~CppGenerator()
     
 }
 
-std::string CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
+void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
 {
     std::string localType;
-    //if(datatype == "number")
-    //{
+    if(datatype == "number" || datatype == "")
+    {
         localType = "int";
-    //}
-    return localType + " " + identifier;
+    }
+    write(localType + " " + identifier);
 }
 
