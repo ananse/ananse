@@ -8,11 +8,14 @@
 #include "Generator.h"
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 
 Generator::Generator() {
+    
 }
 
 Generator::~Generator() {
+    if(file.is_open()) file.close();    
 }
 
 const char * Generator::getExpressionNodeOperator(ExpressionNode* node)
@@ -25,6 +28,14 @@ const char * Generator::getExpressionNodeOperator(ExpressionNode* node)
         case NODE_DIVIDE: return " / ";
     }
 }
+
+void Generator::setAsMainModule(bool main)
+{
+    isMainModule = main;
+}
+
+void Generator::emitModuleHeader(){}
+void Generator::emitModuleFooter(){}
 
 void Generator::emitExpression(ExpressionNode * expressionNode)
 {
@@ -60,12 +71,6 @@ void Generator::emitExpression(ExpressionNode * expressionNode)
             write(getExpressionNodeOperator(expressionNode));
             emitExpression(expressionNode->getRight());
             write(")");
-            /*expression = "(" + (
-                emitExpression(expressionNode->getLeft()) + 
-                (std::string)getExpressionNodeOperator(expressionNode) +  
-                emitExpression(expressionNode->getRight()) +
-                ")"
-            );*/
             break;
     }
 }
@@ -80,20 +85,27 @@ void Generator::emitEndOfStatement()
     write(";\n");
 }
 
-void Generator::openOutput(std::string path)
+std::string Generator::openOutput(std::string path)
 {
-    std::cout<<"Opening ..."<<std::endl;;
-    file.open(path.c_str(), std::fstream::out);
+	// Get the filename without the extension
+	std::string outputFile = getOutputFile(path);
+    file.open(outputFile.c_str());
+    setOutput(&file);
+    return outputFile;
 }
 
 void Generator::closeOutput()
 {
-    std::cout<<"closing ..."<<std::endl;;
-    file.close();
+	file.close();
+}
+
+void Generator::setOutput(std::ostream * output)
+{
+    this->output = output;
 }
 
 void Generator::write(std::string code)
 {
-    file<<code;
+    (*output)<<code;
 }
 

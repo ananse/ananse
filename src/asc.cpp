@@ -42,7 +42,7 @@ int main(int argc, char ** argv)
     
     while(optind < argc)
     {
-        target->addSource(argv[optind++]);
+        target->addSource(argv[optind++], true);
     }
     
     target->build();

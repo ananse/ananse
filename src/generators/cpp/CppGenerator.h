@@ -9,17 +9,38 @@
 #define	CPPGENERATOR_H
 
 #include <string>
+#include <sstream>
 #include "../Generator.h"
 
+typedef struct{
+    int line;
+    std::string identifier;
+    std::string datatype;
+    std::string expression;
+} CppVariableDeclaration;
+
+/**
+ *
+ */
 class CppGenerator : public Generator
 {
 public:
     CppGenerator();
     CppGenerator(const CppGenerator& orig);
-    virtual void emitDeclaration(std::string identifier, std::string datatype);
+    virtual void emitDeclaration(std::string identifier, std::string datatype);    
+    virtual void emitModuleHeader();
+    virtual void emitModuleFooter();
+    virtual void emitEndOfStatement();
+    virtual std::string openOutput(std::string source);
+    virtual void closeOutput();
     virtual ~CppGenerator();
+protected:
+    virtual std::string getOutputFile(std::string output);
 private:
-
+    std::string outputFile;
+    std::stringstream includes;
+    std::stringstream moduleGlobals;
+    std::stringstream body;
 };
 
 #endif	/* CPPGENERATOR_H */

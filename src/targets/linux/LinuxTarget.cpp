@@ -7,10 +7,11 @@
 
 #include "LinuxTarget.h"
 #include "generators/cpp/CppGenerator.h"
+#include <cstdlib>
 
 LinuxTarget::LinuxTarget()
 {
-    generator = new CppGenerator();
+    
 }
 
 LinuxTarget::LinuxTarget(const LinuxTarget& orig)
@@ -19,9 +20,15 @@ LinuxTarget::LinuxTarget(const LinuxTarget& orig)
 
 LinuxTarget::~LinuxTarget()
 {
+    
 }
 
 void LinuxTarget::build()
 {
-    
+    system(("g++ " + outputSources[0]).c_str());
+}
+
+Generator * LinuxTarget::getGenerator()
+{
+    return new CppGenerator();
 }

@@ -12,6 +12,9 @@
 #include <string>
 #include <fstream>
 
+/**
+ *
+ */
 class Generator {
 public:
     Generator();
@@ -20,13 +23,23 @@ public:
     virtual void emitDeclaration(std::string identifier, std::string datatype) = 0;
     virtual void emitAssignment();
     virtual void emitEndOfStatement();
+    virtual void emitModuleHeader();
+    virtual void emitModuleFooter();
     virtual ~Generator();
-    void openOutput(std::string path);
+
+    virtual std::string openOutput(std::string path);
+    virtual void closeOutput();
+
+    void setAsMainModule(bool main);
+    void setOutput(std::ostream * output);
     void write(std::string code);
-    void closeOutput();
+protected:
+    virtual std::string getOutputFile(std::string input) = 0;
+    bool isMainModule;
+    std::ofstream file;
 private:
     const char * getExpressionNodeOperator(ExpressionNode *);
-    std::ofstream file;
+    std::ostream * output;
 };
 
 #endif	/* GENERATOR_H */

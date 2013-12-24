@@ -15,7 +15,9 @@ class LinuxTarget : public Target
 public:
     LinuxTarget();
     LinuxTarget(const LinuxTarget& orig);
+    void addSource(std::string source);
     virtual ~LinuxTarget();
+    virtual Generator * getGenerator();
     virtual void build();
 private:
 

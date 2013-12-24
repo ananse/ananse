@@ -9,12 +9,10 @@ Parser::Parser(Generator * generator, std::string source)
     this->generator = generator;
     symbolTable = new SymbolTable();
     setSource(source);    
-    generator->openOutput("out.cpp");
 }
 
 Parser::~Parser()
 {
-    generator->closeOutput();
     delete symbolTable;
 }
 

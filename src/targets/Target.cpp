@@ -20,10 +20,18 @@ Target::~Target()
 {
 }
 
-void Target::addSource(std::string source)
+void Target::addSource(std::string source, bool main)
 {
+    Generator * generator = getGenerator();
+    inputSources.push_back(source);
+    generator->setAsMainModule(main);
+    outputSources.push_back(generator->openOutput(source));
+    generator->emitModuleHeader();
     Parser * parser = new Parser(generator, source);
     parser->parse();
+    generator->emitModuleFooter();
+    generator->closeOutput();
     delete parser;
+    delete generator;
 }
 
