@@ -8,3 +8,5 @@ dim d as number = 5
 dim longvar as number = 5, jim = 7
 dim e%
 
+print 2 + 3
+

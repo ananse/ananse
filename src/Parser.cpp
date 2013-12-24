@@ -80,6 +80,7 @@ void Parser::parse()
     {
         parseDeclaration();
         parseIdentifierStatements();
+        parsePrint();
         
         // Detect newlines or EOFs
         if(lookahead != NEW_LINE && lookahead != END)
@@ -202,6 +203,19 @@ void Parser::parseIdentifierStatements()
             break;
         }
     }
+}
+
+void Parser::parsePrint()
+{
+	if(lookahead == PRINT)
+	{
+		ExpressionNode * expression;
+		getToken();
+		expression = parseExpression();
+		generator->emitPrint();
+		generator->emitExpression(expression);
+		generator->emitEndOfStatement();
+	}
 }
 
 ExpressionNode * Parser::parseExpression()

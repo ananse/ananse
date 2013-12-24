@@ -10,6 +10,7 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
 #include "../Generator.h"
 
 typedef struct{
@@ -31,6 +32,7 @@ public:
     virtual void emitModuleHeader();
     virtual void emitModuleFooter();
     virtual void emitEndOfStatement();
+    virtual void emitPrint();
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();
     virtual ~CppGenerator();
@@ -38,6 +40,7 @@ protected:
     virtual std::string getOutputFile(std::string output);
 private:
     std::string outputFile;
+    std::vector<std::string> headers;
     std::stringstream includes;
     std::stringstream moduleGlobals;
     std::stringstream body;

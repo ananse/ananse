@@ -122,8 +122,10 @@ Token Lexer::getNextToken()
         
         identifierValue = identString;
         tokenString = identString;
+
         if (identString == "dim") return DIM;
         else if (identString == "as")  return AS;
+        else if (identString == "print") return PRINT;
         else return IDENTIFIER;
     }
     

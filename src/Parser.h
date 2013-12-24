@@ -29,6 +29,7 @@ private:
     void parseDeclaration();
     void parseAssignment();
     void parseIdentifierStatements();
+    void parsePrint();
     
     // Expressions parsing
     ExpressionNode * parseTerm();

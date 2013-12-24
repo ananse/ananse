@@ -7,6 +7,7 @@
 
 #include "CppGenerator.h"
 #include <iostream>
+#include <algorithm>
 
 CppGenerator::CppGenerator() 
 {
@@ -38,6 +39,27 @@ void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
         localType = "int";
     }
     write(localType + " " + identifier);
+}
+
+void CppGenerator::emitPrint()
+{
+	if(headers.size() == 0)
+	{
+		setOutput(&includes);
+		write("#include <iostream>\n");
+		setOutput(&body);
+	}
+	else
+	{
+		std::vector<std::string>::iterator it =std::find(headers.begin(), headers.end(), "iostream");
+		if(*it != "iostream")
+		{
+			setOutput(&includes);
+			write("#include <iostream>\n");
+			setOutput(&body);
+		}
+	}
+	write("std::cout<<");
 }
 
 void CppGenerator::emitModuleHeader()
@@ -84,12 +106,8 @@ void CppGenerator::closeOutput()
 	std::copy(std::istreambuf_iterator<char>(body),
 	     std::istreambuf_iterator<char>(),
 	     std::ostreambuf_iterator<char>(file)
-	 );
+	);
 
-
-	//file<<includes.rdbuf();
-	//file<<moduleGlobals.rdbuf();
-	//file<<body.rdbuf();
 	file.close();
 }
 

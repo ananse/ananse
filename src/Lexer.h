@@ -32,7 +32,8 @@ typedef enum {
     EXCLAMATION,
     HASH,
     DOLLAR,
-    UNKNOWN
+    UNKNOWN,
+    PRINT
 } Token;
 
 class Lexer

@@ -25,6 +25,7 @@ public:
     virtual void emitEndOfStatement();
     virtual void emitModuleHeader();
     virtual void emitModuleFooter();
+    virtual void emitPrint() = 0;
     virtual ~Generator();
 
     virtual std::string openOutput(std::string path);
