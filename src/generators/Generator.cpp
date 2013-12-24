@@ -72,6 +72,12 @@ void Generator::emitExpression(ExpressionNode * expressionNode)
             emitExpression(expressionNode->getRight());
             write(")");
             break;
+
+        case NODE_STRING:
+        	write("\"");
+        	write(expressionNode->getStringValue());
+        	write("\"");
+        	break;
     }
 }
 

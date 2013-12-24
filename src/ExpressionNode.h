@@ -17,7 +17,8 @@ typedef enum{
     NODE_DIVIDE,
     NODE_INTEGER,
     NODE_FLOAT,
-    NODE_IDENTIFIER
+    NODE_IDENTIFIER,
+    NODE_STRING
 } NodeType;
 
 class ExpressionNode {
@@ -31,6 +32,7 @@ public:
     void setRight(ExpressionNode*);
     void setDataType(std::string dataType);
     void setIdentifierValue(std::string identifier);
+    void setStringValue(std::string string);
     
     ExpressionNode * getLeft();
     ExpressionNode * getRight();
@@ -42,6 +44,7 @@ public:
     long getIntegerValue();
     double getFloatValue();
     std::string getIdentifierValue();
+    std::string getStringValue();
     
 private:    
     ExpressionNode * left;
@@ -49,6 +52,7 @@ private:
     NodeType type;
     std::string dataType;
     std::string identifierValue;
+    std::string stringValue;
     long integerValue;
     double floatValue;
 };

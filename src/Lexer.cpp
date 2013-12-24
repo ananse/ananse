@@ -74,7 +74,27 @@ Token Lexer::getNextToken()
     if(currentChar == '!')  { getChar(); return EXCLAMATION; }
     if(currentChar == '#')  { getChar(); return HASH; }
     if(currentChar == '$')  { getChar(); return DOLLAR; }
-    if(currentChar == EOF) { getChar(); return END; }
+    if(currentChar == EOF)  { getChar(); return END; }
+
+    // Match string literals
+    if(currentChar == '\'' || currentChar == '"')
+    {
+    	char stringMarker = currentChar;
+    	stringValue = "";
+
+    	while(true)
+    	{
+    		getChar();
+    		if(currentChar == stringMarker)
+    		{
+    			getChar();
+    			if(currentChar != stringMarker) break;
+    		}
+    		stringValue += currentChar;
+    	}
+
+    	return STRING;
+    }
 
     // Match numbers
     if(isdigit(currentChar))
@@ -123,10 +143,10 @@ Token Lexer::getNextToken()
         identifierValue = identString;
         tokenString = identString;
 
-        if (identString == "dim") return DIM;
-        else if (identString == "as")  return AS;
-        else if (identString == "print") return PRINT;
-        else return IDENTIFIER;
+        if (identString == "dim") 			return DIM;
+        else if (identString == "as")  	 	return AS;
+        else if (identString == "print") 	return PRINT;
+        else 								return IDENTIFIER;
     }
     
     // Return an unknown token for whatever else is there
@@ -152,6 +172,11 @@ std::string Lexer::getIdentifierValue()
 std::string Lexer::getTokenString()
 {
     return tokenString;
+}
+
+std::string Lexer::getStringValue()
+{
+	return stringValue;
 }
 
 std::string Lexer::describeToken(Token token)

@@ -323,6 +323,13 @@ ExpressionNode * Parser::parseFactor()
             match(BRACKET_CLOSE);
             getToken();
             break;
+
+        case STRING:
+        	factor = new ExpressionNode();
+        	factor->setStringValue(lexer->getStringValue());
+        	factor->setDataType("string");
+        	getToken();
+        	break;
     }
     return factor;
 }

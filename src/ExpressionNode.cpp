@@ -104,3 +104,14 @@ std::string ExpressionNode::getIdentifierValue()
 {
     return identifierValue;
 }
+
+void ExpressionNode::setStringValue(std::string stringValue)
+{
+	this->stringValue = stringValue;
+	type = NODE_STRING;
+}
+
+std::string ExpressionNode::getStringValue()
+{
+	return stringValue;
+}
