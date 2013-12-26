@@ -4,9 +4,16 @@
 #include "generators/js/JsGenerator.h"
 #include "LexerException.h"
 
+Parser::OperatorLevel Parser::operators[] = {
+	{{PLUS, MINUS}, {NODE_ADD, NODE_SUBTRACT}, 2},
+	{{MULTIPLY, DIVIDE}, {NODE_MULTIPLY, NODE_DIVIDE}, 2}
+};
+int Parser::numOperators;
+
 Parser::Parser(Generator * generator, std::string source)
 {
     this->generator = generator;
+    Parser::numOperators = sizeof(operators) / sizeof(OperatorLevel);
     symbolTable = new SymbolTable();
     setSource(source);    
 }
@@ -81,6 +88,7 @@ void Parser::parse()
         parseDeclaration();
         parseIdentifierStatements();
         parsePrint();
+        parseIf();
         
         // Detect newlines or EOFs
         if(lookahead != NEW_LINE && lookahead != END)
@@ -218,117 +226,121 @@ void Parser::parsePrint()
 	}
 }
 
+void Parser::parseIf()
+{
+	if(lookahead == IF)
+	{
+
+	}
+}
+
 ExpressionNode * Parser::parseExpression()
 {
-    ExpressionNode *expression = parseTerm();
-    ExpressionNode *left, *right;
+	return parseBinaryOperators(0, this);
+}
+
+ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
+{
+	ExpressionNode *expression;
+	if(precedence < numOperators - 1)
+	{
+		expression = parseBinaryOperators(precedence+1, instance);
+	}
+	else
+	{
+		expression = parseUnaryOperators(instance);
+	}
 
     if (expression == NULL) return NULL;
 
+    ExpressionNode *left, *right;
+	bool continueLooping;
+
     do
     {
-        switch (lookahead)
-        {
-            case PLUS:
-                left = expression;
-                expression = new ExpressionNode();
-                expression->setNodeType(NODE_ADD);
-                getToken();
-                right = parseTerm();
-                expression->setRight(right);
-                expression->setLeft(left);
-                expression->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));
-                break;
+    	continueLooping = false;
 
-            case MINUS:
+    	for(int i = 0; i < operators[precedence].numOperators; i++)
+    	{
+    		if(instance->lookahead == operators[precedence].tokens[i])
+    		{
                 left = expression;
                 expression = new ExpressionNode();
-                expression->setNodeType(NODE_SUBTRACT);
-                getToken();
-                right = parseTerm();
+                expression->setNodeType(operators[precedence].nodes[i]);
+                instance->getToken();
+
+            	if(precedence < numOperators - 1)
+            	{
+            		right = parseBinaryOperators(precedence+1, instance);
+            	}
+            	else
+            	{
+            		right = parseUnaryOperators(instance);
+            	}
+
                 expression->setRight(right);
                 expression->setLeft(left);
-                expression->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));
+
+                expression->setDataType(
+					instance->resolveNumericTypes(
+						left->getDataType(),
+						right->getDataType()
+					)
+				);
                 break;
-        }
-    } while (lookahead == PLUS || lookahead == MINUS);
+    		}
+    	}
+
+    	for(int i = 0; i < operators[precedence].numOperators; i++)
+    	{
+    		if(instance->lookahead == operators[precedence].tokens[i])
+    		{
+    			continueLooping = true;
+    			break;
+    		}
+    	}
+    } while (continueLooping);
 
     return expression;
 }
 
-ExpressionNode * Parser::parseTerm()
-{
-    ExpressionNode *term = parseFactor();
-    ExpressionNode *left, *right;
-
-    do
-    {
-        switch (lookahead)
-        {
-            case MULTIPLY:
-                left = term;
-                term = new ExpressionNode();
-                term->setNodeType(NODE_MULTIPLY);
-                getToken();
-                right = parseFactor();
-                term->setRight(right);
-                term->setLeft(left);
-                term->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));
-                break;
-
-            case DIVIDE:
-                left = term;
-                term = new ExpressionNode();
-                term->setNodeType(NODE_DIVIDE);
-                getToken();
-                right = parseFactor();
-                term->setRight(right);
-                term->setLeft(left);
-                term->setDataType(resolveNumericTypes(left->getDataType(), right->getDataType()));                
-                break;
-        }
-    } while (lookahead == MULTIPLY || lookahead == DIVIDE);
-
-    return term;
-}
-
-ExpressionNode * Parser::parseFactor()
+ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
 {
     ExpressionNode * factor = NULL;
-    switch (lookahead)
+    switch (instance->lookahead)
     {
         case INTEGER:
             factor = new ExpressionNode();
-            factor->setIntegerValue(lexer->getIntegerValue());
+            factor->setIntegerValue(instance->lexer->getIntegerValue());
             factor->setDataType("integer");
-            getToken();
+            instance->getToken();
             break;
             
         case SINGLE:
             factor = new ExpressionNode();
-            factor->setFloatValue(lexer->getSingleValue());
+            factor->setFloatValue(instance->lexer->getSingleValue());
             factor->setDataType("single");
-            getToken();
+            instance->getToken();
             break;
             
         case IDENTIFIER:
             factor = new ExpressionNode();
-            factor->setIdentifierValue(lexer->getIdentifierValue());
-            factor->setDataType(lookupSymbol(lexer->getIdentifierValue())->getDataType());
-            getToken();
+            factor->setIdentifierValue(instance->lexer->getIdentifierValue());
+            factor->setDataType(instance->lookupSymbol(instance->lexer->getIdentifierValue())->getDataType());
+            instance->getToken();
             break;
 
         case BRACKET_OPEN:
-            factor = parseExpression();
-            match(BRACKET_CLOSE);
-            getToken();
+            factor = instance->parseExpression();
+            instance->match(BRACKET_CLOSE);
+            instance->getToken();
             break;
 
         case STRING:
         	factor = new ExpressionNode();
-        	factor->setStringValue(lexer->getStringValue());
+        	factor->setStringValue(instance->lexer->getStringValue());
         	factor->setDataType("string");
-        	getToken();
+        	instance->getToken();
         	break;
     }
     return factor;

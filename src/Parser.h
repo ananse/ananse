@@ -10,10 +10,19 @@
 class Parser
 {
 private:
+
+	typedef struct{
+		Token tokens[4];
+		NodeType nodes[4];
+		int numOperators;
+	} OperatorLevel;
+
     Lexer * lexer;
     SymbolTable * symbolTable;
     Token lookahead;
     Generator * generator;
+    static OperatorLevel operators[];
+    static int numOperators;
     
     bool match(Token token);
     void getToken();
@@ -30,15 +39,12 @@ private:
     void parseAssignment();
     void parseIdentifierStatements();
     void parsePrint();
+    void parseIf();
     
     // Expressions parsing
-    ExpressionNode * parseTerm();
-    ExpressionNode * parseFactor();
-    ExpressionNode * parseAddition();
-    ExpressionNode * parseSubtraction();
-    ExpressionNode * parseMultiplication();
-    ExpressionNode * parseDivision();
     ExpressionNode * parseExpression();
+    static ExpressionNode * parseBinaryOperators(int precedence, Parser * instance);
+    static ExpressionNode * parseUnaryOperators(Parser * instance);
     
     static bool isNumeric(std::string datatype);
     std::string resolveNumericTypes(std::string left, std::string right);

@@ -146,6 +146,8 @@ Token Lexer::getNextToken()
         if (identString == "dim") 			return DIM;
         else if (identString == "as")  	 	return AS;
         else if (identString == "print") 	return PRINT;
+        else if (identString == "if") 		return IF;
+        else if (identString == "then")		return THEN;
         else 								return IDENTIFIER;
     }
     
