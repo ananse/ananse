@@ -2,6 +2,7 @@
 #define PARSER_H_
 
 #include <string>
+#include <vector>
 #include "Lexer.h"
 #include "ExpressionNode.h"
 #include "generators/Generator.h"
@@ -21,8 +22,10 @@ private:
     SymbolTable * symbolTable;
     Token lookahead;
     Generator * generator;
+
     static OperatorLevel operators[];
     static int numOperators;
+    static std::vector<Token> ifTerminators;
     
     bool match(Token token);
     void getToken();
@@ -34,7 +37,7 @@ private:
     Symbol * insertSymbol(std::string identifier, std::string type);
     Symbol * currentSymbol;
     
-    // Declarations and assignments
+    void parseStatement();
     void parseDeclaration();
     void parseAssignment();
     void parseIdentifierStatements();
@@ -47,12 +50,13 @@ private:
     static ExpressionNode * parseUnaryOperators(Parser * instance);
     
     static bool isNumeric(std::string datatype);
-    std::string resolveNumericTypes(std::string left, std::string right);
+    std::string resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType);
     void setSource(std::string source);
     
 public:
     Parser(Generator * generator, std::string source);
     virtual ~Parser();
+    void parse(std::vector<Token> terminators);
     void parse();
 };
 

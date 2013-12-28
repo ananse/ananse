@@ -16,9 +16,9 @@ int main(int argc, char ** argv)
     Target * target;
     static struct option long_options[] =
     {
-      {"target",  required_argument, 0, 't'},
-      {"main",  required_argument, 0, 'm'},
-      {0, 0, 0, 0}
+		{"target",  required_argument, 0, 't'},
+		{"main",  required_argument, 0, 'm'},
+		{0, 0, 0, 0}
     };
     
     while(true)

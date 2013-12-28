@@ -5,15 +5,22 @@
 #include "LexerException.h"
 
 Parser::OperatorLevel Parser::operators[] = {
+	{{EQUALS, NOT_EQUALS}, {NODE_EQUALS, NODE_NOT_EQUALS}, 2},
 	{{PLUS, MINUS}, {NODE_ADD, NODE_SUBTRACT}, 2},
 	{{MULTIPLY, DIVIDE}, {NODE_MULTIPLY, NODE_DIVIDE}, 2}
 };
 int Parser::numOperators;
+std::vector<Token> Parser::ifTerminators;
 
 Parser::Parser(Generator * generator, std::string source)
 {
     this->generator = generator;
     Parser::numOperators = sizeof(operators) / sizeof(OperatorLevel);
+
+    ifTerminators.push_back(END);
+    ifTerminators.push_back(ELSE_IF);
+    ifTerminators.push_back(ELSE);
+
     symbolTable = new SymbolTable();
     setSource(source);    
 }
@@ -81,26 +88,43 @@ void Parser::getToken()
     lookahead = lexer->getNextToken();
 }
 
+void Parser::parseStatement()
+{
+    parseIdentifierStatements();
+    parsePrint();
+}
+
 void Parser::parse()
+{
+	std::vector<Token> terminators;
+	parse(terminators);
+}
+
+void Parser::parse(std::vector<Token> terminators)
 {
     do
     {
+    	parseStatement();
         parseDeclaration();
-        parseIdentifierStatements();
-        parsePrint();
         parseIf();
         
+        // Detect the end of parsing of this block
+        for(std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
+        {
+        	if(lookahead == *i) return;
+        }
+
         // Detect newlines or EOFs
-        if(lookahead != NEW_LINE && lookahead != END)
+        if(lookahead != NEW_LINE && lookahead != END_OF_FILE)
         {
             error("Unexpected token '" + lexer->getTokenString() + "'");
         }
-        
+
         // Get the next token
         getToken();
         
         // Detect EOFs
-        if(lookahead == END) break;
+        if(lookahead == END_OF_FILE) break;
         
     }while(true);
 }
@@ -230,7 +254,38 @@ void Parser::parseIf()
 {
 	if(lookahead == IF)
 	{
+		getToken();
+		ExpressionNode * condition = parseExpression();
 
+		generator->emitIf(condition);
+		match(THEN);
+		getToken();
+		if(lookahead == NEW_LINE)
+		{
+			generator->emitBeginCodeBlock();
+			parse(ifTerminators);
+			if(lookahead == END)
+			{
+				getToken();
+				if(lookahead == IF)
+				{
+					generator->emitEndCodeBlock();
+					getToken();
+				}
+				else if(lookahead == NEW_LINE)
+				{
+					generator->emitEndProgramme();
+				}
+			}
+			else
+			{
+				error("Expecting END IF or ELSEIF or ELSE");
+			}
+		}
+		else
+		{
+			parseStatement();
+		}
 	}
 }
 
@@ -282,9 +337,10 @@ ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
                 expression->setLeft(left);
 
                 expression->setDataType(
-					instance->resolveNumericTypes(
+					instance->resolveTypes(
 						left->getDataType(),
-						right->getDataType()
+						right->getDataType(),
+						operators[precedence].nodes[i]
 					)
 				);
                 break;
@@ -359,15 +415,31 @@ bool Parser::isNumeric(std::string datatype)
     }
 }
 
-std::string Parser::resolveNumericTypes(std::string left, std::string right)
+std::string Parser::resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType)
 {
-    if(left == "integer")
-    {
-        if(right == "integer") return "integer";
-        if(right == "single") return "single";
-    }
-    else if(left == "single")
-    {
-        if(right == "single" || right == "integer") return "single";
-    }    
+	std::string datatype;
+
+	switch(operatorNodeType)
+	{
+	case NODE_ADD:
+	case NODE_SUBTRACT:
+	case NODE_MULTIPLY:
+	case NODE_DIVIDE:
+		if(leftType == "integer")
+		{
+			if(rightType == "integer") datatype = "integer";
+			if(rightType == "single") datatype = "single";
+		}
+		else if(leftType == "single")
+		{
+			if(rightType == "single" || rightType == "integer") datatype = "single";
+		}
+		break;
+
+	case NODE_EQUALS:
+	case NODE_NOT_EQUALS:
+		datatype = "boolean";
+	}
+
+	return datatype;
 }

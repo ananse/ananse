@@ -74,7 +74,22 @@ Token Lexer::getNextToken()
     if(currentChar == '!')  { getChar(); return EXCLAMATION; }
     if(currentChar == '#')  { getChar(); return HASH; }
     if(currentChar == '$')  { getChar(); return DOLLAR; }
-    if(currentChar == EOF)  { getChar(); return END; }
+    if(currentChar == EOF)  { getChar(); return END_OF_FILE; }
+
+    // Match not equals and less than
+    if(currentChar == '<')
+    {
+    	getChar();
+    	if(currentChar == '>')
+    	{
+    		getChar();
+    		return NOT_EQUALS;
+    	}
+    	else
+    	{
+    		return LESS_THAN;
+    	}
+    }
 
     // Match string literals
     if(currentChar == '\'' || currentChar == '"')
@@ -148,6 +163,7 @@ Token Lexer::getNextToken()
         else if (identString == "print") 	return PRINT;
         else if (identString == "if") 		return IF;
         else if (identString == "then")		return THEN;
+        else if (identString == "end")		return END;
         else 								return IDENTIFIER;
     }
     
@@ -190,7 +206,7 @@ std::string Lexer::describeToken(Token token)
             break;
             
         case END:
-            return "end of file";
+            return "end";
             break;
             
         case INTEGER:
@@ -252,6 +268,10 @@ std::string Lexer::describeToken(Token token)
         case UNKNOWN:
             return "unknown";
             break;
+
+        default:
+        	return "unknown token";
+			break;
     }    
 }
 

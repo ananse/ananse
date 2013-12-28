@@ -26,18 +26,22 @@ public:
     virtual void emitModuleHeader();
     virtual void emitModuleFooter();
     virtual void emitPrint() = 0;
+    virtual void emitIf(ExpressionNode * node) = 0;
+    virtual void emitBeginCodeBlock() = 0;
+	virtual void emitEndCodeBlock() = 0;
+	virtual void emitEndProgramme() = 0;
     virtual ~Generator();
-
     virtual std::string openOutput(std::string path);
     virtual void closeOutput();
-
     void setAsMainModule(bool main);
     void setOutput(std::ostream * output);
     void write(std::string code);
+
 protected:
     virtual std::string getOutputFile(std::string input) = 0;
     bool isMainModule;
     std::ofstream file;
+
 private:
     const char * getExpressionNodeOperator(ExpressionNode *);
     std::ostream * output;

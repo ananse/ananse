@@ -11,27 +11,57 @@
 
 CppGenerator::CppGenerator() 
 {
-    
+    indent = 0;
 }
 
-CppGenerator::CppGenerator(const CppGenerator& orig) 
+std::string CppGenerator::indentation()
 {
-    
+	std::string ret = "";
+	for(int i = 0; i < indent; i++)
+	{
+		ret += "    ";
+	}
+	return ret;
 }
 
-CppGenerator::~CppGenerator() 
+void CppGenerator::addHeader(std::string header)
 {
-    
+	bool insert = false;
+
+	if(headers.size() == 0)
+	{
+		insert = true;
+	}
+	else
+	{
+		std::vector<std::string>::iterator it =std::find(headers.begin(), headers.end(), header);
+		if(*it != header)
+		{
+			insert = true;
+		}
+	}
+
+	if(insert)
+	{
+		int tempIndent = indent;
+		indent = 0;
+		setOutput(&includes);
+		write("#include <" + header + ">\n");
+		setOutput(&body);
+		indent = tempIndent;
+		headers.push_back(header);
+	}
 }
 
 void CppGenerator::emitEndOfStatement()
 {
-    write(";\n");
+    write(";\n" + indentation());
 	setOutput(&body);
 }
 
 void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
 {
+	indent = 0;
 	setOutput(&moduleGlobals);
     std::string localType;
     if(datatype == "number" || datatype == "")
@@ -43,22 +73,7 @@ void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
 
 void CppGenerator::emitPrint()
 {
-	if(headers.size() == 0)
-	{
-		setOutput(&includes);
-		write("#include <iostream>\n");
-		setOutput(&body);
-	}
-	else
-	{
-		std::vector<std::string>::iterator it =std::find(headers.begin(), headers.end(), "iostream");
-		if(*it != "iostream")
-		{
-			setOutput(&includes);
-			write("#include <iostream>\n");
-			setOutput(&body);
-		}
-	}
+	addHeader("iostream");
 	write("std::cout<<");
 }
 
@@ -70,11 +85,37 @@ void CppGenerator::emitModuleHeader()
     }
     write(moduleFunction);
     write("\n{\n    ");
+    indent++;
 }
 
 void CppGenerator::emitModuleFooter()
 {
+	indent--;
     write("\n}");
+}
+
+void CppGenerator::emitIf(ExpressionNode * condition)
+{
+	write("if(");
+	emitExpression(condition);
+	write(") ");
+}
+
+void CppGenerator::emitBeginCodeBlock()
+{
+	write("{\n");
+	indent++;
+}
+
+void CppGenerator::emitEndCodeBlock()
+{
+	indent--;
+	write ("}\n");
+}
+
+void CppGenerator::emitEndProgramme()
+{
+	write("exit(0)");
 }
 
 std::string CppGenerator::openOutput(std::string source)

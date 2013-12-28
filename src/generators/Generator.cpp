@@ -26,6 +26,8 @@ const char * Generator::getExpressionNodeOperator(ExpressionNode* node)
         case NODE_SUBTRACT: return " - ";
         case NODE_MULTIPLY: return " * ";
         case NODE_DIVIDE: return " / ";
+        case NODE_EQUALS: return " == ";
+        case NODE_NOT_EQUALS: return " != ";
     }
 }
 
@@ -40,7 +42,7 @@ void Generator::emitModuleFooter(){}
 void Generator::emitExpression(ExpressionNode * expressionNode)
 {
     std::string expression;
-    char buffer[1024];
+    char buffer[256];
     long integerNode;
     double floatNode;
     
@@ -66,6 +68,8 @@ void Generator::emitExpression(ExpressionNode * expressionNode)
         case NODE_SUBTRACT:
         case NODE_DIVIDE:
         case NODE_MULTIPLY:
+        case NODE_EQUALS:
+        case NODE_NOT_EQUALS:
             write("(");
             emitExpression(expressionNode->getLeft());
             write(getExpressionNodeOperator(expressionNode));

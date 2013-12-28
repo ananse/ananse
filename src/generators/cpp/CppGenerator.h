@@ -27,17 +27,27 @@ class CppGenerator : public Generator
 {
 public:
     CppGenerator();
-    CppGenerator(const CppGenerator& orig);
+    //CppGenerator(const CppGenerator& orig);
+    //virtual ~CppGenerator();
+
     virtual void emitDeclaration(std::string identifier, std::string datatype);    
     virtual void emitModuleHeader();
     virtual void emitModuleFooter();
     virtual void emitEndOfStatement();
     virtual void emitPrint();
+    virtual void emitIf(ExpressionNode * condition);
+    virtual void emitBeginCodeBlock();
+	virtual void emitEndCodeBlock();
+	virtual void emitEndProgramme();
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();
-    virtual ~CppGenerator();
+
 protected:
     virtual std::string getOutputFile(std::string output);
+    void addHeader(std::string header);
+    int indent;
+    std::string indentation();
+
 private:
     std::string outputFile;
     std::vector<std::string> headers;

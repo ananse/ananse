@@ -14,6 +14,7 @@
 typedef enum {
     NEW_LINE,
     END,
+    END_OF_FILE,
     STRING,
     INTEGER,
     SINGLE,
@@ -22,6 +23,9 @@ typedef enum {
     MULTIPLY,
     DIVIDE,
     EQUALS,
+    NOT_EQUALS,
+    GREATER_THAN,
+    LESS_THAN,
     COMMA,
     IDENTIFIER,
     BRACKET_OPEN,
@@ -36,7 +40,9 @@ typedef enum {
     UNKNOWN,
     PRINT,
     IF,
-    THEN
+    THEN,
+    ELSE,
+    ELSE_IF
 } Token;
 
 class Lexer
