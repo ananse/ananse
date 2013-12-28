@@ -102,6 +102,11 @@ void CppGenerator::emitIf(ExpressionNode * condition)
 	emitExpression(condition);
 }
 
+void CppGenerator::emitElse()
+{
+	write("else");
+}
+
 void CppGenerator::emitBeginCodeBlock()
 {
 	write("\n" + indentation() + "{\n");

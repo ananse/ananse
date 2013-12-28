@@ -27,6 +27,7 @@ public:
     virtual void emitModuleFooter();
     virtual void emitPrint() = 0;
     virtual void emitIf(ExpressionNode * node) = 0;
+    virtual void emitElse() = 0;
     virtual void emitBeginCodeBlock() = 0;
 	virtual void emitEndCodeBlock() = 0;
 	virtual void emitEndProgramme() = 0;

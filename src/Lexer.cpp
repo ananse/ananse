@@ -163,6 +163,7 @@ Token Lexer::getNextToken()
         else if (identString == "print") 	return PRINT;
         else if (identString == "if") 		return IF;
         else if (identString == "then")		return THEN;
+        else if (identString == "else")		return ELSE;
         else if (identString == "end")		return END;
         else 								return IDENTIFIER;
     }

@@ -258,8 +258,12 @@ void Parser::parseIf()
 		ExpressionNode * condition = parseExpression();
 
 		generator->emitIf(condition);
-		match(THEN);
-		getToken();
+
+		if(lookahead == THEN)
+		{
+			getToken();
+		}
+
 		if(lookahead == NEW_LINE)
 		{
 			generator->emitBeginCodeBlock();
@@ -277,6 +281,10 @@ void Parser::parseIf()
 					generator->emitEndProgramme();
 				}
 			}
+			else if(lookahead == ELSE)
+			{
+
+			}
 			else
 			{
 				error("Expecting END IF or ELSEIF or ELSE");
@@ -285,6 +293,17 @@ void Parser::parseIf()
 		else
 		{
 			parseStatement();
+			std::cout<<lexer->describeToken(lookahead)<<std::endl;
+			while(lookahead == ELSE_IF)
+			{
+				getToken();
+			}
+			if(lookahead == ELSE)
+			{
+				generator->emitElse();
+				parseStatement();
+				generator->emitEndOfStatement();
+			}
 		}
 	}
 }

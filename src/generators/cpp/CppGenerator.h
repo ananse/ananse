@@ -35,7 +35,9 @@ public:
     virtual void emitModuleFooter();
     virtual void emitEndOfStatement();
     virtual void emitPrint();
+    virtual void emitElse();
     virtual void emitIf(ExpressionNode * condition);
+
     virtual void emitBeginCodeBlock();
 	virtual void emitEndCodeBlock();
 	virtual void emitEndProgramme();
