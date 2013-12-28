@@ -12,14 +12,18 @@
 CppGenerator::CppGenerator() 
 {
     indent = 0;
+    indenterEnabled = true;
 }
 
 std::string CppGenerator::indentation()
 {
 	std::string ret = "";
-	for(int i = 0; i < indent; i++)
+	if(indenterEnabled)
 	{
-		ret += "    ";
+		for(int i = 0; i < indent; i++)
+		{
+			ret += "    ";
+		}
 	}
 	return ret;
 }
@@ -43,12 +47,9 @@ void CppGenerator::addHeader(std::string header)
 
 	if(insert)
 	{
-		int tempIndent = indent;
-		indent = 0;
 		setOutput(&includes);
 		write("#include <" + header + ">\n");
 		setOutput(&body);
-		indent = tempIndent;
 		headers.push_back(header);
 	}
 }
@@ -57,11 +58,12 @@ void CppGenerator::emitEndOfStatement()
 {
     write(";\n" + indentation());
 	setOutput(&body);
+	indenterEnabled = true;
 }
 
 void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
 {
-	indent = 0;
+	indenterEnabled = false;
 	setOutput(&moduleGlobals);
     std::string localType;
     if(datatype == "number" || datatype == "")
@@ -96,21 +98,21 @@ void CppGenerator::emitModuleFooter()
 
 void CppGenerator::emitIf(ExpressionNode * condition)
 {
-	write("if(");
+	write("if ");
 	emitExpression(condition);
-	write(") ");
 }
 
 void CppGenerator::emitBeginCodeBlock()
 {
-	write("{\n");
+	write("\n" + indentation() + "{\n");
 	indent++;
+	write(indentation());
 }
 
 void CppGenerator::emitEndCodeBlock()
 {
 	indent--;
-	write ("}\n");
+	write ("\n" + indentation() + "}\n");
 }
 
 void CppGenerator::emitEndProgramme()

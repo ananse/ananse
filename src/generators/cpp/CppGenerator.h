@@ -45,6 +45,7 @@ public:
 protected:
     virtual std::string getOutputFile(std::string output);
     void addHeader(std::string header);
+    bool indenterEnabled;
     int indent;
     std::string indentation();
 
