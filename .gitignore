@@ -34,7 +34,11 @@ config.log
 *.a
 
 #binaries
-src/asc
+src/abc
+
+#outputs
+*.bas.cpp
+*.bas.js
 
 #tests
 tests/lexer_test
