@@ -13,12 +13,25 @@
 #include <fstream>
 
 /**
- *
+ * The base abstract class for the code generators. Other high level code
+ * generators extend this class to help implement the translation of Ananse
+ * Basic to their targets.
  */
 class Generator {
 public:
+	/**
+	 * Constructor
+	 */
     Generator();
+
+    /**
+     * Copy constructor
+     */
     Generator(const Generator& orig);
+
+    /**
+     * Emit an expression which is expressed in the passed expression tree.
+     */
     virtual void emitExpression(ExpressionNode *);
     virtual void emitDeclaration(std::string identifier, std::string datatype) = 0;
     virtual void emitAssignment();
@@ -27,6 +40,7 @@ public:
     virtual void emitModuleFooter();
     virtual void emitPrint() = 0;
     virtual void emitIf(ExpressionNode * node) = 0;
+    virtual void emitElseIf(ExpressionNode * node) = 0;
     virtual void emitElse() = 0;
     virtual void emitBeginCodeBlock() = 0;
 	virtual void emitEndCodeBlock() = 0;

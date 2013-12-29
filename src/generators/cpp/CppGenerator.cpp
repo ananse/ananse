@@ -102,9 +102,15 @@ void CppGenerator::emitIf(ExpressionNode * condition)
 	emitExpression(condition);
 }
 
+void CppGenerator::emitElseIf(ExpressionNode * condition)
+{
+	write("else if ");
+	emitExpression(condition);
+}
+
 void CppGenerator::emitElse()
 {
-	write("else");
+	write("else ");
 }
 
 void CppGenerator::emitBeginCodeBlock()
@@ -117,7 +123,7 @@ void CppGenerator::emitBeginCodeBlock()
 void CppGenerator::emitEndCodeBlock()
 {
 	indent--;
-	write ("\n" + indentation() + "}\n");
+	write ("\n" + indentation() + "}\n" + indentation());
 }
 
 void CppGenerator::emitEndProgramme()

@@ -137,7 +137,12 @@ bool Parser::match(Token token)
     } 
     else
     {
-        error("Unexpected " + Lexer::describeToken(lookahead) + " '" + lexer->getTokenString() + "'. Expected " + Lexer::describeToken(token) + ".");
+        error(
+			"Unexpected " +
+			Lexer::describeToken(lookahead) +
+			" '" + lexer->getTokenString() + "'. Expected " +
+			Lexer::describeToken(token) + "."
+		);
     }
 }
 
@@ -252,6 +257,7 @@ void Parser::parsePrint()
 
 void Parser::parseIf()
 {
+	// Funny if block handler repeats code all over the place
 	if(lookahead == IF)
 	{
 		getToken();
@@ -264,10 +270,38 @@ void Parser::parseIf()
 			getToken();
 		}
 
+		// Deal with multiline if syntax
 		if(lookahead == NEW_LINE)
 		{
 			generator->emitBeginCodeBlock();
 			parse(ifTerminators);
+
+			while(lookahead == ELSE_IF)
+			{
+				getToken();
+				ExpressionNode * condition = parseExpression();
+				if(lookahead == THEN)
+				{
+					getToken();
+				}
+				if(lookahead == NEW_LINE)
+				{
+					generator->emitEndCodeBlock();
+					generator->emitElseIf(condition);
+					generator->emitBeginCodeBlock();
+					parse(ifTerminators);
+				}
+			}
+
+			if(lookahead == ELSE)
+			{
+				getToken();
+				generator->emitEndCodeBlock();
+				generator->emitElse();
+				generator->emitBeginCodeBlock();
+				parse(ifTerminators);
+			}
+
 			if(lookahead == END)
 			{
 				getToken();
@@ -281,10 +315,6 @@ void Parser::parseIf()
 					generator->emitEndProgramme();
 				}
 			}
-			else if(lookahead == ELSE)
-			{
-
-			}
 			else
 			{
 				error("Expecting END IF or ELSEIF or ELSE");
@@ -292,17 +322,24 @@ void Parser::parseIf()
 		}
 		else
 		{
+			// Deal with single line if syntax
 			parseStatement();
-			std::cout<<lexer->describeToken(lookahead)<<std::endl;
 			while(lookahead == ELSE_IF)
 			{
 				getToken();
+				ExpressionNode * condition = parseExpression();
+				generator->emitElseIf(condition);
+				if(lookahead == THEN)
+				{
+					getToken();
+				}
+				parseStatement();
 			}
 			if(lookahead == ELSE)
 			{
 				generator->emitElse();
+				getToken();
 				parseStatement();
-				generator->emitEndOfStatement();
 			}
 		}
 	}
