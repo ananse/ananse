@@ -21,13 +21,15 @@ Parser::Parser(Generator * generator, std::string source)
     ifTerminators.push_back(ELSE_IF);
     ifTerminators.push_back(ELSE);
 
-    symbolTable = new SymbolTable();
+    symbols = new Symbols();
+    symbols->enterScope(source);
     setSource(source);    
 }
 
 Parser::~Parser()
 {
-    delete symbolTable;
+    symbols->exitScope();
+    delete symbols;
 }
 
 void Parser::out(std::string type, std::string message)
@@ -45,8 +47,8 @@ void Parser::error(std::string message)
 
 Symbol * Parser::insertSymbol(std::string identifier, std::string type)
 {
-    Symbol * symbol = symbolTable->insert(identifier, type);
-    switch(symbolTable->getStatus())
+    Symbol * symbol = symbols->insert(identifier, type);
+    switch(symbols->getStatus())
     {
         case ADDED:
             if(type == "integer")
@@ -61,7 +63,7 @@ Symbol * Parser::insertSymbol(std::string identifier, std::string type)
 
 Symbol * Parser::lookupSymbol(std::string identifier)
 {
-    Symbol * symbol = symbolTable->lookup(identifier);
+    Symbol * symbol = symbols->lookup(identifier);
     if(symbol == NULL)
     {
         error("Unknown identifier `" + identifier + "`");
@@ -73,7 +75,13 @@ void Parser::setSource(std::string source)
 {
     try{
         lexer = new Lexer(source);        
-        symbolTable->addType("number", "primitive");        
+        //symbols->addType("number", "primitive");        
+        symbols->addType("integer", "primitive");
+        symbols->addType("long", "primitive");
+        symbols->addType("short", "primitive");
+        symbols->addType("single", "primitive");
+        symbols->addType("double", "primitive");
+        symbols->setLexer(lexer);
     }
     catch(LexerException * e)
     {
@@ -138,11 +146,11 @@ bool Parser::match(Token token)
     else
     {
         error(
-			"Unexpected " +
-			Lexer::describeToken(lookahead) +
-			" '" + lexer->getTokenString() + "'. Expected " +
-			Lexer::describeToken(token) + "."
-		);
+            "Unexpected " +
+            Lexer::describeToken(lookahead) +
+            " '" + lexer->getTokenString() + "'. Expected " +
+            Lexer::describeToken(token) + "."
+        );
     }
 }
 
@@ -160,22 +168,19 @@ void Parser::parseDeclaration()
             identifier = lexer->getIdentifierValue();
             getToken();
 
-            switch(lookahead)
+            if(lookahead == AS)
             {
-                case AS:
-                    getToken();
-                    match(IDENTIFIER);
-                    datatype = lexer->getIdentifierValue();
-                    getToken();
-                    break;
-                    
-                case PERCENT:
-                    datatype = "number";
-                    getToken();
-                    break;
+                getToken();
+                match(IDENTIFIER);
+                datatype = lexer->getIdentifierValue();
+                getToken();
+            }
+            else
+            {
+                error("Expected AS followed by the datatype");
             }
             
-            if(!symbolTable->vaildateType(datatype) && datatype != "")
+            if(!symbols->vaildateType(datatype))
             {
                 error("Unknown data type `" + datatype + "`");
             }
@@ -244,9 +249,9 @@ void Parser::parseIdentifierStatements()
 
 void Parser::parsePrint()
 {
-	if(lookahead == PRINT)
-	{
-		ExpressionNode * expression;
+    if(lookahead == PRINT)
+    {
+        ExpressionNode * expression;
 		getToken();
 		expression = parseExpression();
 		generator->emitPrint();
@@ -280,16 +285,27 @@ void Parser::parseIf()
 			{
 				getToken();
 				ExpressionNode * condition = parseExpression();
+                
 				if(lookahead == THEN)
 				{
 					getToken();
 				}
+                
 				if(lookahead == NEW_LINE)
 				{
+                    char lineNumber[8];
+                    sprintf(lineNumber, "%d", this->lexer->getLine());
 					generator->emitEndCodeBlock();
 					generator->emitElseIf(condition);
 					generator->emitBeginCodeBlock();
+                    symbols->enterScope(
+                        this->lexer->getSourceFile() + 
+                        ":" + 
+                        (std::string) lineNumber + 
+                        ":if"
+                    );
 					parse(ifTerminators);
+                    symbols->exitScope();
 				}
 			}
 
@@ -320,9 +336,10 @@ void Parser::parseIf()
 				error("Expecting END IF or ELSEIF or ELSE");
 			}
 		}
+        
+        // Deal with single line if syntax
 		else
 		{
-			// Deal with single line if syntax
 			parseStatement();
 			while(lookahead == ELSE_IF)
 			{

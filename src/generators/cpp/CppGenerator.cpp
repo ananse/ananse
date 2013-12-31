@@ -66,10 +66,10 @@ void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
 	indenterEnabled = false;
 	setOutput(&moduleGlobals);
     std::string localType;
-    if(datatype == "number" || datatype == "")
-    {
-        localType = "int";
-    }
+    
+    if(datatype == "integer") localType = "int";
+    if(datatype == "long") localType = "long";
+    
     write(localType + " " + identifier);
 }
 

@@ -6,20 +6,20 @@
 #include "Lexer.h"
 #include "ExpressionNode.h"
 #include "generators/Generator.h"
-#include "SymbolTable.h"
+#include "Symbols.h"
 
 class Parser
 {
 private:
 
-	typedef struct{
-		Token tokens[4];
-		NodeType nodes[4];
-		int numOperators;
-	} OperatorLevel;
+    typedef struct{
+        Token tokens[4];
+        NodeType nodes[4];
+        int numOperators;
+    } OperatorLevel;
 
     Lexer * lexer;
-    SymbolTable * symbolTable;
+    Symbols * symbols;
     Token lookahead;
     Generator * generator;
 

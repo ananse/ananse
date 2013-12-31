@@ -17,6 +17,8 @@ public:
     virtual ~Symbol();
     void setDataType(std::string);
     void setIdentifier(std::string);
+    void setScope(std::string);
+    void setLine(int);
     std::string getDataType();
     std::string getIdentifier();
     std::string getNumberType();
@@ -25,10 +27,11 @@ public:
 private:
     google::dense_hash_map<const char*, Symbol*> table;
     std::string dataType;
-    std::string numberType;
     bool isNumber;
     std::string identifier;
     Symbol * parent;
+    std::string scope;
+    int line;
 };
 
 #endif	/* SYMBOL_H */

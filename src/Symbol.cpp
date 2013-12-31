@@ -44,7 +44,12 @@ void Symbol::setAsNumber()
     isNumber = true;
 }
 
-std::string Symbol::getNumberType()
+void Symbol::setScope(std::string scope)
 {
-    return numberType;
+    this->scope = scope;
+}
+
+void Symbol::setLine(int line)
+{
+    this->line = line;
 }
