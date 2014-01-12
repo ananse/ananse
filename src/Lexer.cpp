@@ -85,10 +85,30 @@ Token Lexer::getNextToken()
     		getChar();
     		return NOT_EQUALS;
     	}
+        else if(currentChar == '=')
+        {
+            getChar();
+            return LESS_THAN_OR_EQUALS;
+        }
     	else
     	{
     		return LESS_THAN;
     	}
+    }
+    
+    // Match greater thans
+    if(currentChar == '>')
+    {
+        getChar();
+        if(currentChar == '=')
+        {
+            getChar(); 
+            return GREATER_THAN_OR_EQUALS;
+        }
+        else
+        {
+            return GREATER_THAN;
+        }
     }
 
     // Match string literals
@@ -166,6 +186,8 @@ Token Lexer::getNextToken()
         else if (identString == "else")     return ELSE;
         else if (identString == "elseif")   return ELSE_IF;
         else if (identString == "end")      return END;
+        else if (identString == "select")   return SELECT;
+        else if (identString == "case")     return CASE;
         else                                return IDENTIFIER;
     }
     

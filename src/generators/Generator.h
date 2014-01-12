@@ -8,9 +8,12 @@
 #ifndef GENERATOR_H
 #define	GENERATOR_H
 
-#include "ExpressionNode.h"
 #include <string>
 #include <fstream>
+#include <vector>
+
+#include "CaseExpression.h"
+#include "ExpressionNode.h"
 
 /**
  * The base abstract class for the code generators. Other high level code
@@ -41,10 +44,13 @@ public:
     virtual void emitPrint() = 0;
     virtual void emitIf(ExpressionNode * node) = 0;
     virtual void emitElseIf(ExpressionNode * node) = 0;
-    virtual void emitElse() = 0;
+    virtual void emitElse() = 0;    
+    virtual void emitSelect(ExpressionNode * node) = 0;
+    virtual void emitCase(std::vector<CaseExpression*>) = 0;
     virtual void emitBeginCodeBlock() = 0;
-	virtual void emitEndCodeBlock() = 0;
-	virtual void emitEndProgramme() = 0;
+    virtual void emitEndCodeBlock() = 0;
+    virtual void emitEndProgramme() = 0;
+    
     virtual ~Generator();
     virtual std::string openOutput(std::string path);
     virtual void closeOutput();

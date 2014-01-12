@@ -26,6 +26,8 @@ typedef enum {
     NOT_EQUALS,
     GREATER_THAN,
     LESS_THAN,
+    GREATER_THAN_OR_EQUALS,
+    LESS_THAN_OR_EQUALS,
     COMMA,
     IDENTIFIER,
     BRACKET_OPEN,
@@ -42,9 +44,16 @@ typedef enum {
     IF,
     THEN,
     ELSE,
-    ELSE_IF
+    ELSE_IF,
+    SELECT,
+    CASE,
+    TO,
+    IS
 } Token;
 
+/**
+ * The full lexer
+ */
 class Lexer
 {
 private:

@@ -170,4 +170,12 @@ std::string CppGenerator::getOutputFile(std::string output)
     return output + ".cpp";
 }
 
+void CppGenerator::emitSelect(ExpressionNode* node)
+{
+    
+}
 
+void CppGenerator::emitCase(std::vector<CaseExpression*> expressions)
+{
+    
+}

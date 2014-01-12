@@ -6,10 +6,10 @@
  */
 
 #include "Symbols.h"
+#include <iostream>
 
 Symbols::Symbols()
 {
-    /*table.set_empty_key("");*/
     types.set_empty_key("");
 }
 
@@ -24,25 +24,36 @@ Symbols::~Symbols()
 void Symbols::enterScope(std::string scope)
 {
     SymbolTable * table = new SymbolTable();
+    char lineNumber[8];
+    sprintf(lineNumber, "%d", this->lexer->getLine());
+
     table->set_empty_key("");
     symbolTableStack.push_back(table);
-    scopesStack.push_back(scope);
+    scopesStack.push_back(
+        this->lexer->getSourceFile() + 
+        ":" + 
+        (std::string) lineNumber + 
+        ":" + scope);
     currentScope = scope;
+/*    std::cout<<this->lexer->getSourceFile() + 
+        ":" + 
+        (std::string) lineNumber + 
+        ":" + scope<<std::endl;*/
 }
 
 void Symbols::exitScope()
 {
     symbolTableStack.pop_back();
-    symbolTableStack.pop_back();
 }
 
 Symbol * Symbols::lookup(std::string identifier)
 {
-    //for(std::vector<SymbolTable*>::reverse_iterator itr = symbolTableStack.rbegin(); 
-    //    itr != symbolTableStack.rend(); ++itr)
     Symbol * symbol = NULL;
+    
+    // Initialize the status as UNDEFINED
     status = UNDEFINED;
     
+    //
     for(int i = scopesStack.size() - 1; i >= 0; i--)
     {
         SymbolTable * table = symbolTableStack[i]; 

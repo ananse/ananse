@@ -8,7 +8,6 @@ dim l as integer, m as integer
 if i = j then 
     dim m as integer
     dim i as integer
-    dim m as integer
 
     print 'Dayumn!' 
 elseif k = j then 
@@ -18,4 +17,11 @@ elseif l = m then
 else 
     print 'Whoops'
 end if
+
+select case j
+    case 2
+        print 'dayumn'
+    case else
+        print 'it didn''t work'
+end select
 

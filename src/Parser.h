@@ -3,10 +3,12 @@
 
 #include <string>
 #include <vector>
+
 #include "Lexer.h"
 #include "ExpressionNode.h"
 #include "generators/Generator.h"
 #include "Symbols.h"
+#include "CaseExpression.h"
 
 class Parser
 {
@@ -26,6 +28,7 @@ private:
     static OperatorLevel operators[];
     static int numOperators;
     static std::vector<Token> ifTerminators;
+    static std::vector<Token> caseTerminators;
     
     bool match(Token token);
     void getToken();
@@ -43,6 +46,8 @@ private:
     void parseIdentifierStatements();
     void parsePrint();
     void parseIf();
+    void parseSelectCase();
+    CaseExpression * parseCaseExpression();
     
     // Expressions parsing
     ExpressionNode * parseExpression();
@@ -50,6 +55,7 @@ private:
     static ExpressionNode * parseUnaryOperators(Parser * instance);
     
     static bool isNumeric(std::string datatype);
+    static bool isComparator(Token token);
     std::string resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType);
     void setSource(std::string source);
     

@@ -11,6 +11,7 @@ Parser::OperatorLevel Parser::operators[] = {
 };
 int Parser::numOperators;
 std::vector<Token> Parser::ifTerminators;
+std::vector<Token> Parser::caseTerminators;
 
 Parser::Parser(Generator * generator, std::string source)
 {
@@ -20,9 +21,11 @@ Parser::Parser(Generator * generator, std::string source)
     ifTerminators.push_back(END);
     ifTerminators.push_back(ELSE_IF);
     ifTerminators.push_back(ELSE);
-
+    
+    caseTerminators.push_back(CASE);
+    caseTerminators.push_back(END);
+    
     symbols = new Symbols();
-    symbols->enterScope(source);
     setSource(source);    
 }
 
@@ -82,6 +85,7 @@ void Parser::setSource(std::string source)
         symbols->addType("single", "primitive");
         symbols->addType("double", "primitive");
         symbols->setLexer(lexer);
+        symbols->enterScope(source);
     }
     catch(LexerException * e)
     {
@@ -115,6 +119,7 @@ void Parser::parse(std::vector<Token> terminators)
     	parseStatement();
         parseDeclaration();
         parseIf();
+        parseSelectCase();
         
         // Detect the end of parsing of this block
         for(std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
@@ -293,17 +298,10 @@ void Parser::parseIf()
                 
 				if(lookahead == NEW_LINE)
 				{
-                    char lineNumber[8];
-                    sprintf(lineNumber, "%d", this->lexer->getLine());
 					generator->emitEndCodeBlock();
 					generator->emitElseIf(condition);
 					generator->emitBeginCodeBlock();
-                    symbols->enterScope(
-                        this->lexer->getSourceFile() + 
-                        ":" + 
-                        (std::string) lineNumber + 
-                        ":if"
-                    );
+                    symbols->enterScope("if");
 					parse(ifTerminators);
                     symbols->exitScope();
 				}
@@ -360,6 +358,69 @@ void Parser::parseIf()
 			}
 		}
 	}
+}
+
+CaseExpression * Parser::parseCaseExpression()
+{
+    CaseExpression * caseExpression;
+    ExpressionNode * expression1;
+    ExpressionNode * expression2;
+    CaseExpressionType type;
+    
+    if(lookahead == IS)
+    {
+        type = CASE_IS;
+        getToken();
+        if(!isComparator(lookahead)) error("Expecting comparator after IS statement");            
+        expression1 = parseExpression();
+    }
+    else
+    {
+        type = CASE_EXPRESSION;
+        expression1 = parseExpression();
+    
+        if(lookahead == TO)
+        {
+            type = CASE_TO;
+            getToken();
+            expression2 = parseExpression();
+        }
+    }
+    caseExpression = new CaseExpression(type, expression1, expression2);
+    return caseExpression;
+}
+
+void Parser::parseSelectCase()
+{
+    if(lookahead == SELECT)
+    {
+        getToken();
+        if(lookahead == CASE) getToken();
+        ExpressionNode * expression = parseExpression();
+        generator->emitSelect(expression);
+        while(lookahead == CASE)
+        {
+            getToken();
+            if(lookahead == ELSE)
+            {
+                
+            }
+            else
+            {
+                std::vector<CaseExpression*> expressions;
+                do
+                {
+                    expressions.push_back(parseCaseExpression());
+                } while(true);
+                generator->emitCase(expressions);
+                generator->emitBeginCodeBlock();
+                symbols->enterScope("case");
+                parse(caseTerminators);
+                symbols->exitScope();
+                generator->emitEndCodeBlock();
+            }
+        }
+    }
 }
 
 ExpressionNode * Parser::parseExpression()
@@ -473,6 +534,23 @@ ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
         	break;
     }
     return factor;
+}
+
+bool Parser::isComparator(Token token)
+{
+    switch(token)
+    {
+        case EQUALS:
+        case NOT_EQUALS:
+        case GREATER_THAN:
+        case LESS_THAN:
+        case GREATER_THAN_OR_EQUALS:
+        case LESS_THAN_OR_EQUALS:
+            return true;
+            
+        default:
+            return false;
+    }
 }
 
 bool Parser::isNumeric(std::string datatype)

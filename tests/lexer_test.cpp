@@ -4,6 +4,7 @@
 TEST(LexerTest, Tokens) {
     Lexer * lexer = new Lexer("tokens.bas");
     EXPECT_EQ(NEW_LINE, lexer->getNextToken());
+    EXPECT_EQ(END, lexer->getNextToken());
     EXPECT_EQ(INTEGER, lexer->getNextToken());
     EXPECT_EQ(12, lexer->getIntegerValue());
     EXPECT_EQ(PLUS, lexer->getNextToken());

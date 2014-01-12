@@ -38,10 +38,11 @@ public:
     virtual void emitIf(ExpressionNode * condition);
     virtual void emitElseIf(ExpressionNode * condition);
     virtual void emitElse();
-
+    virtual void emitSelect(ExpressionNode * node);
+    virtual void emitCase(std::vector<CaseExpression*>);
     virtual void emitBeginCodeBlock();
-	virtual void emitEndCodeBlock();
-	virtual void emitEndProgramme();
+    virtual void emitEndCodeBlock();
+    virtual void emitEndProgramme();
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();
 
