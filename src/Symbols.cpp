@@ -35,7 +35,7 @@ void Symbols::enterScope(std::string scope)
         (std::string) lineNumber + 
         ":" + scope);
     currentScope = scope;
-/*    std::cout<<this->lexer->getSourceFile() + 
+    /*std::cout<<this->lexer->getSourceFile() + 
         ":" + 
         (std::string) lineNumber + 
         ":" + scope<<std::endl;*/
@@ -43,7 +43,9 @@ void Symbols::enterScope(std::string scope)
 
 void Symbols::exitScope()
 {
+    //std::cout<<"exiting"<<std::endl;
     symbolTableStack.pop_back();
+    scopesStack.pop_back();
 }
 
 Symbol * Symbols::lookup(std::string identifier)

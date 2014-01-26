@@ -13,6 +13,7 @@ CppGenerator::CppGenerator()
 {
     indent = 0;
     indenterEnabled = true;
+    selectCases = 0;
 }
 
 std::string CppGenerator::indentation()
@@ -61,10 +62,14 @@ void CppGenerator::emitEndOfStatement()
 	indenterEnabled = true;
 }
 
-void CppGenerator::emitDeclaration(std::string identifier, std::string datatype)
+void CppGenerator::emitDeclaration(std::string identifier, std::string datatype, bool global)
 {
-	indenterEnabled = false;
-	setOutput(&moduleGlobals);
+    if(global) 
+    {
+        setOutput(&moduleGlobals);
+        indenterEnabled = false;
+    }
+    
     std::string localType;
     
     if(datatype == "integer") localType = "int";
@@ -172,10 +177,58 @@ std::string CppGenerator::getOutputFile(std::string output)
 
 void CppGenerator::emitSelect(ExpressionNode* node)
 {
-    
+    std::stringstream identifier;
+    identifier<<"select_case_";
+    identifier<<selectCases;
+    emitDeclaration(identifier.str(), node->getDataType(), false);
+    emitAssignment();
+    emitExpression(node);
+    emitEndOfStatement();
+    caseVariables.push_back(identifier.str());
+}
+
+void CppGenerator::writeCaseExpression(std::string identifier, CaseExpression* expression)
+{
+    switch(expression->getType())
+    {
+        case CASE_EXPRESSION:
+            write(identifier);
+            write(" == ");
+            emitExpression(expression->getPrimaryExpression());
+            break;
+            
+        case CASE_TO:
+            write(identifier);
+            write(" >= ");
+            emitExpression(expression->getPrimaryExpression());
+            write(" && ");
+            write(identifier);
+            write(" <= ");
+            emitExpression(expression->getSecondaryExpression());
+            break;
+    }
 }
 
 void CppGenerator::emitCase(std::vector<CaseExpression*> expressions)
 {
+    CaseExpression * caseExpression;
+    write("if(");
+    caseExpression = expressions.back();
+    expressions.pop_back();
+    writeCaseExpression(caseVariables.back(), caseExpression);
     
+    while(expressions.size() > 0)
+    {
+        write("||");
+        caseExpression = expressions.back();
+        expressions.pop_back();
+        writeCaseExpression(caseVariables.back(), caseExpression);        
+    }
+    
+    write(")");
+}
+
+void CppGenerator::emitCaseElse()
+{
+    write("else");
 }

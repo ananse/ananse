@@ -191,7 +191,7 @@ void Parser::parseDeclaration()
             }
             
             currentSymbol = insertSymbol(identifier, datatype);
-            generator->emitDeclaration(identifier, datatype);
+            generator->emitDeclaration(identifier, datatype, false);
             parseAssignment();
             generator->emitEndOfStatement();                        
         }
@@ -398,20 +398,31 @@ void Parser::parseSelectCase()
         if(lookahead == CASE) getToken();
         ExpressionNode * expression = parseExpression();
         generator->emitSelect(expression);
+        match(NEW_LINE);
+        getToken();
+        
         while(lookahead == CASE)
         {
             getToken();
             if(lookahead == ELSE)
             {
-                
+                getToken();
+                generator->emitCaseElse();
+                generator->emitBeginCodeBlock();
+                symbols->enterScope("case_else");
+                parse(caseTerminators);
+                symbols->exitScope();
+                generator->emitEndCodeBlock();
             }
             else
             {
                 std::vector<CaseExpression*> expressions;
+                
                 do
                 {
                     expressions.push_back(parseCaseExpression());
-                } while(true);
+                } while(lookahead == COMMA);
+                
                 generator->emitCase(expressions);
                 generator->emitBeginCodeBlock();
                 symbols->enterScope("case");
@@ -419,6 +430,12 @@ void Parser::parseSelectCase()
                 symbols->exitScope();
                 generator->emitEndCodeBlock();
             }
+        }
+        
+        if(lookahead == END){
+            getToken();
+            match(SELECT);
+            getToken();
         }
     }
 }

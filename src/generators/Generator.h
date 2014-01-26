@@ -36,7 +36,7 @@ public:
      * Emit an expression which is expressed in the passed expression tree.
      */
     virtual void emitExpression(ExpressionNode *);
-    virtual void emitDeclaration(std::string identifier, std::string datatype) = 0;
+    virtual void emitDeclaration(std::string identifier, std::string datatype, bool global) = 0;
     virtual void emitAssignment();
     virtual void emitEndOfStatement();
     virtual void emitModuleHeader();
@@ -47,6 +47,7 @@ public:
     virtual void emitElse() = 0;    
     virtual void emitSelect(ExpressionNode * node) = 0;
     virtual void emitCase(std::vector<CaseExpression*>) = 0;
+    virtual void emitCaseElse() = 0;
     virtual void emitBeginCodeBlock() = 0;
     virtual void emitEndCodeBlock() = 0;
     virtual void emitEndProgramme() = 0;

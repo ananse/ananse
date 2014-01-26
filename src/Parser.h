@@ -10,6 +10,11 @@
 #include "Symbols.h"
 #include "CaseExpression.h"
 
+/**
+ * The Parser. 
+ * 
+ * Receives tokens from the Lexer and implements the syntax of the language.
+ */
 class Parser
 {
 private:
