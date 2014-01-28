@@ -41,6 +41,7 @@ public:
     virtual void emitSelect(ExpressionNode * node);
     virtual void emitCase(std::vector<CaseExpression*>);
     virtual void emitCaseElse();
+    virtual void emitEndSelect();
     virtual void emitBeginCodeBlock();
     virtual void emitEndCodeBlock();
     virtual void emitEndProgramme();
@@ -63,7 +64,7 @@ private:
     std::stringstream body;
     int selectCases;
     std::vector<std::string> caseVariables;
+    std::string nextCodeBlockPrefix;
 };
 
 #endif	/* CPPGENERATOR_H */
-

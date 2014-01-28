@@ -48,6 +48,7 @@ public:
     virtual void emitSelect(ExpressionNode * node) = 0;
     virtual void emitCase(std::vector<CaseExpression*>) = 0;
     virtual void emitCaseElse() = 0;
+    virtual void emitEndSelect() = 0;
     virtual void emitBeginCodeBlock() = 0;
     virtual void emitEndCodeBlock() = 0;
     virtual void emitEndProgramme() = 0;
@@ -61,6 +62,7 @@ public:
 
 protected:
     virtual std::string getOutputFile(std::string input) = 0;
+    std::string getToken(Token);
     bool isMainModule;
     std::ofstream file;
 

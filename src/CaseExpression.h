@@ -9,6 +9,7 @@
 #define	CASEEXPRESSION_H
 
 #include "ExpressionNode.h"
+#include "Tokens.h"
 
 typedef enum{
     CASE_EXPRESSION,
@@ -23,17 +24,20 @@ public:
         ExpressionNode * primaryExpression, 
         ExpressionNode * secondaryExpression
     );
+    
     CaseExpression(const CaseExpression& orig);
     virtual ~CaseExpression();
     ExpressionNode * getPrimaryExpression();
     ExpressionNode * getSecondaryExpression();
     CaseExpressionType getType();
+    void setComparator(Token);
+    Token getComparator();
     
 private:
     ExpressionNode * primaryExpression;
     ExpressionNode * secondaryExpression;
     CaseExpressionType type;
+    Token comparator;
 };
 
 #endif	/* CASEEXPRESSION_H */
-

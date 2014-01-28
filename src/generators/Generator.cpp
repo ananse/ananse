@@ -119,3 +119,16 @@ void Generator::write(std::string code)
     (*output)<<code;
 }
 
+std::string Generator::getToken(Token token)
+{
+    switch(token)
+    {
+        case EQUALS: return " == ";
+        case NOT_EQUALS: return "!=";
+        case GREATER_THAN: return ">";
+        case LESS_THAN: return "<";
+        case GREATER_THAN_OR_EQUALS: return ">=";
+        case LESS_THAN_OR_EQUALS: return "<=";
+    }
+}
+

@@ -14,6 +14,7 @@ CppGenerator::CppGenerator()
     indent = 0;
     indenterEnabled = true;
     selectCases = 0;
+    nextCodeBlockPrefix = "";
 }
 
 std::string CppGenerator::indentation()
@@ -74,6 +75,7 @@ void CppGenerator::emitDeclaration(std::string identifier, std::string datatype,
     
     if(datatype == "integer") localType = "int";
     if(datatype == "long") localType = "long";
+    if(datatype == "boolean") localType = "bool";
     
     write(localType + " " + identifier);
 }
@@ -123,6 +125,10 @@ void CppGenerator::emitBeginCodeBlock()
 	write("\n" + indentation() + "{\n");
 	indent++;
 	write(indentation());
+    if(nextCodeBlockPrefix != "") {
+        write(nextCodeBlockPrefix);
+        nextCodeBlockPrefix = "";
+    }
 }
 
 void CppGenerator::emitEndCodeBlock()
@@ -180,6 +186,9 @@ void CppGenerator::emitSelect(ExpressionNode* node)
     std::stringstream identifier;
     identifier<<"select_case_";
     identifier<<selectCases;
+    emitDeclaration(identifier.str() + "_matched", "boolean", false);
+    write(" = false");
+    emitEndOfStatement();
     emitDeclaration(identifier.str(), node->getDataType(), false);
     emitAssignment();
     emitExpression(node);
@@ -196,7 +205,8 @@ void CppGenerator::writeCaseExpression(std::string identifier, CaseExpression* e
             write(" == ");
             emitExpression(expression->getPrimaryExpression());
             break;
-            
+        
+        //@todo modify this to support strings sorted in ascending order in future
         case CASE_TO:
             write(identifier);
             write(" >= ");
@@ -205,6 +215,12 @@ void CppGenerator::writeCaseExpression(std::string identifier, CaseExpression* e
             write(identifier);
             write(" <= ");
             emitExpression(expression->getSecondaryExpression());
+            break;
+            
+        case CASE_IS:
+            write(identifier);
+            write(getToken(expression->getComparator()));
+            emitExpression(expression->getPrimaryExpression());
             break;
     }
 }
@@ -226,9 +242,16 @@ void CppGenerator::emitCase(std::vector<CaseExpression*> expressions)
     }
     
     write(")");
+    nextCodeBlockPrefix = caseVariables.back() + "_matched = true;\n" + indentation() + indentation();
 }
 
 void CppGenerator::emitCaseElse()
 {
-    write("else");
+    write("if(" + caseVariables.back() + "_matched==false)");
+}
+
+void CppGenerator::emitEndSelect()
+{
+    write("\n" + caseVariables.back() + "_end:\n" + indentation() + "((void)0);\n" + indentation());
+    caseVariables.pop_back();
 }

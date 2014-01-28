@@ -366,12 +366,14 @@ CaseExpression * Parser::parseCaseExpression()
     ExpressionNode * expression1;
     ExpressionNode * expression2;
     CaseExpressionType type;
+    Token comparator;
     
     if(lookahead == IS)
     {
         type = CASE_IS;
         getToken();
         if(!isComparator(lookahead)) error("Expecting comparator after IS statement");            
+        comparator = lookahead;
         expression1 = parseExpression();
     }
     else
@@ -387,6 +389,10 @@ CaseExpression * Parser::parseCaseExpression()
         }
     }
     caseExpression = new CaseExpression(type, expression1, expression2);
+    if(isComparator(comparator))
+    {
+        caseExpression->setComparator(comparator);
+    }
     return caseExpression;
 }
 
@@ -435,6 +441,7 @@ void Parser::parseSelectCase()
         if(lookahead == END){
             getToken();
             match(SELECT);
+            generator->emitEndSelect();
             getToken();
         }
     }

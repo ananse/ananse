@@ -40,3 +40,14 @@ CaseExpressionType CaseExpression::getType()
 {
     return type;
 }
+
+void CaseExpression::setComparator(Token comparator)
+{
+    this->comparator = comparator;
+}
+
+Token CaseExpression::getComparator()
+{
+    return comparator;
+}
+
