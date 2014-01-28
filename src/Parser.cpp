@@ -120,6 +120,7 @@ void Parser::parse(std::vector<Token> terminators)
         parseDeclaration();
         parseIf();
         parseSelectCase();
+        parseExit();
         
         // Detect the end of parsing of this block
         for(std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
@@ -196,6 +197,23 @@ void Parser::parseDeclaration()
             generator->emitEndOfStatement();                        
         }
         while(lookahead == COMMA);
+    }
+}
+
+void Parser::parseExit()
+{
+    if(lookahead == EXIT)
+    {
+        getToken();
+        if(lookahead == SELECT && selectCases > 0)
+        {
+            generator->emitExitSelect();
+            getToken();
+        }
+        else
+        {
+            // Exit the app
+        }
     }
 }
 
@@ -400,6 +418,7 @@ void Parser::parseSelectCase()
 {
     if(lookahead == SELECT)
     {
+        selectCases++;
         getToken();
         if(lookahead == CASE) getToken();
         ExpressionNode * expression = parseExpression();
@@ -443,6 +462,7 @@ void Parser::parseSelectCase()
             match(SELECT);
             generator->emitEndSelect();
             getToken();
+            selectCases--;
         }
     }
 }

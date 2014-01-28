@@ -42,6 +42,7 @@ public:
     virtual void emitCase(std::vector<CaseExpression*>);
     virtual void emitCaseElse();
     virtual void emitEndSelect();
+    virtual void emitExitSelect();
     virtual void emitBeginCodeBlock();
     virtual void emitEndCodeBlock();
     virtual void emitEndProgramme();

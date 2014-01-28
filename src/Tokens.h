@@ -12,6 +12,7 @@ typedef enum {
     NEW_LINE,
     END,
     END_OF_FILE,
+    EXIT,
     STRING,
     INTEGER,
     SINGLE,

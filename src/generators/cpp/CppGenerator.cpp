@@ -255,3 +255,8 @@ void CppGenerator::emitEndSelect()
     write("\n" + caseVariables.back() + "_end:\n" + indentation() + "((void)0);\n" + indentation());
     caseVariables.pop_back();
 }
+
+void CppGenerator::emitExitSelect()
+{
+    write("goto " + caseVariables.back() + "_end;\n" + indentation());
+}
