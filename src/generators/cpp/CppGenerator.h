@@ -46,6 +46,8 @@ public:
     virtual void emitBeginCodeBlock();
     virtual void emitEndCodeBlock();
     virtual void emitEndProgramme();
+    virtual void emitFor(std::string, ExpressionNode*, ExpressionNode*, ExpressionNode*);
+    
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();
 

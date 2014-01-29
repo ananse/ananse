@@ -12,6 +12,7 @@ Parser::OperatorLevel Parser::operators[] = {
 int Parser::numOperators;
 std::vector<Token> Parser::ifTerminators;
 std::vector<Token> Parser::caseTerminators;
+std::vector<Token> Parser::forTerminators;
 
 Parser::Parser(Generator * generator, std::string source)
 {
@@ -24,6 +25,8 @@ Parser::Parser(Generator * generator, std::string source)
     
     caseTerminators.push_back(CASE);
     caseTerminators.push_back(END);
+    
+    forTerminators.push_back(NEXT);
     
     symbols = new Symbols();
     setSource(source);    
@@ -120,6 +123,7 @@ void Parser::parse(std::vector<Token> terminators)
         parseDeclaration();
         parseIf();
         parseSelectCase();
+        parseForLoop();
         parseExit();
         
         // Detect the end of parsing of this block
@@ -412,6 +416,65 @@ CaseExpression * Parser::parseCaseExpression()
         caseExpression->setComparator(comparator);
     }
     return caseExpression;
+}
+
+void Parser::parseForLoop()
+{
+    if(lookahead == FOR)
+    {
+        std::string identifier;
+        Symbol * counter;
+        ExpressionNode * fromExpression = NULL;
+        ExpressionNode * toExpression = NULL;
+        ExpressionNode * stepExpression = NULL;
+        
+        getToken();
+        match(IDENTIFIER);
+        identifier = lexer->getIdentifierValue();
+        getToken();
+        
+        if(lookahead == AS)
+        {
+            // Add the symbol to the symbol table
+            std::string dataType;
+            getToken();
+            dataType = lexer->getIdentifierValue();
+            counter = insertSymbol(identifier, dataType);
+            generator->emitDeclaration(identifier, dataType, false);
+            getToken();
+        }
+        else
+        {
+            counter = lookupSymbol(identifier);
+        }
+        
+        match(EQUALS);
+        getToken();
+        
+        fromExpression = parseExpression();
+        match(TO);
+        getToken();
+        toExpression = parseExpression();
+        
+        if(lookahead == STEP)
+        {
+            getToken();
+            stepExpression = parseExpression();
+        }
+        
+        match(NEW_LINE);
+        generator->emitFor(identifier, fromExpression, toExpression, stepExpression);
+        getToken();
+        
+        generator->emitBeginCodeBlock();
+        symbols->enterScope("for_next");
+        parse(forTerminators);
+        symbols->exitScope();
+        generator->emitEndCodeBlock();
+        
+        getToken();
+        
+    }
 }
 
 void Parser::parseSelectCase()

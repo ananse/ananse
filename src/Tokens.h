@@ -46,7 +46,11 @@ typedef enum {
     SELECT,
     CASE,
     TO,
-    IS
+    IS,
+    FOR,
+    STEP,
+    NEXT,
+    CONTINUE
 } Token;
 
 #endif	/* TOKENS_H */

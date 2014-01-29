@@ -1,10 +1,4 @@
-dim j as integer
-
-select case j
-    case 2
-        print 'dayumn'
-    case else
-        print 'cool'
-        exit select
-        print 'it didn''t work'
-end select
+dim i as integer
+for i = 0 to 10 step 2
+    print i
+next

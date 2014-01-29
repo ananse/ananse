@@ -189,6 +189,11 @@ Token Lexer::getNextToken()
         else if (identString == "exit")     return EXIT;
         else if (identString == "select")   return SELECT;
         else if (identString == "case")     return CASE;
+        else if (identString == "for")      return FOR;
+        else if (identString == "step")     return STEP;
+        else if (identString == "next")     return NEXT;
+        else if (identString == "continue") return CONTINUE;
+        else if (identString == "to")       return TO;
         else                                return IDENTIFIER;
     }
     

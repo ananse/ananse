@@ -53,6 +53,7 @@ public:
     virtual void emitBeginCodeBlock() = 0;
     virtual void emitEndCodeBlock() = 0;
     virtual void emitEndProgramme() = 0;
+    virtual void emitFor(std::string, ExpressionNode*, ExpressionNode*, ExpressionNode*) = 0;
     
     virtual ~Generator();
     virtual std::string openOutput(std::string path);

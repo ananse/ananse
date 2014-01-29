@@ -260,3 +260,23 @@ void CppGenerator::emitExitSelect()
 {
     write("goto " + caseVariables.back() + "_end;\n" + indentation());
 }
+
+void CppGenerator::emitFor(std::string identifier, ExpressionNode* from, ExpressionNode* to, ExpressionNode* step)
+{
+    write("for(" + identifier + " = ");
+    emitExpression(from);
+    write("; ");
+    write(identifier + "<=");
+    emitExpression(to);
+    write("; ");
+    write(identifier + "+=");
+    if(step == NULL)
+    {
+        write("1");
+    }
+    else
+    {
+        emitExpression(step);
+    }
+    write(")");
+}

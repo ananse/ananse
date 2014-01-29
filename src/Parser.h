@@ -34,6 +34,7 @@ private:
     static int numOperators;
     static std::vector<Token> ifTerminators;
     static std::vector<Token> caseTerminators;
+    static std::vector<Token> forTerminators;
     
     bool match(Token token);
     void getToken();
@@ -51,9 +52,10 @@ private:
     void parseIdentifierStatements();
     void parsePrint();
     void parseIf();
-    void parseSelectCase();
-    void parseExit();
     CaseExpression * parseCaseExpression();
+    void parseSelectCase();
+    void parseForLoop();
+    void parseExit();
     
     // Expressions parsing
     ExpressionNode * parseExpression();
