@@ -56,6 +56,10 @@ public:
     virtual void emitFor(std::string, ExpressionNode*, ExpressionNode*, ExpressionNode*) = 0;
     virtual void emitExitFor() = 0;
     virtual void emitContinueFor() = 0;
+    virtual void emitWhile(ExpressionNode*) = 0;
+    virtual void emitEndWhile() = 0;
+    virtual void emitExitWhile() = 0;
+    virtual void emitContinueWhile() = 0;
     
     virtual ~Generator();
     virtual std::string openOutput(std::string path);

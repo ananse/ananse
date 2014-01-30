@@ -35,6 +35,7 @@ private:
     static std::vector<Token> ifTerminators;
     static std::vector<Token> caseTerminators;
     static std::vector<Token> forTerminators;
+    static std::vector<Token> whileTerminators;
     
     bool match(Token token);
     void getToken();
@@ -55,6 +56,7 @@ private:
     CaseExpression * parseCaseExpression();
     void parseSelectCase();
     void parseForLoop();
+    void parseWhileLoop();
     void parseExit();
     void parseContinue();
     

@@ -28,6 +28,8 @@ const char * Generator::getExpressionNodeOperator(ExpressionNode* node)
         case NODE_DIVIDE: return " / ";
         case NODE_EQUALS: return " == ";
         case NODE_NOT_EQUALS: return " != ";
+        case NODE_GREATER_THAN: return " > ";
+        case NODE_LESS_THAN: return " < ";
     }
 }
 
@@ -70,6 +72,8 @@ void Generator::emitExpression(ExpressionNode * expressionNode)
         case NODE_MULTIPLY:
         case NODE_EQUALS:
         case NODE_NOT_EQUALS:
+        case NODE_GREATER_THAN:
+        case NODE_LESS_THAN:
             write("(");
             emitExpression(expressionNode->getLeft());
             write(getExpressionNodeOperator(expressionNode));

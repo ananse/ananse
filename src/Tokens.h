@@ -50,7 +50,9 @@ typedef enum {
     FOR,
     STEP,
     NEXT,
-    CONTINUE
+    CONTINUE,
+    WHILE,
+    WEND
 } Token;
 
 #endif	/* TOKENS_H */

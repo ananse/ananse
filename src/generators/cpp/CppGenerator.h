@@ -49,6 +49,10 @@ public:
     virtual void emitFor(std::string, ExpressionNode*, ExpressionNode*, ExpressionNode*);
     virtual void emitExitFor();
     virtual void emitContinueFor();
+    virtual void emitWhile(ExpressionNode*);
+    virtual void emitEndWhile();
+    virtual void emitExitWhile();
+    virtual void emitContinueWhile();
     
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();

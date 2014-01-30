@@ -20,7 +20,9 @@ typedef enum{
     NODE_IDENTIFIER,
     NODE_STRING,
     NODE_EQUALS,
-    NODE_NOT_EQUALS
+    NODE_NOT_EQUALS,
+    NODE_GREATER_THAN,
+    NODE_LESS_THAN
 } NodeType;
 
 class ExpressionNode {

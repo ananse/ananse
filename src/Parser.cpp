@@ -4,15 +4,19 @@
 #include "generators/js/JsGenerator.h"
 #include "LexerException.h"
 
+
 Parser::OperatorLevel Parser::operators[] = {
 	{{EQUALS, NOT_EQUALS}, {NODE_EQUALS, NODE_NOT_EQUALS}, 2},
+    {{GREATER_THAN, LESS_THAN}, {NODE_GREATER_THAN, NODE_LESS_THAN}, 2},
 	{{PLUS, MINUS}, {NODE_ADD, NODE_SUBTRACT}, 2},
 	{{MULTIPLY, DIVIDE}, {NODE_MULTIPLY, NODE_DIVIDE}, 2}
 };
+
 int Parser::numOperators;
 std::vector<Token> Parser::ifTerminators;
 std::vector<Token> Parser::caseTerminators;
 std::vector<Token> Parser::forTerminators;
+std::vector<Token> Parser::whileTerminators;
 
 Parser::Parser(Generator * generator, std::string source)
 {
@@ -27,6 +31,9 @@ Parser::Parser(Generator * generator, std::string source)
     caseTerminators.push_back(END);
     
     forTerminators.push_back(NEXT);
+    
+    whileTerminators.push_back(END);
+    whileTerminators.push_back(WEND);
     
     selectCases = 0;
     forLoops = 0;
@@ -127,6 +134,7 @@ void Parser::parse(std::vector<Token> terminators)
         parseIf();
         parseSelectCase();
         parseForLoop();
+        parseWhileLoop();
         parseExit();
         parseContinue();
         
@@ -218,6 +226,11 @@ void Parser::parseContinue()
             generator->emitContinueFor();
             getToken();
         }
+        else if(lookahead == WHILE && whileLoops > 0)
+        {
+            generator->emitContinueWhile();
+            getToken();
+        }
     }
 }
 
@@ -236,6 +249,11 @@ void Parser::parseExit()
             generator->emitExitFor();
             getToken();
         }
+        else if(lookahead == WHILE && whileLoops > 0)
+        {
+            generator->emitExitWhile();
+            getToken();
+        }        
         else if(lookahead == NEW_LINE)
         {
             // Exit the app
@@ -438,6 +456,44 @@ CaseExpression * Parser::parseCaseExpression()
         caseExpression->setComparator(comparator);
     }
     return caseExpression;
+}
+
+void Parser::parseWhileLoop()
+{
+    if(lookahead == WHILE)
+    {
+        ExpressionNode * whileExpression = NULL;
+        
+        whileLoops++;
+        getToken();
+        whileExpression = parseExpression();
+        generator->emitWhile(whileExpression);
+        
+        match(NEW_LINE);
+        getToken();
+
+        generator->emitBeginCodeBlock();
+        symbols->enterScope("while");        
+        parse(whileTerminators);
+        symbols->exitScope();
+        generator->emitEndCodeBlock();
+        
+        if(lookahead == WEND)
+        {
+            generator->emitEndWhile();
+            getToken();
+        }
+        
+        if(lookahead == END)
+        {
+            getToken();
+            if(lookahead == WHILE)
+            {
+                generator->emitEndWhile();
+                getToken();
+            }
+        }
+    }
 }
 
 void Parser::parseForLoop()

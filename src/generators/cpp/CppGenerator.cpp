@@ -292,3 +292,24 @@ void CppGenerator::emitContinueFor()
     write("continue");
     emitEndOfStatement();
 }
+
+void CppGenerator::emitWhile(ExpressionNode* condition)
+{
+    write("while(");
+    emitExpression(condition);
+    write(")");
+}
+
+void CppGenerator::emitEndWhile(){}
+
+void CppGenerator::emitExitWhile()
+{
+    write("break");
+    emitEndOfStatement();
+}
+
+void CppGenerator::emitContinueWhile()
+{
+    write("continue");
+    emitEndOfStatement();
+}

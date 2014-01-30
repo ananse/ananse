@@ -194,6 +194,8 @@ Token Lexer::getNextToken()
         else if (identString == "next")     return NEXT;
         else if (identString == "continue") return CONTINUE;
         else if (identString == "to")       return TO;
+        else if (identString == "while")    return WHILE;
+        else if (identString == "wend")     return WEND;
         else                                return IDENTIFIER;
     }
     
