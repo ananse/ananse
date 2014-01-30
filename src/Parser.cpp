@@ -28,6 +28,9 @@ Parser::Parser(Generator * generator, std::string source)
     
     forTerminators.push_back(NEXT);
     
+    selectCases = 0;
+    forLoops = 0;
+    
     symbols = new Symbols();
     setSource(source);    
 }
@@ -125,6 +128,7 @@ void Parser::parse(std::vector<Token> terminators)
         parseSelectCase();
         parseForLoop();
         parseExit();
+        parseContinue();
         
         // Detect the end of parsing of this block
         for(std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
@@ -204,6 +208,19 @@ void Parser::parseDeclaration()
     }
 }
 
+void Parser::parseContinue()
+{
+    if(lookahead == CONTINUE)
+    {
+        getToken();
+        if(lookahead == FOR && forLoops > 0)
+        {
+            generator->emitContinueFor();
+            getToken();
+        }
+    }
+}
+
 void Parser::parseExit()
 {
     if(lookahead == EXIT)
@@ -214,7 +231,12 @@ void Parser::parseExit()
             generator->emitExitSelect();
             getToken();
         }
-        else
+        else if(lookahead == FOR && forLoops > 0)
+        {
+            generator->emitExitFor();
+            getToken();
+        }
+        else if(lookahead == NEW_LINE)
         {
             // Exit the app
         }
@@ -422,6 +444,7 @@ void Parser::parseForLoop()
 {
     if(lookahead == FOR)
     {
+        forLoops++;
         std::string identifier;
         Symbol * counter;
         ExpressionNode * fromExpression = NULL;
@@ -471,6 +494,11 @@ void Parser::parseForLoop()
         parse(forTerminators);
         symbols->exitScope();
         generator->emitEndCodeBlock();
+        
+        if(lookahead == NEXT)
+        {
+            forLoops--;
+        }
         
         getToken();
         

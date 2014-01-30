@@ -56,6 +56,7 @@ private:
     void parseSelectCase();
     void parseForLoop();
     void parseExit();
+    void parseContinue();
     
     // Expressions parsing
     ExpressionNode * parseExpression();
@@ -66,7 +67,11 @@ private:
     static bool isComparator(Token token);
     std::string resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType);
     void setSource(std::string source);
+    
     int selectCases;
+    int forLoops;
+    int doLoops;
+    int whileLoops;
     
 public:
     Parser(Generator * generator, std::string source);

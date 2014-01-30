@@ -280,3 +280,15 @@ void CppGenerator::emitFor(std::string identifier, ExpressionNode* from, Express
     }
     write(")");
 }
+
+void CppGenerator::emitExitFor()
+{
+    write("break");
+    emitEndOfStatement();
+}
+
+void CppGenerator::emitContinueFor()
+{
+    write("continue");
+    emitEndOfStatement();
+}
