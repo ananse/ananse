@@ -52,7 +52,10 @@ typedef enum {
     NEXT,
     CONTINUE,
     WHILE,
-    WEND
+    WEND,
+    DO,
+    LOOP,
+    UNTIL
 } Token;
 
 #endif	/* TOKENS_H */

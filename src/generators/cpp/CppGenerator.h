@@ -53,6 +53,8 @@ public:
     virtual void emitEndWhile();
     virtual void emitExitWhile();
     virtual void emitContinueWhile();
+    virtual void emitDo(std::string, ExpressionNode*);
+    virtual void emitLoop(std::string, ExpressionNode*);    
     
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();
@@ -73,6 +75,7 @@ private:
     std::stringstream body;
     int selectCases;
     std::vector<std::string> caseVariables;
+    std::vector<bool> doConditions;
     std::string nextCodeBlockPrefix;
 };
 

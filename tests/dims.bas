@@ -13,4 +13,8 @@ next
 while k < 10
     k = k + 1
     continue while
-end while
+wend
+
+do 
+    print 'Hello World'
+loop while i = 6

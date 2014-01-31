@@ -196,6 +196,9 @@ Token Lexer::getNextToken()
         else if (identString == "to")       return TO;
         else if (identString == "while")    return WHILE;
         else if (identString == "wend")     return WEND;
+        else if (identString == "do")       return DO;
+        else if (identString == "loop")     return LOOP;
+        else if (identString == "until")    return UNTIL;
         else                                return IDENTIFIER;
     }
     

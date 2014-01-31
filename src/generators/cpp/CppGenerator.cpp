@@ -313,3 +313,58 @@ void CppGenerator::emitContinueWhile()
     write("continue");
     emitEndOfStatement();
 }
+
+void CppGenerator::emitDo(std::string type, ExpressionNode* condition)
+{
+    bool doConditions;
+    if(type == "")
+    {
+        write("do");
+        doConditions = false;
+    }
+    else
+    {
+        write("while(");
+        if(type == "while")
+        {
+            emitExpression(condition);
+        }
+        else if(type == "until")
+        {
+            write("!(");
+            emitExpression(condition);
+            write(")");
+        }
+        write(")");
+        doConditions = true;
+    }
+    this->doConditions.push_back(doConditions);
+}
+
+void CppGenerator::emitLoop(std::string type, ExpressionNode* condition)
+{
+    if(doConditions.back() == false)
+    {
+        if(type == "")
+        {
+            write("while(true)");
+            emitEndOfStatement();
+        }
+        else if(type == "while")
+        {
+            write("while(");
+            emitExpression(condition);
+            write(")");
+            emitEndOfStatement();
+        }
+        else if(type == "until")
+        {
+            write("while(!(");
+            emitExpression(condition);
+            write("))");
+            emitEndOfStatement();
+        }
+    }
+    doConditions.pop_back();
+}
+

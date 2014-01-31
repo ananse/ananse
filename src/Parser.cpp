@@ -13,10 +13,12 @@ Parser::OperatorLevel Parser::operators[] = {
 };
 
 int Parser::numOperators;
+
 std::vector<Token> Parser::ifTerminators;
 std::vector<Token> Parser::caseTerminators;
 std::vector<Token> Parser::forTerminators;
 std::vector<Token> Parser::whileTerminators;
+std::vector<Token> Parser::doTerminators;
 
 Parser::Parser(Generator * generator, std::string source)
 {
@@ -26,14 +28,12 @@ Parser::Parser(Generator * generator, std::string source)
     ifTerminators.push_back(END);
     ifTerminators.push_back(ELSE_IF);
     ifTerminators.push_back(ELSE);
-    
     caseTerminators.push_back(CASE);
     caseTerminators.push_back(END);
-    
     forTerminators.push_back(NEXT);
-    
     whileTerminators.push_back(END);
     whileTerminators.push_back(WEND);
+    doTerminators.push_back(LOOP);
     
     selectCases = 0;
     forLoops = 0;
@@ -135,6 +135,7 @@ void Parser::parse(std::vector<Token> terminators)
         parseSelectCase();
         parseForLoop();
         parseWhileLoop();
+        parseDoLoop();
         parseExit();
         parseContinue();
         
@@ -463,6 +464,7 @@ void Parser::parseWhileLoop()
     if(lookahead == WHILE)
     {
         ExpressionNode * whileExpression = NULL;
+        bool whileEnded = false;
         
         whileLoops++;
         getToken();
@@ -478,20 +480,83 @@ void Parser::parseWhileLoop()
         symbols->exitScope();
         generator->emitEndCodeBlock();
         
-        if(lookahead == WEND)
-        {
-            generator->emitEndWhile();
-            getToken();
-        }
-        
         if(lookahead == END)
         {
             getToken();
             if(lookahead == WHILE)
             {
-                generator->emitEndWhile();
-                getToken();
+                whileEnded = true;
             }
+        }
+        else if(lookahead == WEND)
+        {
+            whileEnded = true;
+        }
+        
+        if(whileEnded)
+        {
+            generator->emitEndWhile();
+            getToken();            
+        }
+    }
+}
+
+void Parser::parseDoLoop()
+{
+    if(lookahead == DO)
+    {
+        std::string doType = "";
+        ExpressionNode * doCondition = NULL;
+        
+        getToken();
+        
+        switch(lookahead)
+        {
+            case WHILE:
+                getToken();
+                doType = "while";
+                doCondition = parseExpression();
+                break;
+                
+            case UNTIL:
+                getToken();
+                doType = "until";
+                doCondition = parseExpression();
+                break;
+        }
+        
+        generator->emitDo(doType, doCondition);
+        generator->emitBeginCodeBlock();
+        symbols->enterScope("do");
+        parse(doTerminators);
+        symbols->exitScope();
+        generator->emitEndCodeBlock();
+        
+        if(lookahead == LOOP)
+        {
+            std::string loopType = "";
+            ExpressionNode * loopCondition = NULL;            
+            getToken(); 
+            
+            if(doType == "")
+            {
+                switch(lookahead)
+                {
+                    case WHILE:
+                        getToken();
+                        loopType = "while";
+                        loopCondition = parseExpression();
+                        break;
+
+                    case UNTIL:
+                        getToken();
+                        loopType = "until";
+                        loopCondition = parseExpression();
+                        break;
+                }                
+            }
+            
+            generator->emitLoop(loopType, loopCondition);
         }
     }
 }

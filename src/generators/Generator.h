@@ -60,6 +60,8 @@ public:
     virtual void emitEndWhile() = 0;
     virtual void emitExitWhile() = 0;
     virtual void emitContinueWhile() = 0;
+    virtual void emitDo(std::string, ExpressionNode*) = 0;
+    virtual void emitLoop(std::string, ExpressionNode*) = 0;
     
     virtual ~Generator();
     virtual std::string openOutput(std::string path);
