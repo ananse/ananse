@@ -37,6 +37,7 @@ private:
     static std::vector<Token> forTerminators;
     static std::vector<Token> whileTerminators;
     static std::vector<Token> doTerminators;
+    static std::vector<Token> subTerminators;
     
     bool match(Token token);
     void getToken();
@@ -45,7 +46,8 @@ private:
     void error(std::string message);
     
     Symbol * lookupSymbol(std::string identifier);
-    Symbol * insertSymbol(std::string identifier, std::string type);
+    //Symbol * insertSymbol(std::string identifier, std::string type);
+    Symbol * insertSymbol(Parameter);
     Symbol * currentSymbol;
     
     void parseStatement();
@@ -61,6 +63,7 @@ private:
     void parseDoLoop();
     void parseExit();
     void parseContinue();
+    void parseSubFunction();
     
     // Expressions parsing
     ExpressionNode * parseExpression();

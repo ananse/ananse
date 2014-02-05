@@ -55,7 +55,10 @@ typedef enum {
     WEND,
     DO,
     LOOP,
-    UNTIL
+    UNTIL,
+    FUNCTION,
+    SUB,
+    DECLARE
 } Token;
 
 #endif	/* TOKENS_H */

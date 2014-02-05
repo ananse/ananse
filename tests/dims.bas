@@ -18,3 +18,9 @@ wend
 do 
     print 'Hello World'
 loop while i = 6
+
+function random() as integer
+    print 'A random number'
+end function
+
+print 'Dead'

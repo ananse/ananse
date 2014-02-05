@@ -20,6 +20,13 @@
  * generators extend this class to help implement the translation of Ananse
  * Basic to their targets.
  */
+
+typedef struct{
+    std::string identifier;
+    std::string datatype;
+    std::string scope;
+} Parameter;
+
 class Generator {
 public:
 	/**
@@ -36,7 +43,7 @@ public:
      * Emit an expression which is expressed in the passed expression tree.
      */
     virtual void emitExpression(ExpressionNode *);
-    virtual void emitDeclaration(std::string identifier, std::string datatype, bool global) = 0;
+    virtual void emitDeclaration(Parameter) = 0;
     virtual void emitAssignment();
     virtual void emitEndOfStatement();
     virtual void emitModuleHeader();
@@ -62,6 +69,8 @@ public:
     virtual void emitContinueWhile() = 0;
     virtual void emitDo(std::string, ExpressionNode*) = 0;
     virtual void emitLoop(std::string, ExpressionNode*) = 0;
+    virtual void emitFunction(Parameter, std::vector<Parameter>) = 0;
+    virtual void emitEndFunction() = 0;
     
     virtual ~Generator();
     virtual std::string openOutput(std::string path);

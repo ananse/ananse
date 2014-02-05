@@ -199,6 +199,9 @@ Token Lexer::getNextToken()
         else if (identString == "do")       return DO;
         else if (identString == "loop")     return LOOP;
         else if (identString == "until")    return UNTIL;
+        else if (identString == "function") return FUNCTION;
+        else if (identString == "sub")      return SUB;
+        else if (identString == "declare")  return DECLARE;
         else                                return IDENTIFIER;
     }
     

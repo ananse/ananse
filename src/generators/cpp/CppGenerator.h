@@ -27,10 +27,8 @@ class CppGenerator : public Generator
 {
 public:
     CppGenerator();
-    //CppGenerator(const CppGenerator& orig);
-    //virtual ~CppGenerator();
 
-    virtual void emitDeclaration(std::string identifier, std::string datatype, bool global);    
+    virtual void emitDeclaration(Parameter);    
     virtual void emitModuleHeader();
     virtual void emitModuleFooter();
     virtual void emitEndOfStatement();
@@ -55,6 +53,8 @@ public:
     virtual void emitContinueWhile();
     virtual void emitDo(std::string, ExpressionNode*);
     virtual void emitLoop(std::string, ExpressionNode*);    
+    virtual void emitFunction(Parameter, std::vector<Parameter>);
+    virtual void emitEndFunction();
     
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();
@@ -66,6 +66,7 @@ protected:
     int indent;
     std::string indentation();
     void writeCaseExpression(std::string, CaseExpression *);
+    std::string getLocalType(std::string);
 
 private:
     std::string outputFile;
@@ -73,6 +74,7 @@ private:
     std::stringstream includes;
     std::stringstream moduleGlobals;
     std::stringstream body;
+    std::stringstream functions;
     int selectCases;
     std::vector<std::string> caseVariables;
     std::vector<bool> doConditions;

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-CppGenerator::CppGenerator() 
+CppGenerator::CppGenerator()
 {
     indent = 0;
     indenterEnabled = true;
@@ -19,77 +19,82 @@ CppGenerator::CppGenerator()
 
 std::string CppGenerator::indentation()
 {
-	std::string ret = "";
-	if(indenterEnabled)
-	{
-		for(int i = 0; i < indent; i++)
-		{
-			ret += "    ";
-		}
-	}
-	return ret;
+    std::string ret = "";
+    if (indenterEnabled)
+    {
+        for (int i = 0; i < indent; i++)
+        {
+            ret += "    ";
+        }
+    }
+    return ret;
 }
 
 void CppGenerator::addHeader(std::string header)
 {
-	bool insert = false;
+    bool insert = false;
 
-	if(headers.size() == 0)
-	{
-		insert = true;
-	}
-	else
-	{
-		std::vector<std::string>::iterator it =std::find(headers.begin(), headers.end(), header);
-		if(*it != header)
-		{
-			insert = true;
-		}
-	}
+    if (headers.size() == 0)
+    {
+        insert = true;
+    } else
+    {
+        std::vector<std::string>::iterator it = std::find(headers.begin(), headers.end(), header);
+        if (*it != header)
+        {
+            insert = true;
+        }
+    }
 
-	if(insert)
-	{
-		setOutput(&includes);
-		write("#include <" + header + ">\n");
-		setOutput(&body);
-		headers.push_back(header);
-	}
+    if (insert)
+    {
+        setOutput(&includes);
+        write("#include <" + header + ">\n");
+        setOutput(&body);
+        headers.push_back(header);
+    }
+}
+
+std::string CppGenerator::getLocalType(std::string datatype)
+{
+    std::string localType;
+
+    if (datatype == "integer") localType = "int";
+    if (datatype == "long") localType = "long";
+    if (datatype == "boolean") localType = "bool";
+
+    return localType;
 }
 
 void CppGenerator::emitEndOfStatement()
 {
     write(";\n" + indentation());
-	setOutput(&body);
-	indenterEnabled = true;
+    /*setOutput(&body);
+    indenterEnabled = true;*/
 }
 
-void CppGenerator::emitDeclaration(std::string identifier, std::string datatype, bool global)
+void CppGenerator::emitDeclaration(Parameter parameter)
 {
-    if(global) 
+    if (parameter.scope == "global" || parameter.scope == "module")
     {
         setOutput(&moduleGlobals);
         indenterEnabled = false;
     }
-    
-    std::string localType;
-    
-    if(datatype == "integer") localType = "int";
-    if(datatype == "long") localType = "long";
-    if(datatype == "boolean") localType = "bool";
-    
-    write(localType + " " + identifier);
+
+    write(getLocalType(parameter.datatype) + " " + parameter.identifier);
 }
 
 void CppGenerator::emitPrint()
 {
-	addHeader("iostream");
-	write("std::cout<<");
+    addHeader("iostream");
+    write("std::cout<<");
 }
 
 void CppGenerator::emitModuleHeader()
 {
     std::string moduleFunction;
-    if(isMainModule){
+    if (isMainModule)
+    {
         moduleFunction = "int main(int argc, char ** argv)";
     }
     write(moduleFunction);
@@ -99,33 +104,34 @@ void CppGenerator::emitModuleHeader()
 
 void CppGenerator::emitModuleFooter()
 {
-	indent--;
+    indent--;
     write("\n}");
 }
 
 void CppGenerator::emitIf(ExpressionNode * condition)
 {
-	write("if ");
-	emitExpression(condition);
+    write("if ");
+    emitExpression(condition);
 }
 
 void CppGenerator::emitElseIf(ExpressionNode * condition)
 {
-	write("else if ");
-	emitExpression(condition);
+    write("else if ");
+    emitExpression(condition);
 }
 
 void CppGenerator::emitElse()
 {
-	write("else ");
+    write("else ");
 }
 
 void CppGenerator::emitBeginCodeBlock()
 {
-	write("\n" + indentation() + "{\n");
-	indent++;
-	write(indentation());
-    if(nextCodeBlockPrefix != "") {
+    write("\n" + indentation() + "{\n");
+    indent++;
+    write(indentation());
+    if (nextCodeBlockPrefix != "")
+    {
         write(nextCodeBlockPrefix);
         nextCodeBlockPrefix = "";
     }
@@ -133,47 +139,54 @@ void CppGenerator::emitBeginCodeBlock()
 
 void CppGenerator::emitEndCodeBlock()
 {
-	indent--;
-	write ("\n" + indentation() + "}\n" + indentation());
+    indent--;
+    write("\n" + indentation() + "}\n" + indentation());
 }
 
 void CppGenerator::emitEndProgramme()
 {
-	write("exit(0)");
+    write("exit(0)");
 }
 
 std::string CppGenerator::openOutput(std::string source)
 {
-	setOutput(&body);
-	outputFile = getOutputFile(source);
-	return outputFile;
+    setOutput(&body);
+    outputFile = getOutputFile(source);
+    return outputFile;
 }
 
 void CppGenerator::closeOutput()
 {
-	std::ofstream file(outputFile.c_str(), std::fstream::out);
-	includes.seekp(0);
+    std::ofstream file(outputFile.c_str(), std::fstream::out);
+    includes.seekp(0);
 
-	std::copy(std::istreambuf_iterator<char>(includes),
-	     std::istreambuf_iterator<char>(),
-	     std::ostreambuf_iterator<char>(file)
-	);
+    std::copy(std::istreambuf_iterator<char>(includes),
+        std::istreambuf_iterator<char>(),
+        std::ostreambuf_iterator<char>(file)
+    );
 
-	file<<"\n";
+    file << "\n";
 
-	std::copy(std::istreambuf_iterator<char>(moduleGlobals),
-	     std::istreambuf_iterator<char>(),
-	     std::ostreambuf_iterator<char>(file)
-	);
+    std::copy(std::istreambuf_iterator<char>(moduleGlobals),
+        std::istreambuf_iterator<char>(),
+        std::ostreambuf_iterator<char>(file)
+    );
 
-	file<<"\n";
+    file << "\n";
 
-	std::copy(std::istreambuf_iterator<char>(body),
-	     std::istreambuf_iterator<char>(),
-	     std::ostreambuf_iterator<char>(file)
-	);
+    std::copy(std::istreambuf_iterator<char>(functions),
+        std::istreambuf_iterator<char>(),
+        std::ostreambuf_iterator<char>(file)
+    );
 
-	file.close();
+    file << "\n";
+
+    std::copy(std::istreambuf_iterator<char>(body),
+        std::istreambuf_iterator<char>(),
+        std::ostreambuf_iterator<char>(file)
+    );
+
+    file.close();
 }
 
 std::string CppGenerator::getOutputFile(std::string output)
@@ -184,12 +197,24 @@ std::string CppGenerator::getOutputFile(std::string output)
 void CppGenerator::emitSelect(ExpressionNode* node)
 {
     std::stringstream identifier;
-    identifier<<"select_case_";
-    identifier<<selectCases;
-    emitDeclaration(identifier.str() + "_matched", "boolean", false);
+
+    Parameter selectMatched;
+    Parameter selectVariable;
+
+    identifier << "select_case_";
+    identifier << selectCases;
+
+    selectMatched.identifier = identifier.str() + "_matched";
+    selectMatched.datatype = "boolean";
+    emitDeclaration(selectMatched);
     write(" = false");
+
     emitEndOfStatement();
-    emitDeclaration(identifier.str(), node->getDataType(), false);
+
+    selectMatched.identifier = identifier.str();
+    selectMatched.datatype = node->getDataType();
+    emitDeclaration(selectMatched);
+
     emitAssignment();
     emitExpression(node);
     emitEndOfStatement();
@@ -198,15 +223,15 @@ void CppGenerator::emitSelect(ExpressionNode* node)
 
 void CppGenerator::writeCaseExpression(std::string identifier, CaseExpression* expression)
 {
-    switch(expression->getType())
+    switch (expression->getType())
     {
         case CASE_EXPRESSION:
             write(identifier);
             write(" == ");
             emitExpression(expression->getPrimaryExpression());
             break;
-        
-        //@todo modify this to support strings sorted in ascending order in future
+
+            //@todo modify this to support strings sorted in ascending order in future
         case CASE_TO:
             write(identifier);
             write(" >= ");
@@ -216,7 +241,7 @@ void CppGenerator::writeCaseExpression(std::string identifier, CaseExpression* e
             write(" <= ");
             emitExpression(expression->getSecondaryExpression());
             break;
-            
+
         case CASE_IS:
             write(identifier);
             write(getToken(expression->getComparator()));
@@ -232,15 +257,15 @@ void CppGenerator::emitCase(std::vector<CaseExpression*> expressions)
     caseExpression = expressions.back();
     expressions.pop_back();
     writeCaseExpression(caseVariables.back(), caseExpression);
-    
-    while(expressions.size() > 0)
+
+    while (expressions.size() > 0)
     {
         write("||");
         caseExpression = expressions.back();
         expressions.pop_back();
-        writeCaseExpression(caseVariables.back(), caseExpression);        
+        writeCaseExpression(caseVariables.back(), caseExpression);
     }
-    
+
     write(")");
     nextCodeBlockPrefix = caseVariables.back() + "_matched = true;\n" + indentation() + indentation();
 }
@@ -270,11 +295,10 @@ void CppGenerator::emitFor(std::string identifier, ExpressionNode* from, Express
     emitExpression(to);
     write("; ");
     write(identifier + "+=");
-    if(step == NULL)
+    if (step == NULL)
     {
         write("1");
-    }
-    else
+    } else
     {
         emitExpression(step);
     }
@@ -300,7 +324,9 @@ void CppGenerator::emitWhile(ExpressionNode* condition)
     write(")");
 }
 
-void CppGenerator::emitEndWhile(){}
+void CppGenerator::emitEndWhile()
+{
+}
 
 void CppGenerator::emitExitWhile()
 {
@@ -317,19 +343,17 @@ void CppGenerator::emitContinueWhile()
 void CppGenerator::emitDo(std::string type, ExpressionNode* condition)
 {
     bool doConditions;
-    if(type == "")
+    if (type == "")
     {
         write("do");
         doConditions = false;
-    }
-    else
+    } else
     {
         write("while(");
-        if(type == "while")
+        if (type == "while")
         {
             emitExpression(condition);
-        }
-        else if(type == "until")
+        } else if (type == "until")
         {
             write("!(");
             emitExpression(condition);
@@ -343,21 +367,19 @@ void CppGenerator::emitDo(std::string type, ExpressionNode* condition)
 
 void CppGenerator::emitLoop(std::string type, ExpressionNode* condition)
 {
-    if(doConditions.back() == false)
+    if (doConditions.back() == false)
     {
-        if(type == "")
+        if (type == "")
         {
             write("while(true)");
             emitEndOfStatement();
-        }
-        else if(type == "while")
+        } else if (type == "while")
         {
             write("while(");
             emitExpression(condition);
             write(")");
             emitEndOfStatement();
-        }
-        else if(type == "until")
+        } else if (type == "until")
         {
             write("while(!(");
             emitExpression(condition);
@@ -366,5 +388,27 @@ void CppGenerator::emitLoop(std::string type, ExpressionNode* condition)
         }
     }
     doConditions.pop_back();
+}
+
+void CppGenerator::emitFunction(Parameter function, std::vector<Parameter> parameters)
+{
+    setOutput(&functions);
+    write(getLocalType(function.datatype));
+    write(" ");
+    write(function.identifier);
+    write("(");
+    std::vector<Parameter>::iterator i;
+    for(i = parameters.begin(); i != parameters.end(); i++)
+    {
+        if(i != parameters.begin()) write(", ");
+        write(getLocalType(i->datatype));
+        write(i->identifier);
+    }
+    write(")");
+}
+
+void CppGenerator::emitEndFunction()
+{
+    setOutput(&body);
 }
 

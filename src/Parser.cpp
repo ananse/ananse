@@ -19,6 +19,7 @@ std::vector<Token> Parser::caseTerminators;
 std::vector<Token> Parser::forTerminators;
 std::vector<Token> Parser::whileTerminators;
 std::vector<Token> Parser::doTerminators;
+std::vector<Token> Parser::subTerminators;
 
 Parser::Parser(Generator * generator, std::string source)
 {
@@ -34,6 +35,7 @@ Parser::Parser(Generator * generator, std::string source)
     whileTerminators.push_back(END);
     whileTerminators.push_back(WEND);
     doTerminators.push_back(LOOP);
+    subTerminators.push_back(END);
     
     selectCases = 0;
     forLoops = 0;
@@ -61,19 +63,19 @@ void Parser::error(std::string message)
     exit(1);
 }
 
-Symbol * Parser::insertSymbol(std::string identifier, std::string type)
+Symbol * Parser::insertSymbol(Parameter parameter)
 {
-    Symbol * symbol = symbols->insert(identifier, type);
+    Symbol * symbol = symbols->insert(parameter.identifier, parameter.datatype);
     switch(symbols->getStatus())
     {
         case ADDED:
-            if(type == "integer")
+            if(parameter.datatype == "integer")
             {
                 symbol->setAsNumber();
             }
             return symbol;
         case EXISTS:
-            error(identifier + " has already been declared");
+            error(parameter.identifier + " has already been declared");
     }
 }
 
@@ -91,7 +93,6 @@ void Parser::setSource(std::string source)
 {
     try{
         lexer = new Lexer(source);        
-        //symbols->addType("number", "primitive");        
         symbols->addType("integer", "primitive");
         symbols->addType("long", "primitive");
         symbols->addType("short", "primitive");
@@ -136,6 +137,7 @@ void Parser::parse(std::vector<Token> terminators)
         parseForLoop();
         parseWhileLoop();
         parseDoLoop();
+        parseSubFunction();
         parseExit();
         parseContinue();
         
@@ -181,21 +183,22 @@ void Parser::parseDeclaration()
 {
     if (lookahead == DIM)
     {
-        std::string identifier;
-        std::string datatype;
-        std::string value;
+        /*std::string identifier;
+        std::string datatype;*/
     
         do{
+            Parameter parameter;
+            
             getToken();
             match(IDENTIFIER);
-            identifier = lexer->getIdentifierValue();
+            parameter.identifier = lexer->getIdentifierValue();
             getToken();
 
             if(lookahead == AS)
             {
                 getToken();
                 match(IDENTIFIER);
-                datatype = lexer->getIdentifierValue();
+                parameter.datatype = lexer->getIdentifierValue();
                 getToken();
             }
             else
@@ -203,13 +206,13 @@ void Parser::parseDeclaration()
                 error("Expected AS followed by the datatype");
             }
             
-            if(!symbols->vaildateType(datatype))
+            if(!symbols->vaildateType(parameter.datatype))
             {
-                error("Unknown data type `" + datatype + "`");
+                error("Unknown data type `" + parameter.datatype + "`");
             }
             
-            currentSymbol = insertSymbol(identifier, datatype);
-            generator->emitDeclaration(identifier, datatype, false);
+            currentSymbol = insertSymbol(parameter);
+            generator->emitDeclaration(parameter);
             parseAssignment();
             generator->emitEndOfStatement();                        
         }
@@ -326,6 +329,64 @@ void Parser::parsePrint()
 		generator->emitExpression(expression);
 		generator->emitEndOfStatement();
 	}
+}
+
+void Parser::parseSubFunction()
+{
+    if(lookahead == FUNCTION)
+    {
+        Parameter function;
+        std::vector<Parameter> parameters;
+        
+        getToken();
+        match(IDENTIFIER);
+        function.identifier = lexer->getIdentifierValue();
+        getToken();
+        match(BRACKET_OPEN);
+        symbols->enterScope("function");
+        
+        do
+        {
+            getToken();
+            if(lookahead == IDENTIFIER)
+            {
+                Parameter parameter;
+                parameter.identifier = lexer->getIdentifierValue();
+                getToken();
+                match(AS);
+                getToken();
+                match(IDENTIFIER);
+                parameter.datatype = lexer->getIdentifierValue();
+                parameters.push_back(parameter);
+                getToken();
+            }
+        }
+        while(lookahead == COMMA);
+        
+        match(BRACKET_CLOSE);
+        getToken();
+        match(AS);
+        getToken();
+        match(IDENTIFIER);
+        function.datatype = lexer->getIdentifierValue();
+        getToken();
+        match(NEW_LINE);
+        
+        generator->emitFunction(function, parameters);
+        generator->emitBeginCodeBlock();
+        
+        parse(subTerminators);
+                
+        if(lookahead == END)
+        {
+            getToken();
+            match(FUNCTION);
+            generator->emitEndCodeBlock();
+            symbols->exitScope();
+            generator->emitEndFunction();
+            getToken();
+        }
+    }
 }
 
 void Parser::parseIf()
@@ -580,11 +641,12 @@ void Parser::parseForLoop()
         if(lookahead == AS)
         {
             // Add the symbol to the symbol table
-            std::string dataType;
+            Parameter parameter;
             getToken();
-            dataType = lexer->getIdentifierValue();
-            counter = insertSymbol(identifier, dataType);
-            generator->emitDeclaration(identifier, dataType, false);
+            parameter.identifier = identifier;
+            parameter.datatype = lexer->getIdentifierValue();
+            counter = insertSymbol(parameter);
+            generator->emitDeclaration(parameter);
             getToken();
         }
         else
