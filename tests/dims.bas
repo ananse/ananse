@@ -15,12 +15,13 @@ while k < 10
     continue while
 wend
 
-do 
-    print 'Hello World'
-loop while i = 6
-
-function random() as integer
+function random(seed as integer) as integer
     print 'A random number'
 end function
+
+do 
+    print 'Hello World'
+    random(2.0)
+loop while i = 6
 
 print 'Dead'

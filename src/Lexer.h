@@ -10,7 +10,7 @@
 
 #include <string>
 #include <fstream>
-#include "Tokens.h"
+#include "abc.h"
 
 /**
  * The full lexer
@@ -36,16 +36,13 @@ private:
 public:
     Lexer(std::string);
     virtual ~Lexer();    
-    
     Token getNextToken();
     static std::string describeToken(Token);
     std::string getTokenString();
-
     long getIntegerValue();
     double getSingleValue();
     std::string getIdentifierValue();
     std::string getStringValue();
-
     std::string getSourceFile();
     long getLine();
     long getColumn();

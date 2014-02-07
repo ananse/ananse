@@ -37,6 +37,7 @@ public:
     virtual ~Symbols();
     void setLexer(Lexer * lexer);
     SymbolStatus getStatus();
+    void dump();
     
 private:    
     std::vector<SymbolTable*> symbolTableStack;

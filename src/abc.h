@@ -1,12 +1,27 @@
 /* 
- * File:   Tokens.h
+ * File:   abc.h
  * Author: ekow
  *
  * Created on 26 January 2014, 15:31
  */
 
-#ifndef TOKENS_H
-#define	TOKENS_H
+#ifndef ABC_H
+#define	ABC_H
+
+#include <vector>
+#include "ExpressionNode.h"
+
+typedef struct{
+    std::string identifier;
+    std::string datatype;
+    std::string scope;
+} Parameter;
+
+typedef std::vector<Parameter> ParameterList;
+typedef std::vector<Parameter>::iterator ParameterListIterator;
+
+typedef std::vector<ExpressionNode*> ExpressionNodeList;
+typedef std::vector<ExpressionNode*>::iterator ExpressionNodeListIterator;
 
 typedef enum {
     NEW_LINE,
@@ -61,5 +76,5 @@ typedef enum {
     DECLARE
 } Token;
 
-#endif	/* TOKENS_H */
+#endif	/* ABC_H */
 

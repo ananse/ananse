@@ -1,6 +1,7 @@
 #include <Parser.h>
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 #include "generators/js/JsGenerator.h"
 #include "LexerException.h"
 
@@ -118,6 +119,8 @@ void Parser::parseStatement()
 {
     parseIdentifierStatements();
     parsePrint();
+    parseExit();
+    parseContinue();
 }
 
 void Parser::parse()
@@ -138,8 +141,6 @@ void Parser::parse(std::vector<Token> terminators)
         parseWhileLoop();
         parseDoLoop();
         parseSubFunction();
-        parseExit();
-        parseContinue();
         
         // Detect the end of parsing of this block
         for(std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
@@ -313,7 +314,51 @@ void Parser::parseIdentifierStatements()
                 generator->write(identifier);
                 parseAssignment();
                 generator->emitEndOfStatement();
-            break;
+                break;
+            case NEW_LINE:
+            case BRACKET_OPEN:
+                if(currentSymbol->getCallable())
+                {
+                    ExpressionNodeList parameters;
+                    ParameterList expectedParameters = currentSymbol->getParameterList();
+                    if(lookahead == BRACKET_OPEN)
+                    {
+                        do{
+                            getToken();
+                            parameters.push_back(parseExpression());
+                        } while(lookahead == COMMA);
+                        match(BRACKET_CLOSE);
+                        getToken();
+                    }
+                    
+                    if(parameters.size() != expectedParameters.size())
+                    {
+                        std::stringstream errorMessage;
+                        errorMessage<<"Expected "<<expectedParameters.size()<<" parameter(s) for "<<currentSymbol->getIdentifier()<<"  but found "<<parameters.size();
+                        error(errorMessage.str());
+                    }
+                    else
+                    {
+                        ExpressionNodeListIterator p;
+                        ParameterListIterator e;
+                        int count;
+                        for(
+                            p = parameters.begin(), 
+                            e = expectedParameters.begin(),
+                            count = 1;
+                            p != parameters.end(); p++, e++, count++
+                        )
+                        {
+                            if((*p)->getDataType() != (*e).datatype)
+                            {
+                                std::stringstream errorMessage;
+                                errorMessage<<"The datatype for argument "<<count<<" of "<<currentSymbol->getIdentifier()<<" does not match. Expected: "<<(*e).datatype<<", found "<<(*p)->getDataType()<<".";
+                                error(errorMessage.str());
+                            }
+                        }
+                    }
+                }
+                break;
         }
     }
 }
@@ -336,14 +381,14 @@ void Parser::parseSubFunction()
     if(lookahead == FUNCTION)
     {
         Parameter function;
-        std::vector<Parameter> parameters;
+        ParameterList parameters;
+        Symbol * symbol;
         
         getToken();
         match(IDENTIFIER);
         function.identifier = lexer->getIdentifierValue();
         getToken();
         match(BRACKET_OPEN);
-        symbols->enterScope("function");
         
         do
         {
@@ -369,6 +414,12 @@ void Parser::parseSubFunction()
         getToken();
         match(IDENTIFIER);
         function.datatype = lexer->getIdentifierValue();
+        symbol = insertSymbol(function);
+        symbol->setCallable(true);
+        symbol->setParameterList(parameters);
+        
+        symbols->enterScope("function");
+        
         getToken();
         match(NEW_LINE);
         

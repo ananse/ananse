@@ -53,7 +53,7 @@ public:
     virtual void emitContinueWhile();
     virtual void emitDo(std::string, ExpressionNode*);
     virtual void emitLoop(std::string, ExpressionNode*);    
-    virtual void emitFunction(Parameter, std::vector<Parameter>);
+    virtual void emitFunction(Parameter, ParameterList);
     virtual void emitEndFunction();
     
     virtual std::string openOutput(std::string source);

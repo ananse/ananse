@@ -35,15 +35,10 @@ void Symbols::enterScope(std::string scope)
         (std::string) lineNumber + 
         ":" + scope);
     currentScope = scope;
-    /*std::cout<<this->lexer->getSourceFile() + 
-        ":" + 
-        (std::string) lineNumber + 
-        ":" + scope<<std::endl;*/
 }
 
 void Symbols::exitScope()
 {
-    //std::cout<<"exiting"<<std::endl;
     symbolTableStack.pop_back();
     scopesStack.pop_back();
 }
@@ -130,4 +125,6 @@ bool Symbols::vaildateType(std::string type)
         return true;
     }
 }
+
+
 

@@ -390,18 +390,19 @@ void CppGenerator::emitLoop(std::string type, ExpressionNode* condition)
     doConditions.pop_back();
 }
 
-void CppGenerator::emitFunction(Parameter function, std::vector<Parameter> parameters)
+void CppGenerator::emitFunction(Parameter function, ParameterList parameters)
 {
     setOutput(&functions);
     write(getLocalType(function.datatype));
     write(" ");
     write(function.identifier);
     write("(");
-    std::vector<Parameter>::iterator i;
+    ParameterListIterator i;
     for(i = parameters.begin(); i != parameters.end(); i++)
     {
         if(i != parameters.begin()) write(", ");
         write(getLocalType(i->datatype));
+        write(" ");
         write(i->identifier);
     }
     write(")");

@@ -53,3 +53,24 @@ void Symbol::setLine(int line)
 {
     this->line = line;
 }
+
+void Symbol::setCallable(bool callable)
+{
+    this->callable = callable;
+}
+
+bool Symbol::getCallable()
+{
+    return callable;
+}
+
+void Symbol::setParameterList(ParameterList parameterList)
+{
+    this->parameterList = parameterList;
+}
+
+ParameterList Symbol::getParameterList()
+{
+    return parameterList;
+}
+
