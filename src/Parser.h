@@ -64,6 +64,7 @@ private:
     void parseExit();
     void parseContinue();
     void parseSubFunction();
+    void parseReturn();
     
     // Expressions parsing
     ExpressionNode * parseExpression();
@@ -79,6 +80,8 @@ private:
     int forLoops;
     int doLoops;
     int whileLoops;
+    int functions;
+    int subs;
     
 public:
     Parser(Generator * generator, std::string source);

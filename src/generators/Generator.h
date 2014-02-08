@@ -65,6 +65,8 @@ public:
     virtual void emitFunction(Parameter, ParameterList) = 0;
     virtual void emitCallSubFunction(std::string, ExpressionNodeList) = 0;
     virtual void emitEndFunction() = 0;
+    virtual void emitExitFunction() = 0;
+    virtual void emitReturn(ExpressionNode*) = 0;
     
     virtual ~Generator();
     virtual std::string openOutput(std::string path);

@@ -426,3 +426,15 @@ void CppGenerator::emitCallSubFunction(std::string identifier, ExpressionNodeLis
     
     write(")");
 }
+
+void CppGenerator::emitExitFunction()
+{
+    write("return");
+    emitEndOfStatement();
+}
+
+void CppGenerator::emitReturn(ExpressionNode * returnExpression)
+{
+    write("return ");
+    emitExpression(returnExpression);
+}

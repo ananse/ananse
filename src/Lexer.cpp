@@ -202,6 +202,7 @@ Token Lexer::getNextToken()
         else if (identString == "function") return FUNCTION;
         else if (identString == "sub")      return SUB;
         else if (identString == "declare")  return DECLARE;
+        else if (identString == "return")   return RETURN;
         else                                return IDENTIFIER;
     }
     

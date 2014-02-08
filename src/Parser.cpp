@@ -121,6 +121,7 @@ void Parser::parseStatement()
     parsePrint();
     parseExit();
     parseContinue();
+    parseReturn();
 }
 
 void Parser::parse()
@@ -259,6 +260,11 @@ void Parser::parseExit()
             generator->emitExitWhile();
             getToken();
         }        
+        else if(lookahead == FUNCTION && functions > 0)
+        {
+            //generator->emitExitFunction();
+            getToken();
+        }
         else if(lookahead == NEW_LINE)
         {
             // Exit the app
@@ -422,16 +428,23 @@ void Parser::parseSubFunction()
         
         symbols->enterScope("function");
         
+        for(ParameterListIterator i = parameters.begin(); i != parameters.end(); i++)
+        {
+            insertSymbol(*i);
+        }
+        
         getToken();
         match(NEW_LINE);
         
         generator->emitFunction(function, parameters);
         generator->emitBeginCodeBlock();
+        functions++;
         
         parse(subTerminators);
                 
         if(lookahead == END)
         {
+            functions--;
             getToken();
             match(FUNCTION);
             generator->emitEndCodeBlock();
@@ -886,9 +899,18 @@ ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
             
         case IDENTIFIER:
             factor = new ExpressionNode();
-            factor->setIdentifierValue(instance->lexer->getIdentifierValue());
-            factor->setDataType(instance->lookupSymbol(instance->lexer->getIdentifierValue())->getDataType());
-            instance->getToken();
+            Symbol * symbol = instance->lookupSymbol(instance->lexer->getIdentifierValue());
+            
+            if(symbol->getCallable())
+            {
+                
+            }
+            else
+            {
+                factor->setIdentifierValue(instance->lexer->getIdentifierValue());
+                factor->setDataType(symbol->getDataType());
+                instance->getToken();
+            }
             break;
 
         case BRACKET_OPEN:
@@ -964,4 +986,18 @@ std::string Parser::resolveTypes(std::string leftType, std::string rightType, No
 	}
 
 	return datatype;
+}
+
+void Parser::parseReturn()
+{
+    if(lookahead == RETURN)
+    {
+        ExpressionNode * returnExpression = NULL;
+        getToken();
+        if(lookahead != NEW_LINE)
+        {
+            returnExpression = parseExpression();
+        }
+        generator->emitReturn(returnExpression);
+    }
 }

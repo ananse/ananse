@@ -73,7 +73,8 @@ typedef enum {
     UNTIL,
     FUNCTION,
     SUB,
-    DECLARE
+    DECLARE,
+    RETURN
 } Token;
 
 #endif	/* ABC_H */
