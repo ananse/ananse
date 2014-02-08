@@ -21,7 +21,7 @@ end function
 
 do 
     print 'Hello World'
-    random(2.0)
+    random(2)
 loop while i = 6
 
 print 'Dead'

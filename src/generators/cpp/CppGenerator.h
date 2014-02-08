@@ -55,6 +55,7 @@ public:
     virtual void emitLoop(std::string, ExpressionNode*);    
     virtual void emitFunction(Parameter, ParameterList);
     virtual void emitEndFunction();
+    virtual void emitCallSubFunction(std::string, ExpressionNodeList);
     
     virtual std::string openOutput(std::string source);
     virtual void closeOutput();

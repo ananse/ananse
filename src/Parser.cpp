@@ -357,6 +357,8 @@ void Parser::parseIdentifierStatements()
                             }
                         }
                     }
+                    generator->emitCallSubFunction(currentSymbol->getIdentifier(), parameters);
+                    generator->emitEndOfStatement();
                 }
                 break;
         }

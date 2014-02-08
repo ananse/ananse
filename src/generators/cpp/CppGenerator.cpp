@@ -413,3 +413,16 @@ void CppGenerator::emitEndFunction()
     setOutput(&body);
 }
 
+void CppGenerator::emitCallSubFunction(std::string identifier, ExpressionNodeList parameters)
+{
+    write(identifier);
+    write("(");
+    
+    for(ExpressionNodeListIterator p = parameters.begin(); p != parameters.end(); p++)
+    {
+        if(p != parameters.begin()) write(", ");
+        emitExpression(*p);
+    }
+    
+    write(")");
+}

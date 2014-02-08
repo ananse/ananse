@@ -63,7 +63,7 @@ public:
     virtual void emitDo(std::string, ExpressionNode*) = 0;
     virtual void emitLoop(std::string, ExpressionNode*) = 0;
     virtual void emitFunction(Parameter, ParameterList) = 0;
-    //virtual void emitCallSubFunction() = 0;
+    virtual void emitCallSubFunction(std::string, ExpressionNodeList) = 0;
     virtual void emitEndFunction() = 0;
     
     virtual ~Generator();
