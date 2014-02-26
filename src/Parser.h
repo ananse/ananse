@@ -15,11 +15,10 @@
  * 
  * Receives tokens from the Lexer and implements the syntax of the language.
  */
-class Parser
-{
+class Parser {
 private:
 
-    typedef struct{
+    typedef struct {
         Token tokens[4];
         NodeType nodes[4];
         int numOperators;
@@ -38,18 +37,18 @@ private:
     static std::vector<Token> whileTerminators;
     static std::vector<Token> doTerminators;
     static std::vector<Token> subTerminators;
-    
+
     bool match(Token token);
     void getToken();
 
     void out(std::string type, std::string message);
     void error(std::string message);
-    
+
     Symbol * lookupSymbol(std::string identifier);
     //Symbol * insertSymbol(std::string identifier, std::string type);
     Symbol * insertSymbol(Parameter);
     Symbol * currentSymbol;
-    
+
     void parseStatement();
     void parseDeclaration();
     void parseAssignment();
@@ -62,27 +61,28 @@ private:
     void parseWhileLoop();
     void parseDoLoop();
     void parseExit();
+    void parseFunctionCall();
     void parseContinue();
     void parseSubFunction();
     void parseReturn();
-    
+
     // Expressions parsing
     ExpressionNode * parseExpression();
     static ExpressionNode * parseBinaryOperators(int precedence, Parser * instance);
     static ExpressionNode * parseUnaryOperators(Parser * instance);
-    
+
     static bool isNumeric(std::string datatype);
     static bool isComparator(Token token);
     std::string resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType);
     void setSource(std::string source);
-    
+
     int selectCases;
     int forLoops;
     int doLoops;
     int whileLoops;
     int functions;
     int subs;
-    
+
 public:
     Parser(Generator * generator, std::string source);
     virtual ~Parser();

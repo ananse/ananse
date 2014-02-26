@@ -7,10 +7,22 @@
 
 
 Parser::OperatorLevel Parser::operators[] = {
-	{{EQUALS, NOT_EQUALS}, {NODE_EQUALS, NODE_NOT_EQUALS}, 2},
-    {{GREATER_THAN, LESS_THAN}, {NODE_GREATER_THAN, NODE_LESS_THAN}, 2},
-	{{PLUS, MINUS}, {NODE_ADD, NODE_SUBTRACT}, 2},
-	{{MULTIPLY, DIVIDE}, {NODE_MULTIPLY, NODE_DIVIDE}, 2}
+    {
+        {EQUALS, NOT_EQUALS},
+        {NODE_EQUALS, NODE_NOT_EQUALS}, 2
+    },
+    {
+        {GREATER_THAN, LESS_THAN},
+        {NODE_GREATER_THAN, NODE_LESS_THAN}, 2
+    },
+    {
+        {PLUS, MINUS},
+        {NODE_ADD, NODE_SUBTRACT}, 2
+    },
+    {
+        {MULTIPLY, DIVIDE},
+        {NODE_MULTIPLY, NODE_DIVIDE}, 2
+    }
 };
 
 int Parser::numOperators;
@@ -25,7 +37,7 @@ std::vector<Token> Parser::subTerminators;
 Parser::Parser(Generator * generator, std::string source)
 {
     this->generator = generator;
-    Parser::numOperators = sizeof(operators) / sizeof(OperatorLevel);
+    Parser::numOperators = sizeof (operators) / sizeof (OperatorLevel);
 
     ifTerminators.push_back(END);
     ifTerminators.push_back(ELSE_IF);
@@ -37,12 +49,12 @@ Parser::Parser(Generator * generator, std::string source)
     whileTerminators.push_back(WEND);
     doTerminators.push_back(LOOP);
     subTerminators.push_back(END);
-    
+
     selectCases = 0;
     forLoops = 0;
-    
+
     symbols = new Symbols();
-    setSource(source);    
+    setSource(source);
 }
 
 Parser::~Parser()
@@ -53,9 +65,9 @@ Parser::~Parser()
 
 void Parser::out(std::string type, std::string message)
 {
-    std::cerr<<
-        lexer->getSourceFile()<<":"<<lexer->getLine()<<":"<<lexer->getColumn()<<
-        ": "<<type<<": "<<message<<std::endl;
+    std::cerr <<
+            lexer->getSourceFile() << ":" << lexer->getLine() << ":" << lexer->getColumn() <<
+            ": " << type << ": " << message << std::endl;
 }
 
 void Parser::error(std::string message)
@@ -67,10 +79,10 @@ void Parser::error(std::string message)
 Symbol * Parser::insertSymbol(Parameter parameter)
 {
     Symbol * symbol = symbols->insert(parameter.identifier, parameter.datatype);
-    switch(symbols->getStatus())
+    switch (symbols->getStatus())
     {
         case ADDED:
-            if(parameter.datatype == "integer")
+            if (parameter.datatype == "integer")
             {
                 symbol->setAsNumber();
             }
@@ -83,7 +95,7 @@ Symbol * Parser::insertSymbol(Parameter parameter)
 Symbol * Parser::lookupSymbol(std::string identifier)
 {
     Symbol * symbol = symbols->lookup(identifier);
-    if(symbol == NULL)
+    if (symbol == NULL)
     {
         error("Unknown identifier `" + identifier + "`");
     }
@@ -92,8 +104,9 @@ Symbol * Parser::lookupSymbol(std::string identifier)
 
 void Parser::setSource(std::string source)
 {
-    try{
-        lexer = new Lexer(source);        
+    try
+    {
+        lexer = new Lexer(source);
         symbols->addType("integer", "primitive");
         symbols->addType("long", "primitive");
         symbols->addType("short", "primitive");
@@ -102,9 +115,9 @@ void Parser::setSource(std::string source)
         symbols->setLexer(lexer);
         symbols->enterScope(source);
     }
-    catch(LexerException * e)
+    catch (LexerException * e)
     {
-        std::cerr<<"Could not open file "<<source<<std::endl;
+        std::cerr << "Could not open file " << source << std::endl;
         exit(1);
     }
     getToken();
@@ -126,15 +139,15 @@ void Parser::parseStatement()
 
 void Parser::parse()
 {
-	std::vector<Token> terminators;
-	parse(terminators);
+    std::vector<Token> terminators;
+    parse(terminators);
 }
 
 void Parser::parse(std::vector<Token> terminators)
 {
     do
     {
-    	parseStatement();
+        parseStatement();
         parseDeclaration();
         parseIf();
         parseSelectCase();
@@ -142,26 +155,26 @@ void Parser::parse(std::vector<Token> terminators)
         parseWhileLoop();
         parseDoLoop();
         parseSubFunction();
-        
+
         // Detect the end of parsing of this block
-        for(std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
+        for (std::vector<Token>::iterator i = terminators.begin(); i != terminators.end(); i++)
         {
-        	if(lookahead == *i) return;
+            if (lookahead == *i) return;
         }
 
         // Detect newlines or EOFs
-        if(lookahead != NEW_LINE && lookahead != END_OF_FILE)
+        if (lookahead != NEW_LINE && lookahead != END_OF_FILE)
         {
             error("Unexpected token '" + lexer->getTokenString() + "'");
         }
 
         // Get the next token
         getToken();
-        
+
         // Detect EOFs
-        if(lookahead == END_OF_FILE) break;
-        
-    }while(true);
+        if (lookahead == END_OF_FILE) break;
+
+    } while (true);
 }
 
 bool Parser::match(Token token)
@@ -169,15 +182,15 @@ bool Parser::match(Token token)
     if (lookahead == token)
     {
         return true;
-    } 
+    }
     else
     {
         error(
-            "Unexpected " +
-            Lexer::describeToken(lookahead) +
-            " '" + lexer->getTokenString() + "'. Expected " +
-            Lexer::describeToken(token) + "."
-        );
+                "Unexpected " +
+                Lexer::describeToken(lookahead) +
+                " '" + lexer->getTokenString() + "'. Expected " +
+                Lexer::describeToken(token) + "."
+                );
     }
 }
 
@@ -187,16 +200,17 @@ void Parser::parseDeclaration()
     {
         /*std::string identifier;
         std::string datatype;*/
-    
-        do{
+
+        do
+        {
             Parameter parameter;
-            
+
             getToken();
             match(IDENTIFIER);
             parameter.identifier = lexer->getIdentifierValue();
             getToken();
 
-            if(lookahead == AS)
+            if (lookahead == AS)
             {
                 getToken();
                 match(IDENTIFIER);
@@ -207,32 +221,31 @@ void Parser::parseDeclaration()
             {
                 error("Expected AS followed by the datatype");
             }
-            
-            if(!symbols->vaildateType(parameter.datatype))
+
+            if (!symbols->vaildateType(parameter.datatype))
             {
                 error("Unknown data type `" + parameter.datatype + "`");
             }
-            
+
             currentSymbol = insertSymbol(parameter);
             generator->emitDeclaration(parameter);
             parseAssignment();
-            generator->emitEndOfStatement();                        
-        }
-        while(lookahead == COMMA);
+            generator->emitEndOfStatement();
+        } while (lookahead == COMMA);
     }
 }
 
 void Parser::parseContinue()
 {
-    if(lookahead == CONTINUE)
+    if (lookahead == CONTINUE)
     {
         getToken();
-        if(lookahead == FOR && forLoops > 0)
+        if (lookahead == FOR && forLoops > 0)
         {
             generator->emitContinueFor();
             getToken();
         }
-        else if(lookahead == WHILE && whileLoops > 0)
+        else if (lookahead == WHILE && whileLoops > 0)
         {
             generator->emitContinueWhile();
             getToken();
@@ -242,30 +255,30 @@ void Parser::parseContinue()
 
 void Parser::parseExit()
 {
-    if(lookahead == EXIT)
+    if (lookahead == EXIT)
     {
         getToken();
-        if(lookahead == SELECT && selectCases > 0)
+        if (lookahead == SELECT && selectCases > 0)
         {
             generator->emitExitSelect();
             getToken();
         }
-        else if(lookahead == FOR && forLoops > 0)
+        else if (lookahead == FOR && forLoops > 0)
         {
             generator->emitExitFor();
             getToken();
         }
-        else if(lookahead == WHILE && whileLoops > 0)
+        else if (lookahead == WHILE && whileLoops > 0)
         {
             generator->emitExitWhile();
             getToken();
-        }        
-        else if(lookahead == FUNCTION && functions > 0)
+        }
+        else if (lookahead == FUNCTION && functions > 0)
         {
             //generator->emitExitFunction();
             getToken();
         }
-        else if(lookahead == NEW_LINE)
+        else if (lookahead == NEW_LINE)
         {
             // Exit the app
         }
@@ -274,21 +287,21 @@ void Parser::parseExit()
 
 void Parser::parseAssignment()
 {
-    if(lookahead == EQUALS)
+    if (lookahead == EQUALS)
     {
         getToken();
         generator->emitAssignment();
         ExpressionNode * expression = parseExpression();
-        
-        if(isNumeric(expression->getDataType()) && isNumeric(currentSymbol->getDataType()))
+
+        if (isNumeric(expression->getDataType()) && isNumeric(currentSymbol->getDataType()))
         {
             generator->emitExpression(expression);
         }
-        else if(expression->getDataType() == currentSymbol->getDataType())
+        else if (expression->getDataType() == currentSymbol->getDataType())
         {
             generator->emitExpression(expression);
-        }        
-        else if(currentSymbol->getDataType() == "")
+        }
+        else if (currentSymbol->getDataType() == "")
         {
             currentSymbol->setDataType(expression->getDataType());
             generator->emitExpression(expression);
@@ -296,11 +309,11 @@ void Parser::parseAssignment()
         else
         {
             error(
-                "Cannot assign value of type " + 
-                expression->getDataType() + 
-                " to variable " + currentSymbol->getIdentifier() + 
-                " of type " + currentSymbol->getDataType()
-            );
+                    "Cannot assign value of type " +
+                    expression->getDataType() +
+                    " to variable " + currentSymbol->getIdentifier() +
+                    " of type " + currentSymbol->getDataType()
+                    );
         }
     }
 
@@ -309,12 +322,12 @@ void Parser::parseAssignment()
 void Parser::parseIdentifierStatements()
 {
     std::string identifier;
-    if(lookahead == IDENTIFIER)
+    if (lookahead == IDENTIFIER)
     {
         identifier = lexer->getIdentifierValue();
         currentSymbol = lookupSymbol(identifier);
         getToken();
-        switch(lookahead)
+        switch (lookahead)
         {
             case EQUALS:
                 generator->write(identifier);
@@ -323,24 +336,25 @@ void Parser::parseIdentifierStatements()
                 break;
             case NEW_LINE:
             case BRACKET_OPEN:
-                if(currentSymbol->getCallable())
+                if (currentSymbol->getCallable())
                 {
                     ExpressionNodeList parameters;
                     ParameterList expectedParameters = currentSymbol->getParameterList();
-                    if(lookahead == BRACKET_OPEN)
+                    if (lookahead == BRACKET_OPEN)
                     {
-                        do{
+                        do
+                        {
                             getToken();
                             parameters.push_back(parseExpression());
-                        } while(lookahead == COMMA);
+                        } while (lookahead == COMMA);
                         match(BRACKET_CLOSE);
                         getToken();
                     }
-                    
-                    if(parameters.size() != expectedParameters.size())
+
+                    if (parameters.size() != expectedParameters.size())
                     {
                         std::stringstream errorMessage;
-                        errorMessage<<"Expected "<<expectedParameters.size()<<" parameter(s) for "<<currentSymbol->getIdentifier()<<"  but found "<<parameters.size();
+                        errorMessage << "Expected " << expectedParameters.size() << " parameter(s) for " << currentSymbol->getIdentifier() << "  but found " << parameters.size();
                         error(errorMessage.str());
                     }
                     else
@@ -348,17 +362,17 @@ void Parser::parseIdentifierStatements()
                         ExpressionNodeListIterator p;
                         ParameterListIterator e;
                         int count;
-                        for(
-                            p = parameters.begin(), 
-                            e = expectedParameters.begin(),
-                            count = 1;
-                            p != parameters.end(); p++, e++, count++
-                        )
+                        for (
+                                p = parameters.begin(),
+                                e = expectedParameters.begin(),
+                                count = 1;
+                                p != parameters.end(); p++, e++, count++
+                                )
                         {
-                            if((*p)->getDataType() != (*e).datatype)
+                            if ((*p)->getDataType() != (*e).datatype)
                             {
                                 std::stringstream errorMessage;
-                                errorMessage<<"The datatype for argument "<<count<<" of "<<currentSymbol->getIdentifier()<<" does not match. Expected: "<<(*e).datatype<<", found "<<(*p)->getDataType()<<".";
+                                errorMessage << "The datatype for argument " << count << " of " << currentSymbol->getIdentifier() << " does not match. Expected: " << (*e).datatype << ", found " << (*p)->getDataType() << ".";
                                 error(errorMessage.str());
                             }
                         }
@@ -373,35 +387,35 @@ void Parser::parseIdentifierStatements()
 
 void Parser::parsePrint()
 {
-    if(lookahead == PRINT)
+    if (lookahead == PRINT)
     {
         ExpressionNode * expression;
-		getToken();
-		expression = parseExpression();
-		generator->emitPrint();
-		generator->emitExpression(expression);
-		generator->emitEndOfStatement();
-	}
+        getToken();
+        expression = parseExpression();
+        generator->emitPrint();
+        generator->emitExpression(expression);
+        generator->emitEndOfStatement();
+    }
 }
 
 void Parser::parseSubFunction()
 {
-    if(lookahead == FUNCTION)
+    if (lookahead == FUNCTION)
     {
         Parameter function;
         ParameterList parameters;
         Symbol * symbol;
-        
+
         getToken();
         match(IDENTIFIER);
         function.identifier = lexer->getIdentifierValue();
         getToken();
         match(BRACKET_OPEN);
-        
+
         do
         {
             getToken();
-            if(lookahead == IDENTIFIER)
+            if (lookahead == IDENTIFIER)
             {
                 Parameter parameter;
                 parameter.identifier = lexer->getIdentifierValue();
@@ -413,9 +427,8 @@ void Parser::parseSubFunction()
                 parameters.push_back(parameter);
                 getToken();
             }
-        }
-        while(lookahead == COMMA);
-        
+        } while (lookahead == COMMA);
+
         match(BRACKET_CLOSE);
         getToken();
         match(AS);
@@ -425,24 +438,24 @@ void Parser::parseSubFunction()
         symbol = insertSymbol(function);
         symbol->setCallable(true);
         symbol->setParameterList(parameters);
-        
+
         symbols->enterScope("function");
-        
-        for(ParameterListIterator i = parameters.begin(); i != parameters.end(); i++)
+
+        for (ParameterListIterator i = parameters.begin(); i != parameters.end(); i++)
         {
             insertSymbol(*i);
         }
-        
+
         getToken();
         match(NEW_LINE);
-        
+
         generator->emitFunction(function, parameters);
         generator->emitBeginCodeBlock();
         functions++;
-        
+
         parse(subTerminators);
-                
-        if(lookahead == END)
+
+        if (lookahead == END)
         {
             functions--;
             getToken();
@@ -457,97 +470,96 @@ void Parser::parseSubFunction()
 
 void Parser::parseIf()
 {
-	// Funny if block handler repeats code all over the place
-	if(lookahead == IF)
-	{
-		getToken();
-		ExpressionNode * condition = parseExpression();
+    // Funny if block handler repeats code all over the place
+    if (lookahead == IF)
+    {
+        getToken();
+        ExpressionNode * condition = parseExpression();
 
-		generator->emitIf(condition);
+        generator->emitIf(condition);
 
-		if(lookahead == THEN)
-		{
-			getToken();
-		}
+        if (lookahead == THEN)
+        {
+            getToken();
+        }
 
-		// Deal with multiline if syntax
-		if(lookahead == NEW_LINE)
-		{
-			generator->emitBeginCodeBlock();
-			parse(ifTerminators);
+        // Deal with multiline if syntax
+        if (lookahead == NEW_LINE)
+        {
+            generator->emitBeginCodeBlock();
+            parse(ifTerminators);
 
-			while(lookahead == ELSE_IF)
-			{
-				getToken();
-				ExpressionNode * condition = parseExpression();
-                
-				if(lookahead == THEN)
-				{
-					getToken();
-				}
-                
-				if(lookahead == NEW_LINE)
-				{
-					generator->emitEndCodeBlock();
-					generator->emitElseIf(condition);
-					generator->emitBeginCodeBlock();
+            while (lookahead == ELSE_IF)
+            {
+                getToken();
+                ExpressionNode * condition = parseExpression();
+
+                if (lookahead == THEN)
+                {
+                    getToken();
+                }
+
+                if (lookahead == NEW_LINE)
+                {
+                    generator->emitEndCodeBlock();
+                    generator->emitElseIf(condition);
+                    generator->emitBeginCodeBlock();
                     symbols->enterScope("if");
-					parse(ifTerminators);
+                    parse(ifTerminators);
                     symbols->exitScope();
-				}
-			}
+                }
+            }
 
-			if(lookahead == ELSE)
-			{
-				getToken();
-				generator->emitEndCodeBlock();
-				generator->emitElse();
-				generator->emitBeginCodeBlock();
-				parse(ifTerminators);
-			}
+            if (lookahead == ELSE)
+            {
+                getToken();
+                generator->emitEndCodeBlock();
+                generator->emitElse();
+                generator->emitBeginCodeBlock();
+                parse(ifTerminators);
+            }
 
-			if(lookahead == END)
-			{
-				getToken();
-				if(lookahead == IF)
-				{
-					generator->emitEndCodeBlock();
-					getToken();
-				}
-				else if(lookahead == NEW_LINE)
-				{
-					generator->emitEndProgramme();
-				}
-			}
-			else
-			{
-				error("Expecting END IF or ELSEIF or ELSE");
-			}
-		}
-        
-        // Deal with single line if syntax
-		else
-		{
-			parseStatement();
-			while(lookahead == ELSE_IF)
-			{
-				getToken();
-				ExpressionNode * condition = parseExpression();
-				generator->emitElseIf(condition);
-				if(lookahead == THEN)
-				{
-					getToken();
-				}
-				parseStatement();
-			}
-			if(lookahead == ELSE)
-			{
-				generator->emitElse();
-				getToken();
-				parseStatement();
-			}
-		}
-	}
+            if (lookahead == END)
+            {
+                getToken();
+                if (lookahead == IF)
+                {
+                    generator->emitEndCodeBlock();
+                    getToken();
+                }
+                else if (lookahead == NEW_LINE)
+                {
+                    generator->emitEndProgramme();
+                }
+            }
+            else
+            {
+                error("Expecting END IF or ELSEIF or ELSE");
+            }
+        }
+            // Deal with single line if syntax
+        else
+        {
+            parseStatement();
+            while (lookahead == ELSE_IF)
+            {
+                getToken();
+                ExpressionNode * condition = parseExpression();
+                generator->emitElseIf(condition);
+                if (lookahead == THEN)
+                {
+                    getToken();
+                }
+                parseStatement();
+            }
+            if (lookahead == ELSE)
+            {
+                generator->emitElse();
+                getToken();
+                parseStatement();
+            }
+        }
+    }
 }
 
 CaseExpression * Parser::parseCaseExpression()
@@ -557,12 +569,12 @@ CaseExpression * Parser::parseCaseExpression()
     ExpressionNode * expression2;
     CaseExpressionType type;
     Token comparator;
-    
-    if(lookahead == IS)
+
+    if (lookahead == IS)
     {
         type = CASE_IS;
         getToken();
-        if(!isComparator(lookahead)) error("Expecting comparator after IS statement");            
+        if (!isComparator(lookahead)) error("Expecting comparator after IS statement");
         comparator = lookahead;
         expression1 = parseExpression();
     }
@@ -570,8 +582,8 @@ CaseExpression * Parser::parseCaseExpression()
     {
         type = CASE_EXPRESSION;
         expression1 = parseExpression();
-    
-        if(lookahead == TO)
+
+        if (lookahead == TO)
         {
             type = CASE_TO;
             getToken();
@@ -579,7 +591,7 @@ CaseExpression * Parser::parseCaseExpression()
         }
     }
     caseExpression = new CaseExpression(type, expression1, expression2);
-    if(isComparator(comparator))
+    if (isComparator(comparator))
     {
         caseExpression->setComparator(comparator);
     }
@@ -588,86 +600,86 @@ CaseExpression * Parser::parseCaseExpression()
 
 void Parser::parseWhileLoop()
 {
-    if(lookahead == WHILE)
+    if (lookahead == WHILE)
     {
         ExpressionNode * whileExpression = NULL;
         bool whileEnded = false;
-        
+
         whileLoops++;
         getToken();
         whileExpression = parseExpression();
         generator->emitWhile(whileExpression);
-        
+
         match(NEW_LINE);
         getToken();
 
         generator->emitBeginCodeBlock();
-        symbols->enterScope("while");        
+        symbols->enterScope("while");
         parse(whileTerminators);
         symbols->exitScope();
         generator->emitEndCodeBlock();
-        
-        if(lookahead == END)
+
+        if (lookahead == END)
         {
             getToken();
-            if(lookahead == WHILE)
+            if (lookahead == WHILE)
             {
                 whileEnded = true;
             }
         }
-        else if(lookahead == WEND)
+        else if (lookahead == WEND)
         {
             whileEnded = true;
         }
-        
-        if(whileEnded)
+
+        if (whileEnded)
         {
             generator->emitEndWhile();
-            getToken();            
+            getToken();
         }
     }
 }
 
 void Parser::parseDoLoop()
 {
-    if(lookahead == DO)
+    if (lookahead == DO)
     {
         std::string doType = "";
         ExpressionNode * doCondition = NULL;
-        
+
         getToken();
-        
-        switch(lookahead)
+
+        switch (lookahead)
         {
             case WHILE:
                 getToken();
                 doType = "while";
                 doCondition = parseExpression();
                 break;
-                
+
             case UNTIL:
                 getToken();
                 doType = "until";
                 doCondition = parseExpression();
                 break;
         }
-        
+
         generator->emitDo(doType, doCondition);
         generator->emitBeginCodeBlock();
         symbols->enterScope("do");
         parse(doTerminators);
         symbols->exitScope();
         generator->emitEndCodeBlock();
-        
-        if(lookahead == LOOP)
+
+        if (lookahead == LOOP)
         {
             std::string loopType = "";
-            ExpressionNode * loopCondition = NULL;            
-            getToken(); 
-            
-            if(doType == "")
+            ExpressionNode * loopCondition = NULL;
+            getToken();
+
+            if (doType == "")
             {
-                switch(lookahead)
+                switch (lookahead)
                 {
                     case WHILE:
                         getToken();
@@ -680,9 +692,9 @@ void Parser::parseDoLoop()
                         loopType = "until";
                         loopCondition = parseExpression();
                         break;
-                }                
+                }
             }
-            
+
             generator->emitLoop(loopType, loopCondition);
         }
     }
@@ -690,7 +702,7 @@ void Parser::parseDoLoop()
 
 void Parser::parseForLoop()
 {
-    if(lookahead == FOR)
+    if (lookahead == FOR)
     {
         forLoops++;
         std::string identifier;
@@ -698,13 +710,13 @@ void Parser::parseForLoop()
         ExpressionNode * fromExpression = NULL;
         ExpressionNode * toExpression = NULL;
         ExpressionNode * stepExpression = NULL;
-        
+
         getToken();
         match(IDENTIFIER);
         identifier = lexer->getIdentifierValue();
         getToken();
-        
-        if(lookahead == AS)
+
+        if (lookahead == AS)
         {
             // Add the symbol to the symbol table
             Parameter parameter;
@@ -719,57 +731,57 @@ void Parser::parseForLoop()
         {
             counter = lookupSymbol(identifier);
         }
-        
+
         match(EQUALS);
         getToken();
-        
+
         fromExpression = parseExpression();
         match(TO);
         getToken();
         toExpression = parseExpression();
-        
-        if(lookahead == STEP)
+
+        if (lookahead == STEP)
         {
             getToken();
             stepExpression = parseExpression();
         }
-        
+
         match(NEW_LINE);
         generator->emitFor(identifier, fromExpression, toExpression, stepExpression);
         getToken();
-        
+
         generator->emitBeginCodeBlock();
         symbols->enterScope("for_next");
         parse(forTerminators);
         symbols->exitScope();
         generator->emitEndCodeBlock();
-        
-        if(lookahead == NEXT)
+
+        if (lookahead == NEXT)
         {
             forLoops--;
         }
-        
+
         getToken();
-        
+
     }
 }
 
 void Parser::parseSelectCase()
 {
-    if(lookahead == SELECT)
+    if (lookahead == SELECT)
     {
         selectCases++;
         getToken();
-        if(lookahead == CASE) getToken();
+        if (lookahead == CASE) getToken();
         ExpressionNode * expression = parseExpression();
         generator->emitSelect(expression);
         match(NEW_LINE);
         getToken();
-        
-        while(lookahead == CASE)
+
+        while (lookahead == CASE)
         {
             getToken();
-            if(lookahead == ELSE)
+            if (lookahead == ELSE)
             {
                 getToken();
                 generator->emitCaseElse();
@@ -782,12 +794,12 @@ void Parser::parseSelectCase()
             else
             {
                 std::vector<CaseExpression*> expressions;
-                
+
                 do
                 {
                     expressions.push_back(parseCaseExpression());
-                } while(lookahead == COMMA);
-                
+                } while (lookahead == COMMA);
+
                 generator->emitCase(expressions);
                 generator->emitBeginCodeBlock();
                 symbols->enterScope("case");
@@ -796,8 +808,9 @@ void Parser::parseSelectCase()
                 generator->emitEndCodeBlock();
             }
         }
-        
-        if(lookahead == END){
+
+        if (lookahead == END)
+        {
             getToken();
             match(SELECT);
             generator->emitEndSelect();
@@ -809,70 +822,70 @@ void Parser::parseSelectCase()
 
 ExpressionNode * Parser::parseExpression()
 {
-	return parseBinaryOperators(0, this);
+    return parseBinaryOperators(0, this);
 }
 
 ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
 {
-	ExpressionNode *expression;
-	if(precedence < numOperators - 1)
-	{
-		expression = parseBinaryOperators(precedence+1, instance);
-	}
-	else
-	{
-		expression = parseUnaryOperators(instance);
-	}
+    ExpressionNode *expression;
+    if (precedence < numOperators - 1)
+    {
+        expression = parseBinaryOperators(precedence + 1, instance);
+    }
+    else
+    {
+        expression = parseUnaryOperators(instance);
+    }
 
     if (expression == NULL) return NULL;
 
     ExpressionNode *left, *right;
-	bool continueLooping;
+    bool continueLooping;
 
     do
     {
-    	continueLooping = false;
+        continueLooping = false;
 
-    	for(int i = 0; i < operators[precedence].numOperators; i++)
-    	{
-    		if(instance->lookahead == operators[precedence].tokens[i])
-    		{
+        for (int i = 0; i < operators[precedence].numOperators; i++)
+        {
+            if (instance->lookahead == operators[precedence].tokens[i])
+            {
                 left = expression;
                 expression = new ExpressionNode();
                 expression->setNodeType(operators[precedence].nodes[i]);
                 instance->getToken();
 
-            	if(precedence < numOperators - 1)
-            	{
-            		right = parseBinaryOperators(precedence+1, instance);
-            	}
-            	else
-            	{
-            		right = parseUnaryOperators(instance);
-            	}
+                if (precedence < numOperators - 1)
+                {
+                    right = parseBinaryOperators(precedence + 1, instance);
+                }
+                else
+                {
+                    right = parseUnaryOperators(instance);
+                }
 
                 expression->setRight(right);
                 expression->setLeft(left);
 
                 expression->setDataType(
-					instance->resolveTypes(
-						left->getDataType(),
-						right->getDataType(),
-						operators[precedence].nodes[i]
-					)
-				);
+                        instance->resolveTypes(
+                        left->getDataType(),
+                        right->getDataType(),
+                        operators[precedence].nodes[i]
+                        )
+                        );
                 break;
-    		}
-    	}
+            }
+        }
 
-    	for(int i = 0; i < operators[precedence].numOperators; i++)
-    	{
-    		if(instance->lookahead == operators[precedence].tokens[i])
-    		{
-    			continueLooping = true;
-    			break;
-    		}
-    	}
+        for (int i = 0; i < operators[precedence].numOperators; i++)
+        {
+            if (instance->lookahead == operators[precedence].tokens[i])
+            {
+                continueLooping = true;
+                break;
+            }
+        }
     } while (continueLooping);
 
     return expression;
@@ -889,21 +902,21 @@ ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
             factor->setDataType("integer");
             instance->getToken();
             break;
-            
+
         case SINGLE:
             factor = new ExpressionNode();
             factor->setFloatValue(instance->lexer->getSingleValue());
             factor->setDataType("single");
             instance->getToken();
             break;
-            
+
         case IDENTIFIER:
             factor = new ExpressionNode();
             Symbol * symbol = instance->lookupSymbol(instance->lexer->getIdentifierValue());
-            
-            if(symbol->getCallable())
+
+            if (symbol->getCallable())
             {
-                
+
             }
             else
             {
@@ -920,18 +933,18 @@ ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
             break;
 
         case STRING:
-        	factor = new ExpressionNode();
-        	factor->setStringValue(instance->lexer->getStringValue());
-        	factor->setDataType("string");
-        	instance->getToken();
-        	break;
+            factor = new ExpressionNode();
+            factor->setStringValue(instance->lexer->getStringValue());
+            factor->setDataType("string");
+            instance->getToken();
+            break;
     }
     return factor;
 }
 
 bool Parser::isComparator(Token token)
 {
-    switch(token)
+    switch (token)
     {
         case EQUALS:
         case NOT_EQUALS:
@@ -940,7 +953,7 @@ bool Parser::isComparator(Token token)
         case GREATER_THAN_OR_EQUALS:
         case LESS_THAN_OR_EQUALS:
             return true;
-            
+
         default:
             return false;
     }
@@ -948,8 +961,8 @@ bool Parser::isComparator(Token token)
 
 bool Parser::isNumeric(std::string datatype)
 {
-    if(datatype == "integer" || datatype == "single" || datatype == "double"  || 
-       datatype == "long"    || datatype == "number")
+    if (datatype == "integer" || datatype == "single" || datatype == "double" ||
+            datatype == "long" || datatype == "number")
     {
         return true;
     }
@@ -961,40 +974,40 @@ bool Parser::isNumeric(std::string datatype)
 
 std::string Parser::resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType)
 {
-	std::string datatype;
+    std::string datatype;
 
-	switch(operatorNodeType)
-	{
-	case NODE_ADD:
-	case NODE_SUBTRACT:
-	case NODE_MULTIPLY:
-	case NODE_DIVIDE:
-		if(leftType == "integer")
-		{
-			if(rightType == "integer") datatype = "integer";
-			if(rightType == "single") datatype = "single";
-		}
-		else if(leftType == "single")
-		{
-			if(rightType == "single" || rightType == "integer") datatype = "single";
-		}
-		break;
+    switch (operatorNodeType)
+    {
+        case NODE_ADD:
+        case NODE_SUBTRACT:
+        case NODE_MULTIPLY:
+        case NODE_DIVIDE:
+            if (leftType == "integer")
+            {
+                if (rightType == "integer") datatype = "integer";
+                if (rightType == "single") datatype = "single";
+            }
+            else if (leftType == "single")
+            {
+                if (rightType == "single" || rightType == "integer") datatype = "single";
+            }
+            break;
 
-	case NODE_EQUALS:
-	case NODE_NOT_EQUALS:
-		datatype = "boolean";
-	}
+        case NODE_EQUALS:
+        case NODE_NOT_EQUALS:
+            datatype = "boolean";
+    }
 
-	return datatype;
+    return datatype;
 }
 
 void Parser::parseReturn()
 {
-    if(lookahead == RETURN)
+    if (lookahead == RETURN)
     {
         ExpressionNode * returnExpression = NULL;
         getToken();
-        if(lookahead != NEW_LINE)
+        if (lookahead != NEW_LINE)
         {
             returnExpression = parseExpression();
         }

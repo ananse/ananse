@@ -30,10 +30,10 @@ void Symbols::enterScope(std::string scope)
     table->set_empty_key("");
     symbolTableStack.push_back(table);
     scopesStack.push_back(
-        this->lexer->getSourceFile() + 
-        ":" + 
-        (std::string) lineNumber + 
-        ":" + scope);
+            this->lexer->getSourceFile() +
+            ":" +
+            (std::string) lineNumber +
+            ":" + scope);
     currentScope = scope;
 }
 
@@ -46,38 +46,38 @@ void Symbols::exitScope()
 Symbol * Symbols::lookup(std::string identifier)
 {
     Symbol * symbol = NULL;
-    
+
     // Initialize the status as UNDEFINED
     status = UNDEFINED;
-    
+
     //
-    for(int i = scopesStack.size() - 1; i >= 0; i--)
+    for (int i = scopesStack.size() - 1; i >= 0; i--)
     {
-        SymbolTable * table = symbolTableStack[i]; 
+        SymbolTable * table = symbolTableStack[i];
         std::string scope = scopesStack[i];
         SymbolTableIterator iterator = table->find(identifier);
-        if(table->end() == iterator)
+        if (table->end() == iterator)
         {
             continue;
         }
         else
         {
             symbol = (*table)[identifier];
-            if(scope == currentScope)
+            if (scope == currentScope)
                 status = EXISTS;
             else
                 status = OVERRIDES;
         }
     }
-    
+
     return symbol;
 }
 
 Symbol * Symbols::insert(std::string identifier, std::string type)
 {
     Symbol * symbol = lookup(identifier);
-    
-    if(symbol == NULL || status == OVERRIDES)
+
+    if (symbol == NULL || status == OVERRIDES)
     {
         SymbolTable * table = symbolTableStack.back();
         Symbol * symbol = new Symbol();
@@ -86,9 +86,9 @@ Symbol * Symbols::insert(std::string identifier, std::string type)
         symbol->setScope(currentScope);
         symbol->setLine(lexer->getLine());
         (*table)[identifier] = symbol;
-        
-        if(status == UNDEFINED) status = ADDED;
-        
+
+        if (status == UNDEFINED) status = ADDED;
+
         return symbol;
     }
     else
@@ -116,7 +116,7 @@ void Symbols::addType(std::string type, std::string details)
 bool Symbols::vaildateType(std::string type)
 {
     google::dense_hash_map<std::string, std::string>::iterator iterator = types.find(type);
-    if(types.end() == iterator)
+    if (types.end() == iterator)
     {
         return false;
     }
