@@ -89,7 +89,7 @@ Symbol * Parser::insertSymbol(Parameter parameter)
             return symbol;
         case EXISTS:
             error(parameter.identifier + " has already been declared");
-    }
+    }    
 }
 
 Symbol * Parser::lookupSymbol(std::string identifier)
@@ -186,11 +186,11 @@ bool Parser::match(Token token)
     else
     {
         error(
-                "Unexpected " +
-                Lexer::describeToken(lookahead) +
-                " '" + lexer->getTokenString() + "'. Expected " +
-                Lexer::describeToken(token) + "."
-                );
+            "Unexpected " +
+            Lexer::describeToken(lookahead) +
+            " '" + lexer->getTokenString() + "'. Expected " +
+            Lexer::describeToken(token) + "."
+        );
     }
 }
 
@@ -309,11 +309,11 @@ void Parser::parseAssignment()
         else
         {
             error(
-                    "Cannot assign value of type " +
-                    expression->getDataType() +
-                    " to variable " + currentSymbol->getIdentifier() +
-                    " of type " + currentSymbol->getDataType()
-                    );
+                "Cannot assign value of type " +
+                expression->getDataType() +
+                " to variable " + currentSymbol->getIdentifier() +
+                " of type " + currentSymbol->getDataType()
+            );
         }
     }
 
@@ -338,47 +338,7 @@ void Parser::parseIdentifierStatements()
             case BRACKET_OPEN:
                 if (currentSymbol->getCallable())
                 {
-                    ExpressionNodeList parameters;
-                    ParameterList expectedParameters = currentSymbol->getParameterList();
-                    if (lookahead == BRACKET_OPEN)
-                    {
-                        do
-                        {
-                            getToken();
-                            parameters.push_back(parseExpression());
-                        } while (lookahead == COMMA);
-                        match(BRACKET_CLOSE);
-                        getToken();
-                    }
-
-                    if (parameters.size() != expectedParameters.size())
-                    {
-                        std::stringstream errorMessage;
-                        errorMessage << "Expected " << expectedParameters.size() << " parameter(s) for " << currentSymbol->getIdentifier() << "  but found " << parameters.size();
-                        error(errorMessage.str());
-                    }
-                    else
-                    {
-                        ExpressionNodeListIterator p;
-                        ParameterListIterator e;
-                        int count;
-                        for (
-                                p = parameters.begin(),
-                                e = expectedParameters.begin(),
-                                count = 1;
-                                p != parameters.end(); p++, e++, count++
-                                )
-                        {
-                            if ((*p)->getDataType() != (*e).datatype)
-                            {
-                                std::stringstream errorMessage;
-                                errorMessage << "The datatype for argument " << count << " of " << currentSymbol->getIdentifier() << " does not match. Expected: " << (*e).datatype << ", found " << (*p)->getDataType() << ".";
-                                error(errorMessage.str());
-                            }
-                        }
-                    }
-                    generator->emitCallSubFunction(currentSymbol->getIdentifier(), parameters);
-                    generator->emitEndOfStatement();
+                    parseSubFunctionCall(true);
                 }
                 break;
         }
@@ -396,6 +356,58 @@ void Parser::parsePrint()
         generator->emitExpression(expression);
         generator->emitEndOfStatement();
     }
+}
+
+std::vector<ExpressionNode*> Parser::parseSubFunctionCall(bool call)
+{
+    std::vector<ExpressionNode*> parameters;
+    ParameterList expectedParameters = currentSymbol->getParameterList();
+    if (lookahead == BRACKET_OPEN)
+    {
+        do
+        {
+            getToken();
+            ExpressionNode * expression = parseExpression();
+            if(expression != NULL) parameters.push_back(expression);
+        } 
+        while (lookahead == COMMA);
+        match(BRACKET_CLOSE);
+    }
+    getToken();
+
+    if (parameters.size() != expectedParameters.size())
+    {
+        std::stringstream errorMessage;
+        errorMessage << "Expected " << expectedParameters.size() << " parameter(s) for " << currentSymbol->getIdentifier() << "  but found " << parameters.size();
+        error(errorMessage.str());
+    }
+    else
+    {
+        std::vector<ExpressionNode*>::iterator p;
+        ParameterListIterator e;
+        int count;
+        for (
+            p = parameters.begin(),
+            e = expectedParameters.begin(),
+            count = 1;
+            p != parameters.end(); p++, e++, count++
+        )
+        {
+            if ((*p)->getDataType() != (*e).datatype)
+            {
+                std::stringstream errorMessage;
+                errorMessage << "The datatype for argument " << count << " of " << currentSymbol->getIdentifier() << " does not match. Expected: " << (*e).datatype << ", found " << (*p)->getDataType() << ".";
+                error(errorMessage.str());
+            }
+        }
+    }
+    
+    if(call == true)
+    {
+        generator->emitCallSubFunction(currentSymbol->getIdentifier(), parameters);
+        generator->emitEndOfStatement();
+    }
+    return parameters;
 }
 
 void Parser::parseSubFunction()
@@ -894,6 +906,7 @@ ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
 ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
 {
     ExpressionNode * factor = NULL;
+    
     switch (instance->lookahead)
     {
         case INTEGER:
@@ -912,16 +925,17 @@ ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
 
         case IDENTIFIER:
             factor = new ExpressionNode();
-            Symbol * symbol = instance->lookupSymbol(instance->lexer->getIdentifierValue());
+            instance->currentSymbol = instance->lookupSymbol(instance->lexer->getIdentifierValue());
+            factor->setIdentifierValue(instance->lexer->getIdentifierValue());
+            factor->setDataType(instance->currentSymbol->getDataType());
 
-            if (symbol->getCallable())
+            if (instance->currentSymbol->getCallable())
             {
-
+                instance->getToken();
+                factor->setParameters(instance->parseSubFunctionCall(false));
             }
             else
             {
-                factor->setIdentifierValue(instance->lexer->getIdentifierValue());
-                factor->setDataType(symbol->getDataType());
                 instance->getToken();
             }
             break;

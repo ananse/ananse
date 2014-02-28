@@ -72,7 +72,6 @@ public:
     virtual std::string openOutput(std::string path);
     virtual void closeOutput();
     void setAsMainModule(bool main);
-    void setOutput(std::ostream * output);
     void write(std::string code);
 
 protected:
@@ -80,6 +79,8 @@ protected:
     std::string getToken(Token);
     bool isMainModule;
     std::ofstream file;
+    void setOutput(std::ostream * output);
+    std::ostream * getOutput();
 
 private:
     const char * getExpressionNodeOperator(ExpressionNode *);

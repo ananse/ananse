@@ -228,7 +228,7 @@ Token Lexer::getNextToken()
         {
             identString += tolower(currentChar);
             getChar();
-        } while (isalnum(currentChar));
+        } while (isalnum(currentChar) || currentChar == '_');
 
         identifierValue = identString;
         tokenString = identString;

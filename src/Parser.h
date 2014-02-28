@@ -45,7 +45,6 @@ private:
     void error(std::string message);
 
     Symbol * lookupSymbol(std::string identifier);
-    //Symbol * insertSymbol(std::string identifier, std::string type);
     Symbol * insertSymbol(Parameter);
     Symbol * currentSymbol;
 
@@ -64,6 +63,7 @@ private:
     void parseFunctionCall();
     void parseContinue();
     void parseSubFunction();
+    std::vector<ExpressionNode*> parseSubFunctionCall(bool call);
     void parseReturn();
 
     // Expressions parsing

@@ -86,6 +86,19 @@ void Generator::emitExpression(ExpressionNode * expressionNode)
         	write(expressionNode->getStringValue());
         	write("\"");
         	break;
+            
+        case NODE_FUNCTION:
+            write(expressionNode->getIdentifierValue());
+            write("(");
+            std::vector<ExpressionNode*>::iterator parameter; 
+            std::vector<ExpressionNode*> parameters = expressionNode->getParameters();
+            for(parameter = parameters.begin(); parameter != parameters.end(); parameter++)
+            {
+                if(parameter != parameters.begin()) write(", ");
+                emitExpression(*parameter);
+            }
+            write(")");
+            break;
     }
 }
 
@@ -116,6 +129,11 @@ void Generator::closeOutput()
 void Generator::setOutput(std::ostream * output)
 {
     this->output = output;
+}
+
+std::ostream * Generator::getOutput()
+{
+    return output;
 }
 
 void Generator::write(std::string code)

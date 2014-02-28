@@ -115,3 +115,14 @@ std::string ExpressionNode::getStringValue()
 {
 	return stringValue;
 }
+
+void ExpressionNode::setParameters(std::vector<ExpressionNode*> parameters)
+{
+    this->parameters = parameters;
+    type = NODE_FUNCTION;
+}
+
+std::vector<ExpressionNode*> ExpressionNode::getParameters()
+{
+    return parameters;
+}

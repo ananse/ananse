@@ -6,6 +6,7 @@
  */
 
 #include "Symbols.h"
+#include "CaseExpression.h"
 #include <iostream>
 
 Symbols::Symbols()
@@ -125,6 +126,4 @@ bool Symbols::vaildateType(std::string type)
         return true;
     }
 }
-
-
 

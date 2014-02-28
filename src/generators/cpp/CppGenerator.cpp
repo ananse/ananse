@@ -1,4 +1,4 @@
-/*
+/**
  * File:   CppGenerator.cpp
  * Author: ekow
  * 
@@ -48,9 +48,10 @@ void CppGenerator::addHeader(std::string header)
 
     if (insert)
     {
+        std::ostream * currentOutput = getOutput();
         setOutput(&includes);
         write("#include <" + header + ">\n");
-        setOutput(&body);
+        setOutput(currentOutput);
         headers.push_back(header);
     }
 }
@@ -69,8 +70,6 @@ std::string CppGenerator::getLocalType(std::string datatype)
 void CppGenerator::emitEndOfStatement()
 {
     write(";\n" + indentation());
-    /*setOutput(&body);
-    indenterEnabled = true;*/
 }
 
 void CppGenerator::emitDeclaration(Parameter parameter)
@@ -437,4 +436,5 @@ void CppGenerator::emitReturn(ExpressionNode * returnExpression)
 {
     write("return ");
     emitExpression(returnExpression);
+    emitEndOfStatement();
 }

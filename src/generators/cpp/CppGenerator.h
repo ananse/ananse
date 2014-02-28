@@ -79,10 +79,11 @@ private:
     std::stringstream moduleGlobals;
     std::stringstream body;
     std::stringstream functions;
-    int selectCases;
     std::vector<std::string> caseVariables;
     std::vector<bool> doConditions;
     std::string nextCodeBlockPrefix;
+    std::vector<int> indentationStack;
+    int selectCases;
 };
 
 #endif	/* CPPGENERATOR_H */
