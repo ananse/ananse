@@ -33,7 +33,8 @@ public:
     Generator(const Generator& orig);
 
     /**
-     * Emit an expression which is expressed in the passed expression tree.
+     * Emit an expression. Expressions are stored in a tree made up of 
+     * ExpressionNode objects.
      */
     virtual void emitExpression(ExpressionNode *);
     virtual void emitDeclaration(Parameter) = 0;

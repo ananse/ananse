@@ -107,8 +107,15 @@ void Parser::setSource(std::string source)
     try
     {
         lexer = new Lexer(source);
+        symbols->addType("boolean", "primitive");
+        symbols->addType("byte", "primitive");
+        symbols->addType("sbyte", "primitive");
+        symbols->addType("char", "primitive");
+        symbols->addType("uinteger", "primitive");
         symbols->addType("integer", "primitive");
+        symbols->addType("ulong", "primitive");
         symbols->addType("long", "primitive");
+        symbols->addType("ushort", "primitive");
         symbols->addType("short", "primitive");
         symbols->addType("single", "primitive");
         symbols->addType("double", "primitive");
