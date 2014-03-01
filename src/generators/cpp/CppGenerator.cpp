@@ -392,7 +392,14 @@ void CppGenerator::emitLoop(std::string type, ExpressionNode* condition)
 void CppGenerator::emitFunction(Parameter function, ParameterList parameters)
 {
     setOutput(&functions);
-    write(getLocalType(function.datatype));
+    if(function.datatype == "")
+    {
+        write("void");
+    }
+    else
+    {
+        write(getLocalType(function.datatype));
+    }
     write(" ");
     write(function.identifier);
     write("(");

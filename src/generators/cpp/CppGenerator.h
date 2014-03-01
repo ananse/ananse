@@ -82,7 +82,6 @@ private:
     std::vector<std::string> caseVariables;
     std::vector<bool> doConditions;
     std::string nextCodeBlockPrefix;
-    std::vector<int> indentationStack;
     int selectCases;
 };
 

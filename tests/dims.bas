@@ -1,15 +1,15 @@
 dim i as integer = 6
 
-function say_hello() as integer
+sub say_hello()
     print 'Hello'
-    return 5
-end function
+end sub
 
 function add(a as integer, b as integer) as integer
     return a+b
 end function
 
 do 
-    i = add(6,7)
+    i = add(6 ,add(2,2))
     print i
+    say_hello()
 loop while i = 6

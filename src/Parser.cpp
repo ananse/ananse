@@ -412,11 +412,12 @@ std::vector<ExpressionNode*> Parser::parseSubFunctionCall(bool call)
 
 void Parser::parseSubFunction()
 {
-    if (lookahead == FUNCTION)
+    if (lookahead == FUNCTION || lookahead == SUB)
     {
         Parameter function;
         ParameterList parameters;
         Symbol * symbol;
+        bool isFunction = lookahead == FUNCTION;
 
         getToken();
         match(IDENTIFIER);
@@ -442,11 +443,16 @@ void Parser::parseSubFunction()
         } while (lookahead == COMMA);
 
         match(BRACKET_CLOSE);
-        getToken();
-        match(AS);
-        getToken();
-        match(IDENTIFIER);
-        function.datatype = lexer->getIdentifierValue();
+        
+        if(isFunction)
+        {
+            getToken();
+            match(AS);
+            getToken();
+            match(IDENTIFIER);
+            function.datatype = lexer->getIdentifierValue();
+        }
+        
         symbol = insertSymbol(function);
         symbol->setCallable(true);
         symbol->setParameterList(parameters);
@@ -471,7 +477,12 @@ void Parser::parseSubFunction()
         {
             functions--;
             getToken();
-            match(FUNCTION);
+            
+            if(isFunction)
+                match(FUNCTION);
+            else
+                match(SUB);
+            
             generator->emitEndCodeBlock();
             symbols->exitScope();
             generator->emitEndFunction();
@@ -931,6 +942,10 @@ ExpressionNode * Parser::parseUnaryOperators(Parser * instance)
 
             if (instance->currentSymbol->getCallable())
             {
+                if(instance->currentSymbol->getDataType() == "")
+                {
+                    instance->error("Cannot use sub '" + instance->lexer->getIdentifierValue()+"' in an expression.");
+                }
                 instance->getToken();
                 factor->setParameters(instance->parseSubFunctionCall(false));
             }
