@@ -43,27 +43,41 @@ void Generator::emitModuleFooter(){}
 
 void Generator::emitExpression(ExpressionNode * expressionNode)
 {
-    std::string expression;
     char buffer[256];
     long integerNode;
     double floatNode;
+    std::string cast = expressionNode->getCastType();
+    expressionNode->setCastType("");
     
     switch(expressionNode->getType())
     {
         case NODE_INTEGER:
             integerNode = expressionNode->getIntegerValue();
             sprintf(buffer,"%d", integerNode);
-            write(buffer);
+            
+            if(cast == "")
+                write(buffer);
+            else
+                emitTypeCast(expressionNode, cast);
+            
             break;
             
         case NODE_FLOAT:
             floatNode = expressionNode->getFloatValue();
             sprintf(buffer,"%f", floatNode);
-            write(buffer);
+            
+            if(cast == "")
+                write(buffer);
+            else
+                emitTypeCast(expressionNode, cast);            
+            
             break;
             
         case NODE_IDENTIFIER:
-            write(expressionNode->getIdentifierValue());
+            if(cast == "")
+                write(expressionNode->getIdentifierValue());
+            else
+                emitTypeCast(expressionNode, cast);
             break;
         
         case NODE_ADD:

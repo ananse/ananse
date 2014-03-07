@@ -1,6 +1,6 @@
 bin_PROGRAMS = abc
 abc_SOURCES = abc.cpp Lexer.cpp LexerException.cpp Parser.cpp ExpressionNode.cpp \
-    Symbols.cpp Symbol.cpp CaseExpression.cpp \
+    Symbols.cpp Symbol.cpp CaseExpression.cpp Type.cpp \
     generators/Generator.cpp \
     generators/js/JsGenerator.cpp \
     generators/cpp/CppGenerator.cpp \

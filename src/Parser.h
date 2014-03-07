@@ -73,8 +73,10 @@ private:
 
     static bool isNumeric(std::string datatype);
     static bool isComparator(Token token);
-    std::string resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType);
+    std::string resolveTypes(ExpressionNode * left, ExpressionNode * right, NodeType operatorNodeType);
     void setSource(std::string source);
+    
+    static int getTypeRank(std::string type);
 
     int selectCases;
     int forLoops;
@@ -86,6 +88,7 @@ private:
 public:
     Parser(Generator * generator, std::string source);
     virtual ~Parser();
+    static void init();
     void parse(std::vector<Token> terminators);
     void parse();
 };

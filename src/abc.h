@@ -38,7 +38,6 @@ typedef enum {
     LONG,
     SBYTE,
     SHORT,
-    SINGLE,
     UINTEGER,
     ULONG,
     USHORT,

@@ -109,14 +109,14 @@ SymbolStatus Symbols::getStatus()
     return status;
 }
 
-void Symbols::addType(std::string type, std::string details)
+void Symbols::addType(std::string type, Type * details)
 {
     types[type] = details;
 }
 
 bool Symbols::vaildateType(std::string type)
 {
-    google::dense_hash_map<std::string, std::string>::iterator iterator = types.find(type);
+    google::dense_hash_map<std::string, Type *>::iterator iterator = types.find(type);
     if (types.end() == iterator)
     {
         return false;
@@ -127,3 +127,7 @@ bool Symbols::vaildateType(std::string type)
     }
 }
 
+Type * Symbols::getType(std::string type)
+{
+    return types[type];
+}

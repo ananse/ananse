@@ -7,6 +7,7 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#include "Parser.h"
 #endif
 
 int main(int argc, char ** argv)
@@ -20,6 +21,8 @@ int main(int argc, char ** argv)
 		{"main",  required_argument, 0, 'm'},
 		{0, 0, 0, 0}
     };
+    
+    Parser::init();
     
     while(true)
     {

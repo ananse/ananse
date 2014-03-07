@@ -12,6 +12,7 @@
 #include <vector>
 #include "Symbol.h"
 #include "Lexer.h"
+#include "Type.h"
 
 typedef enum{
     ADDED,
@@ -22,7 +23,7 @@ typedef enum{
 
 typedef google::dense_hash_map<std::string, Symbol *> SymbolTable;
 typedef google::dense_hash_map<std::string, Symbol *>::iterator SymbolTableIterator;
-typedef google::dense_hash_map<std::string, std::string> TypesTable;
+typedef google::dense_hash_map<std::string, Type *> TypesTable;
 
 class Symbols {
 public:
@@ -30,7 +31,7 @@ public:
     Symbols(const Symbols& orig);
     Symbol * insert(std::string symbol, std::string type);
     Symbol * lookup(std::string identifier);
-    void addType(std::string, std::string);
+    void addType(std::string, Type *);
     bool vaildateType(std::string);
     void enterScope(std::string scope);
     void exitScope();
@@ -38,6 +39,7 @@ public:
     void setLexer(Lexer * lexer);
     SymbolStatus getStatus();
     void dump();
+    Type * getType(std::string type);
     
 private:    
     std::vector<SymbolTable*> symbolTableStack;
@@ -47,6 +49,7 @@ private:
     Lexer * lexer;
     SymbolStatus status;
     std::string currentScope;
+    static google::dense_hash_map<std::string, int> typeHeirachy;
 };
 
 #endif	/* SYMBOLTABLE_H */

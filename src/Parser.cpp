@@ -37,8 +37,23 @@ std::vector<Token> Parser::subTerminators;
 Parser::Parser(Generator * generator, std::string source)
 {
     this->generator = generator;
-    Parser::numOperators = sizeof (operators) / sizeof (OperatorLevel);
 
+    selectCases = 0;
+    forLoops = 0;
+    symbols = new Symbols();
+    setSource(source);
+}
+
+Parser::~Parser()
+{
+    symbols->exitScope();
+    delete symbols;
+}
+
+void Parser::init()
+{
+    Parser::numOperators = sizeof (operators) / sizeof (OperatorLevel);
+    
     ifTerminators.push_back(END);
     ifTerminators.push_back(ELSE_IF);
     ifTerminators.push_back(ELSE);
@@ -48,19 +63,7 @@ Parser::Parser(Generator * generator, std::string source)
     whileTerminators.push_back(END);
     whileTerminators.push_back(WEND);
     doTerminators.push_back(LOOP);
-    subTerminators.push_back(END);
-
-    selectCases = 0;
-    forLoops = 0;
-
-    symbols = new Symbols();
-    setSource(source);
-}
-
-Parser::~Parser()
-{
-    symbols->exitScope();
-    delete symbols;
+    subTerminators.push_back(END);    
 }
 
 void Parser::out(std::string type, std::string message)
@@ -107,18 +110,20 @@ void Parser::setSource(std::string source)
     try
     {
         lexer = new Lexer(source);
-        symbols->addType("boolean", "primitive");
-        symbols->addType("byte", "primitive");
-        symbols->addType("sbyte", "primitive");
-        symbols->addType("char", "primitive");
-        symbols->addType("uinteger", "primitive");
-        symbols->addType("integer", "primitive");
-        symbols->addType("ulong", "primitive");
-        symbols->addType("long", "primitive");
-        symbols->addType("ushort", "primitive");
-        symbols->addType("short", "primitive");
-        symbols->addType("single", "primitive");
-        symbols->addType("double", "primitive");
+        symbols->addType("boolean", Type::createPrimitiveType(-1));
+        symbols->addType("char", Type::createPrimitiveType(-1));
+        
+        symbols->addType("sbyte", Type::createPrimitiveType(1));
+        symbols->addType("byte", Type::createPrimitiveType(2));
+        symbols->addType("short", Type::createPrimitiveType(3));
+        symbols->addType("ushort", Type::createPrimitiveType(4));
+        symbols->addType("integer", Type::createPrimitiveType(5));
+        symbols->addType("uinteger", Type::createPrimitiveType(6));
+        symbols->addType("long", Type::createPrimitiveType(7));
+        symbols->addType("ulong", Type::createPrimitiveType(8));
+        symbols->addType("single", Type::createPrimitiveType(9));
+        symbols->addType("double", Type::createPrimitiveType(10));
+        
         symbols->setLexer(lexer);
         symbols->enterScope(source);
     }
@@ -898,12 +903,12 @@ ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
                 expression->setLeft(left);
 
                 expression->setDataType(
-                        instance->resolveTypes(
-                        left->getDataType(),
-                        right->getDataType(),
+                    instance->resolveTypes(
+                        left,
+                        right,
                         operators[precedence].nodes[i]
-                        )
-                        );
+                    )
+                );
                 break;
             }
         }
@@ -997,8 +1002,18 @@ bool Parser::isComparator(Token token)
 
 bool Parser::isNumeric(std::string datatype)
 {
-    if (datatype == "integer" || datatype == "single" || datatype == "double" ||
-            datatype == "long" || datatype == "number")
+    if (
+        datatype == "integer" || 
+        datatype == "short" || 
+        datatype == "single" || 
+        datatype == "double" ||
+        datatype == "long" || 
+        datatype == "byte" ||
+        datatype == "sbyte" ||
+        datatype == "ulong" ||
+        datatype == "uinteger" ||
+        datatype == "ushort"
+    )
     {
         return true;
     }
@@ -1008,9 +1023,11 @@ bool Parser::isNumeric(std::string datatype)
     }
 }
 
-std::string Parser::resolveTypes(std::string leftType, std::string rightType, NodeType operatorNodeType)
+std::string Parser::resolveTypes(ExpressionNode * left, ExpressionNode * right, NodeType operatorNodeType)
 {
     std::string datatype;
+    int leftTypeRank;
+    int rightTypeRank;
 
     switch (operatorNodeType)
     {
@@ -1018,15 +1035,75 @@ std::string Parser::resolveTypes(std::string leftType, std::string rightType, No
         case NODE_SUBTRACT:
         case NODE_MULTIPLY:
         case NODE_DIVIDE:
-            if (leftType == "integer")
+            // Super mangled set of type resolution rules for primitive numeric data types
+            // find a better way to do this. Use some heirachical ranking
+            
+            leftTypeRank = symbols->getType(left->getDataType())->getRank();
+            rightTypeRank = symbols->getType(right->getDataType())->getRank();
+            
+            if(leftTypeRank == -1 || rightTypeRank == -1)
             {
-                if (rightType == "integer") datatype = "integer";
-                if (rightType == "single") datatype = "single";
+                error("Cannot perform operation");
             }
-            else if (leftType == "single")
+            else
             {
-                if (rightType == "single" || rightType == "integer") datatype = "single";
+                if(leftTypeRank == rightTypeRank)
+                {
+                    datatype = left->getDataType();
+                }
+                else if(leftTypeRank < rightTypeRank)
+                {
+                    datatype = right->getDataType();
+                    left->setCastType(datatype);
+                }
+                else if(leftTypeRank > rightTypeRank)
+                {
+                    datatype = left->getDataType();
+                    right->setCastType(datatype);                
+                }
             }
+            
+            /*if (left->getDataType() == "integer")
+            {
+                if (right->getDataType() == "integer") 
+                {
+                    datatype = "integer";
+                }
+                
+                if (right->getDataType() == "single") 
+                {
+                    left->setCastType("single");
+                    datatype = "single";
+                }
+                
+                if (right->getDataType() == "long") 
+                {
+                    left->setCastType("long");
+                    datatype = "long";
+                }
+                
+                if (right->getDataType() == "double") 
+                {
+                    left->setCastType("double");
+                    datatype = "single";
+                }
+                
+                if (right->getDataType() == "byte")
+                {
+                    right->setCastType("integer");
+                    datatype = "integer";
+                }
+                
+                if (right->getDataType() == "short") datatype = "single";
+                if (right->getDataType() == "uinteger") datatype = "single";
+                if (right->getDataType() == "ulong") datatype = "single";
+                if (right->getDataType() == "ushort") datatype = "single";
+                if (right->getDataType() == "sbyte") datatype = "single";
+            }
+            else if (left->getDataType() == "single")
+            {
+                if (right->getDataType() == "single" || right->getDataType() == "integer") datatype = "single";
+            }*/
             break;
 
         case NODE_EQUALS:

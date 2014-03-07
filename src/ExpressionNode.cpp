@@ -126,3 +126,13 @@ std::vector<ExpressionNode*> ExpressionNode::getParameters()
 {
     return parameters;
 }
+
+void ExpressionNode::setCastType(std::string castType)
+{
+    this->castType = castType;
+}
+
+std::string ExpressionNode::getCastType()
+{
+    return castType;
+}

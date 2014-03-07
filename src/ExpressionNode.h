@@ -40,6 +40,7 @@ public:
     void setIdentifierValue(std::string identifier);
     void setStringValue(std::string string);
     void setParameters(std::vector<ExpressionNode*> parameters);
+    void setCastType(std::string castType);
     
     ExpressionNode * getLeft();
     ExpressionNode * getRight();
@@ -53,12 +54,14 @@ public:
     std::string getIdentifierValue();
     std::string getStringValue();
     std::vector<ExpressionNode*> getParameters();
+    std::string getCastType();
     
 private:    
     ExpressionNode * left;
     ExpressionNode * right;
     NodeType type;
     std::string dataType;
+    std::string castType;
     std::string identifierValue;
     std::string stringValue;
     long integerValue;

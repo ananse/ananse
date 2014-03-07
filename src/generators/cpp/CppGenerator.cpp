@@ -60,9 +60,17 @@ std::string CppGenerator::getLocalType(std::string datatype)
 {
     std::string localType;
 
-    if (datatype == "integer") localType = "int";
-    if (datatype == "long") localType = "long";
-    if (datatype == "boolean") localType = "bool";
+    if (datatype == "integer")  localType = "int";
+    if (datatype == "long")     localType = "long";
+    if (datatype == "boolean")  localType = "bool";
+    if (datatype == "single")   localType = "float";
+    if (datatype == "double")   localType = "double";
+    if (datatype == "short")    localType = "short";
+    if (datatype == "byte")     localType = "unsigned char";
+    if (datatype == "sbyte")    localType = "char";
+    if (datatype == "uinteger") localType = "unsigned int";
+    if (datatype == "ulong")    localType = "unsigned long";
+    if (datatype == "ushort")   localType = "unsigned short";
 
     return localType;
 }
@@ -444,4 +452,10 @@ void CppGenerator::emitReturn(ExpressionNode * returnExpression)
     write("return ");
     emitExpression(returnExpression);
     emitEndOfStatement();
+}
+
+void CppGenerator::emitTypeCast(ExpressionNode* expression,std::string type)
+{
+    write("(" + getLocalType(type) + ")");
+    emitExpression(expression);
 }
