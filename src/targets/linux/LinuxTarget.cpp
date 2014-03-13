@@ -25,7 +25,7 @@ LinuxTarget::~LinuxTarget()
 
 void LinuxTarget::build()
 {
-    system(("g++ " + outputSources[0]).c_str());
+    system(("g++ -std=c++11 " + outputSources[0]).c_str());
 }
 
 Generator * LinuxTarget::getGenerator()

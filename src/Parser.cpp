@@ -123,6 +123,7 @@ void Parser::setSource(std::string source)
         symbols->addType("ulong", Type::createPrimitiveType(8));
         symbols->addType("single", Type::createPrimitiveType(9));
         symbols->addType("double", Type::createPrimitiveType(10));
+        symbols->addType("string", Type::createPrimitiveType(11));
         
         symbols->setLexer(lexer);
         symbols->enterScope(source);

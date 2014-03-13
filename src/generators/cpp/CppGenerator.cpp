@@ -40,7 +40,7 @@ void CppGenerator::addHeader(std::string header)
     } else
     {
         std::vector<std::string>::iterator it = std::find(headers.begin(), headers.end(), header);
-        if (*it != header)
+        if (it == headers.end())
         {
             insert = true;
         }
@@ -71,6 +71,11 @@ std::string CppGenerator::getLocalType(std::string datatype)
     if (datatype == "uinteger") localType = "unsigned int";
     if (datatype == "ulong")    localType = "unsigned long";
     if (datatype == "ushort")   localType = "unsigned short";
+    if (datatype == "string") 
+    {
+        localType = "std::string";
+        addHeader("string");
+    }
 
     return localType;
 }
@@ -456,6 +461,15 @@ void CppGenerator::emitReturn(ExpressionNode * returnExpression)
 
 void CppGenerator::emitTypeCast(ExpressionNode* expression,std::string type)
 {
-    write("(" + getLocalType(type) + ")");
-    emitExpression(expression);
+    if(type == "string")
+    {
+        write("std::to_string(");
+        emitExpression(expression);
+        write(")");
+    }
+    else
+    {
+        write("(" + getLocalType(type) + ")");
+        emitExpression(expression);
+    }
 }
