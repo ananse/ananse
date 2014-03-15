@@ -28,6 +28,7 @@ class CppGenerator : public Generator
 public:
     CppGenerator();
 
+    virtual void emitAssignment();
     virtual void emitDeclaration(Parameter);    
     virtual void emitModuleHeader();
     virtual void emitModuleFooter();
@@ -83,6 +84,23 @@ private:
     std::vector<bool> doConditions;
     std::string nextCodeBlockPrefix;
     int selectCases;
+    
+    /**
+     * This flag is set whenever a global declaration is in session. The flag is
+     * monitored by the assignment and expression emitters so that they can
+     * emit variables initializations within the module function.
+     */
+    bool globalDeclarationFlag;
+    
+    /**
+     * The identifier of the current global declaration.
+     */
+    std::string globalDeclarationIdentifier;
+    
+    /**
+     * This flag is set whenever a global assignment has been emitted.
+     */
+    bool globalAssignmentEmittedFlag;
 };
 
 #endif	/* CPPGENERATOR_H */

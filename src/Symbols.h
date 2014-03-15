@@ -40,6 +40,7 @@ public:
     SymbolStatus getStatus();
     void dump();
     Type * getType(std::string type);
+    std::string getScope();
     
 private:    
     std::vector<SymbolTable*> symbolTableStack;

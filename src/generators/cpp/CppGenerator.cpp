@@ -15,6 +15,7 @@ CppGenerator::CppGenerator()
     indenterEnabled = true;
     selectCases = 0;
     nextCodeBlockPrefix = "";
+    globalDeclarationFlag = false;
 }
 
 std::string CppGenerator::indentation()
@@ -80,20 +81,54 @@ std::string CppGenerator::getLocalType(std::string datatype)
     return localType;
 }
 
+void CppGenerator::emitAssignment()
+{
+    if(globalDeclarationFlag) 
+    {
+        write(globalDeclarationIdentifier);
+        globalAssignmentEmittedFlag = true;
+    }
+    write(" = ");    
+}
+
 void CppGenerator::emitEndOfStatement()
 {
-    write(";\n" + indentation());
+    
+    if(globalDeclarationFlag) 
+    {
+        if(globalAssignmentEmittedFlag)
+        {
+           write(";\n" + indentation());
+        }
+        globalDeclarationFlag = false;
+        globalAssignmentEmittedFlag = false;
+    }
+    else
+    {
+        write(";\n" + indentation());
+    }
 }
 
 void CppGenerator::emitDeclaration(Parameter parameter)
 {
-    if (parameter.scope == "global" || parameter.scope == "module")
+    if (parameter.scope == "global" || parameter.scope == "1:module")
     {
+        std::ostream * previousOutput = NULL;
+        previousOutput = getOutput();
         setOutput(&moduleGlobals);
         indenterEnabled = false;
+        write(getLocalType(parameter.datatype) + " " + parameter.identifier);
+        emitEndOfStatement();
+        setOutput(previousOutput);
+        indenterEnabled = true;
+        
+        globalDeclarationFlag = true;
+        globalDeclarationIdentifier = parameter.identifier;
     }
-
-    write(getLocalType(parameter.datatype) + " " + parameter.identifier);
+    else
+    {
+        write(getLocalType(parameter.datatype) + " " + parameter.identifier);
+    }
 }
 
 void CppGenerator::emitPrint()

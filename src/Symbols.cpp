@@ -31,10 +31,8 @@ void Symbols::enterScope(std::string scope)
     table->set_empty_key("");
     symbolTableStack.push_back(table);
     scopesStack.push_back(
-            this->lexer->getSourceFile() +
-            ":" +
-            (std::string) lineNumber +
-            ":" + scope);
+        (std::string) lineNumber +
+        ":" + scope);
     currentScope = scope;
 }
 
@@ -130,4 +128,9 @@ bool Symbols::vaildateType(std::string type)
 Type * Symbols::getType(std::string type)
 {
     return types[type];
+}
+
+std::string Symbols::getScope()
+{
+    return scopesStack.back();
 }

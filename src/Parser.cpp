@@ -126,7 +126,7 @@ void Parser::setSource(std::string source)
         symbols->addType("string", Type::createPrimitiveType(11));
         
         symbols->setLexer(lexer);
-        symbols->enterScope(source);
+        symbols->enterScope("module");
     }
     catch (LexerException * e)
     {
@@ -221,6 +221,7 @@ void Parser::parseDeclaration()
             getToken();
             match(IDENTIFIER);
             parameter.identifier = lexer->getIdentifierValue();
+            parameter.scope = symbols->getScope();
             getToken();
 
             if (lookahead == AS)
