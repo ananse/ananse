@@ -59,6 +59,12 @@ Token Lexer::getNextToken()
         getChar();
         return NEW_LINE;
     }
+    
+    if (currentChar == '\'')
+    {
+        eatComment();
+        return NEW_LINE;
+    }    
 
     // Match operators
     if (currentChar == '+')
@@ -168,18 +174,17 @@ Token Lexer::getNextToken()
     }
 
     // Match string literals
-    if (currentChar == '\'' || currentChar == '"')
+    if (currentChar == '"')
     {
-        char stringMarker = currentChar;
         stringValue = "";
 
         while (true)
         {
             getChar();
-            if (currentChar == stringMarker)
+            if (currentChar == '"')
             {
                 getChar();
-                if (currentChar != stringMarker) break;
+                if (currentChar != '"') break;
             }
             stringValue += currentChar;
         }
@@ -204,7 +209,8 @@ Token Lexer::getNextToken()
             }
             numberString += currentChar;
             getChar();
-        }        while (isdigit(currentChar) || currentChar == '.');
+        }
+        while (isdigit(currentChar) || currentChar == '.');
 
         tokenString = numberString;
 
@@ -258,12 +264,29 @@ Token Lexer::getNextToken()
         else if (identString == "sub") return SUB;
         else if (identString == "declare") return DECLARE;
         else if (identString == "return") return RETURN;
+        else if (identString == "rem")
+        {
+            eatComment();
+            return NEW_LINE;
+        }
         else return IDENTIFIER;
     }
 
     // Return an unknown token for whatever else is there
     tokenString = currentChar;
     return UNKNOWN;
+}
+
+void Lexer::eatComment()
+{
+    do
+    {
+        getChar();
+    }
+    while(currentChar != '\n');
+    line++;
+    column = 0;
+    getChar();    
 }
 
 double Lexer::getSingleValue()

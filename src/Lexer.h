@@ -19,8 +19,10 @@ class Lexer
 {
 private:
     void tcc(std::string);
-    char currentChar;
     void getChar();
+    void eatComment();
+    
+    char currentChar;
     std::string buffer;
     std::ifstream sourceStream;
     std::string sourceFile;

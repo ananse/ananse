@@ -865,6 +865,8 @@ ExpressionNode * Parser::parseExpression()
 ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
 {
     ExpressionNode *expression;
+    
+    // The precedences of operators
     if (precedence < numOperators - 1)
     {
         expression = parseBinaryOperators(precedence + 1, instance);
@@ -899,6 +901,11 @@ ExpressionNode * Parser::parseBinaryOperators(int precedence, Parser * instance)
                 else
                 {
                     right = parseUnaryOperators(instance);
+                }
+                
+                if(right == NULL)
+                {
+                    instance->error("Unexpected end of expression");
                 }
 
                 expression->setRight(right);
@@ -1037,8 +1044,6 @@ std::string Parser::resolveTypes(ExpressionNode * left, ExpressionNode * right, 
         case NODE_SUBTRACT:
         case NODE_MULTIPLY:
         case NODE_DIVIDE:
-            // Super mangled set of type resolution rules for primitive numeric data types
-            // find a better way to do this. Use some heirachical ranking
             
             leftTypeRank = symbols->getType(left->getDataType())->getRank();
             rightTypeRank = symbols->getType(right->getDataType())->getRank();
@@ -1063,49 +1068,8 @@ std::string Parser::resolveTypes(ExpressionNode * left, ExpressionNode * right, 
                     datatype = left->getDataType();
                     right->setCastType(datatype);                
                 }
-            }
-            
-            /*if (left->getDataType() == "integer")
-            {
-                if (right->getDataType() == "integer") 
-                {
-                    datatype = "integer";
-                }
-                
-                if (right->getDataType() == "single") 
-                {
-                    left->setCastType("single");
-                    datatype = "single";
-                }
-                
-                if (right->getDataType() == "long") 
-                {
-                    left->setCastType("long");
-                    datatype = "long";
-                }
-                
-                if (right->getDataType() == "double") 
-                {
-                    left->setCastType("double");
-                    datatype = "single";
-                }
-                
-                if (right->getDataType() == "byte")
-                {
-                    right->setCastType("integer");
-                    datatype = "integer";
-                }
-                
-                if (right->getDataType() == "short") datatype = "single";
-                if (right->getDataType() == "uinteger") datatype = "single";
-                if (right->getDataType() == "ulong") datatype = "single";
-                if (right->getDataType() == "ushort") datatype = "single";
-                if (right->getDataType() == "sbyte") datatype = "single";
-            }
-            else if (left->getDataType() == "single")
-            {
-                if (right->getDataType() == "single" || right->getDataType() == "integer") datatype = "single";
-            }*/
+            }            
+
             break;
 
         case NODE_EQUALS:
