@@ -15,6 +15,7 @@ AC_PROG_RANLIB
 
 # Checks for header files.
 AC_CHECK_HEADERS([unistd.h])
+AC_CHECK_HEADERS([iconv.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 m4_pattern_allow([AC_CHECK_HEADER_STDBOOL])

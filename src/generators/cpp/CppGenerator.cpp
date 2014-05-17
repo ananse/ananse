@@ -8,6 +8,9 @@
 #include "CppGenerator.h"
 #include <iostream>
 #include <algorithm>
+#include <iconv.h>
+
+int CppGenerator::numModules = 0;
 
 CppGenerator::CppGenerator()
 {
@@ -139,18 +142,33 @@ void CppGenerator::emitPrint()
 
 void CppGenerator::emitModuleHeader()
 {
-    std::string moduleFunction;
+    std::stringstream moduleFunction;
     if (isMainModule)
     {
-        moduleFunction = "int main(int argc, char ** argv)";
+        moduleFunction<<"int main(int argc, char ** argv)";
     }
-    write(moduleFunction);
+    else
+    {
+        moduleFunction<<"void module"<<numModules++<<"()";
+    }
+    write(moduleFunction.str());
     write("\n{\n    ");
     indent++;
 }
 
 void CppGenerator::emitModuleFooter()
 {
+    std::stringstream moduleName;
+    
+    if(isMainModule)
+    {
+        for(int i = 0; i < numModules; i++)
+        {
+            moduleName.seekp(std::stringstream::beg);
+            moduleName<<"module"<<i<<"()\n";
+            write(moduleName.str());
+        }
+    }
     indent--;
     write("\n}");
 }

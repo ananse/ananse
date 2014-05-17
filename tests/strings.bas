@@ -8,7 +8,7 @@ firstname = "James"
 lastname = "Ainooson"
 
 dim k as integer = 1+1 'doing one plus one
-dim fullname as string = firstname
+dim fullname as string = firstname + " " + lastname
 print fullname
 
 dim i as integer = 0

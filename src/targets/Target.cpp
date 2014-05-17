@@ -20,6 +20,16 @@ Target::~Target()
 {
 }
 
+void Target::addMainSource(std::string source)
+{
+    addSource(source, true);
+}
+
+void Target::addOtherSource(std::string source)
+{
+    addSource(source, false);
+}
+
 void Target::addSource(std::string source, bool main)
 {
     Generator * generator = getGenerator();

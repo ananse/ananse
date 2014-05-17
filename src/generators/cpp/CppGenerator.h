@@ -84,6 +84,7 @@ private:
     std::vector<bool> doConditions;
     std::string nextCodeBlockPrefix;
     int selectCases;
+    static int numModules;
     
     /**
      * This flag is set whenever a global declaration is in session. The flag is

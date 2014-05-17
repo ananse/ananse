@@ -16,10 +16,12 @@ public:
     Target();
     Target(const Target& orig);
     virtual ~Target();
-    void addSource(std::string source, bool main);
+    void addMainSource(std::string source);
+    void addOtherSource(std::string source);
     virtual void build() = 0;
     virtual Generator * getGenerator() = 0;
 protected:
+    void addSource(std::string source, bool main);
     std::vector<std::string> inputSources;    
     std::vector<std::string> outputSources;
 };

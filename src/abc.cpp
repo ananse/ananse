@@ -15,6 +15,8 @@ int main(int argc, char ** argv)
     int optionIndex = 0;
     int c;
     Target * target;
+    bool mainSourceAdded = false;
+    
     static struct option long_options[] =
     {
 		{"target",  required_argument, 0, 't'},
@@ -36,16 +38,29 @@ int main(int argc, char ** argv)
                 {
                     target = new LinuxTarget();
                 }
+                else
+                {
+                    std::cerr<<"Please specify a target with the -t switch"<<std::endl;
+                }
                 break;
                 
             case 'm':
+                target->addMainSource((std::string)optarg);
+                mainSourceAdded = true;
                 break;
         }
     }
     
+    // Treat the first source file as the main source if none is added
+    if(!mainSourceAdded)
+    {
+        target->addMainSource(argv[optind++]);
+    }
+    
+    // Loop through the remaining sources if any
     while(optind < argc)
     {
-        target->addSource(argv[optind++], true);
+        target->addOtherSource(argv[optind++]);
     }
     
     target->build();
