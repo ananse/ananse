@@ -15,7 +15,7 @@ int main(int argc, char ** argv)
     int optionIndex = 0;
     int c;
     Target * target;
-    bool mainSourceAdded = false;
+    std::string mainSource = "";
     
     static struct option long_options[] =
     {
@@ -45,16 +45,15 @@ int main(int argc, char ** argv)
                 break;
                 
             case 'm':
-                target->addMainSource((std::string)optarg);
-                mainSourceAdded = true;
+                mainSource = (std::string)optarg;
                 break;
         }
     }
     
     // Treat the first source file as the main source if none is added
-    if(!mainSourceAdded)
+    if(mainSource == "")
     {
-        target->addMainSource(argv[optind++]);
+        mainSource = argv[optind++];
     }
     
     // Loop through the remaining sources if any
@@ -62,6 +61,7 @@ int main(int argc, char ** argv)
     {
         target->addOtherSource(argv[optind++]);
     }
+    target->addMainSource(mainSource);
     
     target->build();
 }

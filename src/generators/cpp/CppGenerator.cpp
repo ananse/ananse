@@ -142,16 +142,24 @@ void CppGenerator::emitPrint()
 
 void CppGenerator::emitModuleHeader()
 {
-    std::stringstream moduleFunction;
+    std::stringstream moduleName;
     if (isMainModule)
     {
-        moduleFunction<<"int main(int argc, char ** argv)";
+        for(int i = 0; i < numModules; i++)
+        {
+            moduleName.seekp(std::stringstream::beg);
+            moduleName<<"void module_"<<i<<"();\n";
+            write(moduleName.str());
+        }
+        
+        moduleName.seekp(std::stringstream::beg);
+        moduleName<<"int main(int argc, char ** argv)";
     }
     else
     {
-        moduleFunction<<"void module"<<numModules++<<"()";
+        moduleName<<"void module_"<<numModules++<<"()";
     }
-    write(moduleFunction.str());
+    write(moduleName.str());
     write("\n{\n    ");
     indent++;
 }
@@ -165,7 +173,7 @@ void CppGenerator::emitModuleFooter()
         for(int i = 0; i < numModules; i++)
         {
             moduleName.seekp(std::stringstream::beg);
-            moduleName<<"module"<<i<<"()\n";
+            moduleName<<"module_"<<i<<"();\n";
             write(moduleName.str());
         }
     }

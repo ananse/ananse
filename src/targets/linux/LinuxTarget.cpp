@@ -25,7 +25,15 @@ LinuxTarget::~LinuxTarget()
 
 void LinuxTarget::build()
 {
-    system(("g++ -std=c++11 " + outputSources[0]).c_str());
+    std::string linkString = "";
+    
+    for(std::vector<std::string>::iterator i = outputSources.begin(); i != outputSources.end(); i++)
+    {
+        linkString += (*i) + ".o ";
+        system(("g++ -std=c++11 " + (*i) + " -o " + (*i) + ".o -c" ).c_str());
+    }
+    
+    system(("g++ -o program " + linkString).c_str());
 }
 
 Generator * LinuxTarget::getGenerator()
