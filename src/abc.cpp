@@ -19,9 +19,10 @@ int main(int argc, char ** argv)
     
     static struct option long_options[] =
     {
-		{"target",  required_argument, 0, 't'},
-		{"main",  required_argument, 0, 'm'},
-		{0, 0, 0, 0}
+        {"target",  required_argument, 0, 't'},
+        {"main",  required_argument, 0, 'm'},
+        {"output", required_argument, 0, 'o'},
+        {0, 0, 0, 0}
     };
     
     Parser::init();
@@ -34,7 +35,7 @@ int main(int argc, char ** argv)
         switch(c)
         {            
             case 't':
-                if(((std::string)optarg) == "linux")
+                if((std::string)optarg == "linux")
                 {
                     target = new LinuxTarget();
                 }

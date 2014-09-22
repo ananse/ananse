@@ -1,7 +1,7 @@
-language: cpp
-before_install:
-    - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
-    - unzip gtest-1.7.0.zip
-    - autoreconf -fi
-    - sudo apt-get install libsparsehash-dev
-script: ./configure --with-googletest=../gtest-1.7.0 && make && make check
+#language: cpp
+#before_install:
+#    - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
+#    - unzip gtest-1.7.0.zip
+#    - autoreconf -fi
+#    - sudo apt-get install libsparsehash-dev
+#script: ./configure --with-googletest=../gtest-1.7.0 && make && make check

@@ -24,15 +24,8 @@ m4_pattern_allow([AC_CHECK_HEADER_STDBOOL])
 AC_CHECK_FUNCS([strtol])
 AC_FUNC_STRTOD
 
-AC_ARG_WITH(
-    [googletest],
-    [AS_HELP_STRING([--with-googletest])],
-    [AC_SUBST([GTEST], ["$with_googletest"])]
-)
-
-AM_CONDITIONAL([HAVE_GTEST], [test x$with_googletest != x] )
+#AM_CONDITIONAL([HAVE_GTEST], [test x$with_googletest != x] )
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile
-                 tests/Makefile])
+                 src/Makefile])
 AC_OUTPUT
