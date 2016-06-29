@@ -16,7 +16,7 @@ public class Lexer
 	end sub
 
 	public function getToken() as Token
-
+		
 	end function
 
 end class
