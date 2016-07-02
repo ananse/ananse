@@ -16,10 +16,10 @@ public class Parser
 		me.lexer = Lexer
 	end sub
 
-	public sub parse()
+	public sub run()
 		lookAhead = lexer.getToken
 		select case lookAhead
-			case NUMBER
+			case Token.NUMBER
 				
 		end select
 	end sub

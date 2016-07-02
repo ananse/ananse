@@ -3,20 +3,23 @@ option strict on
 
 imports System
 imports System.IO
+imports System.Text.RegularExpressions
 
 public class Lexer
 
-	private source as string
+	private currentLine as string
+	private linePosition as integer
+	private characterPosition as integer
 
 	public sub new(file as string)
 		mybase.new
 		dim stream as StreamReader = new StreamReader(file)
-		source = stream.ReadToEnd
-		stream.Close
+		currentLine = stream.ReadLine
 	end sub
 
 	public function getToken() as Token
-		
+		dim regexMatch as Match = Regex.Match(currentLine, "print")
+
 	end function
 
 end class

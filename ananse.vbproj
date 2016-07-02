@@ -33,11 +33,19 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.vb" />
-    <Compile Include="AssemblyInfo.vb" />
-    <Compile Include="Lexer.vb" />
-    <Compile Include="Parser.vb" />
-    <Compile Include="Token.vb" />
+    <Compile Include="src\Application.vb" />
+    <Compile Include="src\AssemblyInfo.vb" />
+    <Compile Include="src\Lexer.vb" />
+    <Compile Include="src\Parser.vb" />
+    <Compile Include="src\Token.vb" />
+    <Compile Include="src\ast\StatementAst.vb" />
+    <Compile Include="src\AbstractAst.vb" />
+    <Compile Include="src\GeneratorInterface.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <ItemGroup>
+    <Folder Include="src\" />
+    <Folder Include="src\ast\" />
+    <Folder Include="src\generators\" />
+  </ItemGroup>
 </Project>
