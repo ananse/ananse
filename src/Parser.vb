@@ -14,14 +14,11 @@ public class Parser
 	public sub new(Lexer as Lexer)
 		mybase.new
 		me.lexer = Lexer
+		lexer.getToken
 	end sub
 
 	public sub run()
-		lookAhead = lexer.getToken
-		select case lookAhead
-			case Token.NUMBER
-				
-		end select
+		Ast.expression
 	end sub
 
 End Class

@@ -4,7 +4,7 @@ Option Strict On
 
 Imports System
 
-Public Interface GeneratorInterface
-	sub term()
+Public Interface AstInterface
+	sub parse()
 End Interface
 

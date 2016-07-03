@@ -1,13 +1,16 @@
 ﻿<Properties StartupItem="ananse.vbproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="src/Lexer.vb">
+  <MonoDevelop.Ide.Workbench ActiveDocument="src/Application.vb">
     <Files>
-      <File FileName="src/Application.vb" Line="1" Column="1" />
+      <File FileName="src/Application.vb" Line="13" Column="1" />
       <File FileName="src/AssemblyInfo.vb" Line="1" Column="1" />
-      <File FileName="src/Ast.vb" Line="1" Column="1" />
-      <File FileName="src/Lexer.vb" Line="1" Column="1" />
-      <File FileName="src/Parser.vb" Line="1" Column="1" />
+      <File FileName="src/Lexer.vb" Line="22" Column="3" />
+      <File FileName="src/Parser.vb" Line="24" Column="10" />
       <File FileName="src/Token.vb" Line="1" Column="1" />
+      <File FileName="src/ast/ExpressionAst.vb" Line="8" Column="2" />
+      <File FileName="src/Ast.vb" Line="12" Column="27" />
+      <File FileName="src/GeneratorInterface.vb" Line="8" Column="2" />
+      <File FileName="src/AstInterface.vb" Line="5" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

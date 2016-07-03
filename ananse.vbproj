@@ -38,9 +38,10 @@
     <Compile Include="src\Lexer.vb" />
     <Compile Include="src\Parser.vb" />
     <Compile Include="src\Token.vb" />
-    <Compile Include="src\ast\StatementAst.vb" />
-    <Compile Include="src\AbstractAst.vb" />
     <Compile Include="src\GeneratorInterface.vb" />
+    <Compile Include="src\Ast.vb" />
+    <Compile Include="src\AstInterface.vb" />
+    <Compile Include="src\ast\ExpressionAst.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <ItemGroup>
