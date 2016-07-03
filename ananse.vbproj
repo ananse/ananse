@@ -39,7 +39,6 @@
     <Compile Include="src\Parser.vb" />
     <Compile Include="src\Token.vb" />
     <Compile Include="src\GeneratorInterface.vb" />
-    <Compile Include="src\Ast.vb" />
     <Compile Include="src\AstInterface.vb" />
     <Compile Include="src\ast\ExpressionAst.vb" />
   </ItemGroup>
