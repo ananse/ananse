@@ -4,11 +4,11 @@
     <Files>
       <File FileName="src/GeneratorInterface.vb" Line="1" Column="1" />
       <File FileName="src/AstInterface.vb" Line="1" Column="1" />
-      <File FileName="src/ast/ExpressionAst.vb" Line="17" Column="10" />
-      <File FileName="src/Application.vb" Line="12" Column="13" />
-      <File FileName="src/Parser.vb" Line="26" Column="1" />
+      <File FileName="src/ast/ExpressionAst.vb" Line="1" Column="1" />
+      <File FileName="src/Application.vb" Line="1" Column="1" />
+      <File FileName="src/Parser.vb" Line="1" Column="1" />
       <File FileName="src/Lexer.vb" Line="19" Column="35" />
-      <File FileName="src/Token.vb" Line="9" Column="9" />
+      <File FileName="src/Token.vb" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
