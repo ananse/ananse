@@ -18,7 +18,7 @@ public class Parser
 	end sub
 
 	public sub run()
-		Ast.expression
+		Ast.expression.parse
 	end sub
 
 End Class
