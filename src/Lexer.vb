@@ -6,12 +6,15 @@ imports System.IO
 imports System.Text.RegularExpressions
 imports System.Collections.Generic
 
+' Lexer Class
+' Breaks up input file stream into tokens that are consumed by the parser
 public class Lexer
 
 	private currentLine as string
 	private linePosition as integer
 	private characterPosition as integer
 	private rules as Dictionary(of Token, string)
+    public tokenString as string
 
 	public sub new(file as string)
 		mybase.new
@@ -23,10 +26,6 @@ public class Lexer
 
 	public function getToken() as Token
 		dim regexMatch as Match
-
-		'for index as integer 1 to 5
-		'	regexMatch = 
-		'next
 
 		for each rule as KeyValuePair(of Token,string) in rules
 			regexMatch = Regex.Match(currentLine, rule.value)
