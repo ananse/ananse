@@ -40,7 +40,8 @@
     <Compile Include="src\Token.vb" />
     <Compile Include="src\GeneratorInterface.vb" />
     <Compile Include="src\AstInterface.vb" />
-    <Compile Include="src\ast\ExpressionAst.vb" />
+    <Compile Include="src\ast\AssignmentAst.vb" />
+    <Compile Include="src\ExpressionParser.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <ItemGroup>

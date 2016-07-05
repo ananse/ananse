@@ -8,16 +8,19 @@ imports System
 public class Parser
 
 	private lexer as Lexer
-	private lookAhead as Token
+	public lookAhead as Token
 
-	public expressionParser as AstInterface
+	public expressionParser as ExpressionParser
+    public assignmentAst as AstInterface
 
 	' Lexer
 	public sub new(Lexer as Lexer)
 		mybase.new
 		me.lexer = Lexer
 
-		expressionParser = new ExpressionAst(me)
+		expressionParser = new ExpressionParser(me)
+  
+        assignmentAst = new AssignmentAst(me)
 
 		lookAhead = lexer.getToken
 	end sub
@@ -35,8 +38,12 @@ public class Parser
 		return lexer
 	end function
 
+    public function parseExpression() as Expression
+        return expressionParser.run
+    end function
+
 	public sub run()
-		expressionParser.parse
+		assignmentAst.parse
 	end sub
 
 End Class
