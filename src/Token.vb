@@ -5,9 +5,11 @@ Option Strict On
 Imports System
 
 Public Enum Token
+    UNKNOWN
 	NUMBER
     ADD_OPERATOR
     SUBTRACT_OPERATOR
-	UNKNOWN
+    MULTIPLY_OPERATOR
+    DIVIDE_OPERATOR
 End Enum
 

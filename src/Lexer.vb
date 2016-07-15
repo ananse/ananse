@@ -22,6 +22,9 @@ public class Lexer
 		rules.Add(Token.NUMBER, "[0-9]+")
         rules.Add(Token.ADD_OPERATOR, "\+")
         rules.Add(Token.SUBTRACT_OPERATOR, "\-")
+        rules.Add(Token.MULTIPLY_OPERATOR, "\*")
+        rules.Add(Token.DIVIDE_OPERATOR, "/")
+
 		dim stream as StreamReader = new StreamReader(file)
 		currentLine = stream.ReadLine
 	end sub

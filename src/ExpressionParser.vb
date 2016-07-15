@@ -15,7 +15,8 @@ Public Class ExpressionParser
     private shared operators as List (of Token()) = new List (of Token())
 
     public shared sub init
-        operators.add(new Token() {Token.ADD_OPERATOR})
+        operators.add(new Token() {Token.ADD_OPERATOR, Token.SUBTRACT_OPERATOR})
+        operators.add(new Token() {Token.MULTIPLY_OPERATOR, Token.DIVIDE_OPERATOR})
     end sub
 
 	Public Sub New(parser as Parser)
@@ -40,10 +41,13 @@ Public Class ExpressionParser
             if Array.indexOf(operators(level), parser.lookAhead) <> -1 then
                 expression = new Expression
                 expression.left = tempExpression
+                expression.opr = parser.lookAhead
                 parser.getNextToken
+                expression.right = parseExpression(level + 1)
             else
                 return expression
             end if
+            tempExpression = expression
         loop
         return expression
     end function

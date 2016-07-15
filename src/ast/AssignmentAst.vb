@@ -17,7 +17,8 @@ Public Class AssignmentAst
     End Sub
 
     public sub parse() implements AstInterface.parse
-        parser.parseExpression
+        dim expression as Expression = parser.parseExpression
+        console.writeline(expression.value)
     end sub
 End Class
 
