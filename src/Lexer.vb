@@ -19,7 +19,9 @@ public class Lexer
 	public sub new(file as string)
 		mybase.new
 		rules = new Dictionary(of Token, string)
-		rules.Add(Token.NUMBER, "[0-9]")
+		rules.Add(Token.NUMBER, "[0-9]+")
+        rules.Add(Token.ADD_OPERATOR, "\+")
+        rules.Add(Token.SUBTRACT_OPERATOR, "\-")
 		dim stream as StreamReader = new StreamReader(file)
 		currentLine = stream.ReadLine
 	end sub
@@ -28,8 +30,10 @@ public class Lexer
 		dim regexMatch as Match
 
 		for each rule as KeyValuePair(of Token,string) in rules
-			regexMatch = Regex.Match(currentLine, rule.value)
+			regexMatch = Regex.Match(currentLine, "^" + rule.value)
 			if regexMatch.Success then
+                tokenString = regexMatch.Value
+                currentLine = currentLine.subString(regexMatch.length, currentLine.length - regexMatch.length)
 				return rule.key
 			end if
 		next

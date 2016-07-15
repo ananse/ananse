@@ -7,48 +7,66 @@ Imports System.Collections.Generic
 
 Public Class ExpressionParser
 
-    '
+    'An instance of the parser
 	private parser as Parser
-    private shared operators as List (of List (of Token))
+
+    'List of operators forming the operator heirachy
+    'private shared operators as List (of List (of Token)) = new List (of List (of Token))
+    private shared operators as List (of Token()) = new List (of Token())
+
+    public shared sub init
+        operators.add(new Token() {Token.ADD_OPERATOR})
+    end sub
 
 	Public Sub New(parser as Parser)
 		me.parser = parser
 	End Sub
 
+    'Run the expression parser and return an expression object
     public function run as Expression
         return parseExpression(0)
     end function
 
     private function parseExpression(level as integer) as Expression
-
-        dim expression as Expression = new Expression
-
+        dim expression as Expression
+        dim tempExpression as Expression
         if level = operators.Count then
             return parseFactor
         else
-            expression = parseExpression(level + 1)
+            tempExpression = parseExpression(level + 1)
+            expression = tempExpression
         end if
-
         do
-            if operators(level).indexOf(parser.lookAhead) <> -1 then
-                
+            if Array.indexOf(operators(level), parser.lookAhead) <> -1 then
+                expression = new Expression
+                expression.left = tempExpression
+                parser.getNextToken
+            else
+                return expression
             end if
         loop
-
         return expression
-
     end function
 
 	private function parseFactor as Expression
-		
+        dim expression as Expression = new Expression
+		if parser.lookAhead = Token.Number then
+            expression.token = Token.Number
+            expression.value = parser.getLexer().tokenString
+            parser.getNextToken
+        end if
+        return expression
 	end function
 
 End Class
 
 private class Expression
 
-    private left as Expression
-    private right as Expression
+    public left as Expression
+    public right as Expression
+    public opr as Token
+    public token as Token
+    public value as string
 
 end class
 

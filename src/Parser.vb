@@ -17,11 +17,8 @@ public class Parser
 	public sub new(Lexer as Lexer)
 		mybase.new
 		me.lexer = Lexer
-
 		expressionParser = new ExpressionParser(me)
-  
         assignmentAst = new AssignmentAst(me)
-
 		lookAhead = lexer.getToken
 	end sub
 
@@ -34,9 +31,17 @@ public class Parser
 		end if
 	end function
 
+    public function isOperator(token as Token) as boolean
+        
+    end function
+
 	public function getLexer() as Lexer
 		return lexer
 	end function
+
+    public function getNextToken() as Token
+        lookAhead = lexer.getToken
+    end function
 
     public function parseExpression() as Expression
         return expressionParser.run
