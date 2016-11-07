@@ -26,7 +26,7 @@ public class Parser
 		if lookAhead = token then 
 			return true
 		else
-			Console.WriteLine("Unexpected " + lookAhead.toString)
+			Console.WriteLine("Unexpected " + lookAhead.toString + " expecting " + (token.toString()))
 			return false
 		end if
 	end function
@@ -41,6 +41,7 @@ public class Parser
 
     public function getNextToken() as Token
         lookAhead = lexer.getToken
+        return lookAhead
     end function
 
     public function parseExpression() as Expression
@@ -48,7 +49,8 @@ public class Parser
     end function
 
 	public sub run()
-		assignmentAst.parse
+	    assignmentAst.parse()
+        Console.WriteLine("Unexpected '" + lexer.tokenString + "'")
 	end sub
 
 End Class

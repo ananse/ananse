@@ -19,11 +19,16 @@ public class Lexer
 	public sub new(file as string)
 		mybase.new
 		rules = new Dictionary(of Token, string)
+
 		rules.Add(Token.NUMBER, "[0-9]+")
         rules.Add(Token.ADD_OPERATOR, "\+")
         rules.Add(Token.SUBTRACT_OPERATOR, "\-")
         rules.Add(Token.MULTIPLY_OPERATOR, "\*")
         rules.Add(Token.DIVIDE_OPERATOR, "/")
+        rules.Add(Token.NOT_OPERATOR, "NOT")
+        rules.Add(Token.MOD_OPERATOR, "MOD")
+        rules.Add(Token.EQUALS_OPERATOR, "=")
+        rules.Add(Token.IDENTIFIER, "[a-z][a-z0-9_]*")
 
 		dim stream as StreamReader = new StreamReader(file)
 		currentLine = stream.ReadLine
