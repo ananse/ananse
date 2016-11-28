@@ -23,7 +23,6 @@ Public Class AssignmentAst
         parser.match(Token.EQUALS_OPERATOR)
         parser.getNextToken()
         expression = parser.parseExpression
-        Generator
     end sub
 End Class
 

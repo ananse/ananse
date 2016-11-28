@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "ananse", "ananse.vbproj", "{50C21CB8-566A-4AA1-9440-A8E9A1A2DB07}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ananse", "ananse.vbproj", "{50C21CB8-566A-4AA1-9440-A8E9A1A2DB07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
