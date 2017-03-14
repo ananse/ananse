@@ -4,7 +4,7 @@ option strict on
 
 imports System
 
-
+'' Implements the parser for the ananse language
 public class Parser
 
 	private lexer as Lexer
@@ -13,7 +13,7 @@ public class Parser
 	public expressionParser as ExpressionParser
     public assignmentAst as AstInterface
 
-	' Lexer
+	'' Creates a new Parser by taking in a lexer
 	public sub new(Lexer as Lexer)
 		mybase.new
 		me.lexer = Lexer
@@ -48,6 +48,7 @@ public class Parser
         return expressionParser.run
     end function
 
+    '' Parse the different statement types
 	public sub run()
 	    assignmentAst.parse()
         Console.WriteLine("Unexpected '" + lexer.tokenString + "'")

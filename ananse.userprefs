@@ -1,19 +1,6 @@
 ﻿<Properties StartupItem="ananse.vbproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="src/ExpressionParser.vb">
-    <Files>
-      <File FileName="src/Application.vb" Line="1" Column="1" />
-      <File FileName="src/AssemblyInfo.vb" Line="1" Column="1" />
-      <File FileName="src/generators/CppGenerator.vb" Line="1" Column="1" />
-      <File FileName="src/ast/AssignmentAst.vb" Line="1" Column="1" />
-      <File FileName="src/Token.vb" Line="1" Column="1" />
-      <File FileName="src/Parser.vb" Line="1" Column="1" />
-      <File FileName="src/Lexer.vb" Line="1" Column="1" />
-      <File FileName="src/Generator.vb" Line="1" Column="1" />
-      <File FileName="src/ExpressionParser.vb" Line="1" Column="1" />
-      <File FileName="src/interfaces/AstInterface.vb" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
