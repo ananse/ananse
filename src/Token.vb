@@ -18,5 +18,9 @@ Public Enum Token
     NOT_OPERATOR
     EQUALS_OPERATOR
 
+    ' Terminators
+    NEW_LINE
+    EOF
+
 End Enum
 

@@ -50,8 +50,15 @@ public class Parser
 
     '' Parse the different statement types
 	public sub run()
-	    assignmentAst.parse()
-        Console.WriteLine("Unexpected '" + lexer.tokenString + "'")
+        do 
+    	    assignmentAst.parse()
+
+            if lookAhead <> Token.NEW_LINE and lookAhead <> Token.EOF then
+                Console.WriteLine("Unexpected '" + lexer.tokenString + "'")
+            end if
+            if lookAhead = Token.EOF then exit do
+            getNextToken()
+        loop
 	end sub
 
 End Class
