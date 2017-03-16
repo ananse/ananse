@@ -72,13 +72,13 @@ Public Class ExpressionParser
 
 End Class
 
-private class Expression
+Public Class Expression
 
-    public left as Expression
-    public right as Expression
-    public opr as Token
-    public token as Token
-    public value as string
+    Public left As Expression
+    Public right As Expression
+    Public opr As Token
+    Public token As Token
+    Public value As String
 
-end class
+End Class
 
