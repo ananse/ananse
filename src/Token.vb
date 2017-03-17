@@ -9,7 +9,7 @@ Public Enum Token
 	NUMBER
     IDENTIFIER
 
-    ' Operators
+    '' Operators
     ADD_OPERATOR
     SUBTRACT_OPERATOR
     MULTIPLY_OPERATOR
@@ -18,9 +18,12 @@ Public Enum Token
     NOT_OPERATOR
     EQUALS_OPERATOR
 
-    ' Terminators
+    '' Common Symbols
+    OPEN_PARANTHESIS
+    CLOSE_PARANTHESIS
+
+    '' Terminators
     NEW_LINE
     EOF
-
 End Enum
 

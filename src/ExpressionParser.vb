@@ -18,8 +18,8 @@ Public Class ExpressionParser
     public shared sub init
         operators.add(new Token() {Token.EQUALS_OPERATOR})
         operators.add(new Token() {Token.ADD_OPERATOR, Token.SUBTRACT_OPERATOR})
-        operators.add(new Token() {Token.MULTIPLY_OPERATOR, Token.DIVIDE_OPERATOR, Token.MOD_OPERATOR})
-    end sub
+        operators.Add(New Token() {Token.MULTIPLY_OPERATOR, Token.DIVIDE_OPERATOR, Token.MOD_OPERATOR})
+    End sub
 
 	Public Sub New(parser as Parser)
 		me.parser = parser
@@ -34,10 +34,10 @@ Public Class ExpressionParser
         dim expression as Expression
         dim tempExpression as Expression
 
-        if level = operators.Count then
+        if level = operators.Count Then
             ' Return a factor if we've exhausted all our operators
-            return parseFactor
-        else
+            Return parseFactor()
+        Else
             ' if not, parse the next level of expressions
             tempExpression = parseExpression(level + 1)
             expression = tempExpression
@@ -61,12 +61,18 @@ Public Class ExpressionParser
 
     ' Factors are numbers, function calls, variables or other expressions contained in parantheses
 	private function parseFactor as Expression
-        dim expression as Expression = new Expression
-		if parser.lookAhead = Token.Number then
-            expression.token = Token.Number
-            expression.value = parser.getLexer().tokenString
-            parser.getNextToken
-        end if
+        dim expression as Expression = New Expression
+
+		Select Case  parser.lookAhead
+		    Case Token.NUMBER
+                expression.token = Token.Number
+                expression.value = parser.getLexer().tokenString
+                parser.getNextToken
+            Case Token.OPEN_PARANTHESIS
+                parser.getNextToken
+                expression = parseExpression(0)
+                parser.match(Token.CLOSE_PARANTHESIS)
+		End Select
         return expression
 	end function
 

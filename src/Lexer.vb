@@ -30,6 +30,8 @@ public class Lexer
         rules.Add(Token.MOD_OPERATOR, "MOD")
         rules.Add(Token.EQUALS_OPERATOR, "=")
         rules.Add(Token.IDENTIFIER, "[a-z][a-z0-9_]*")
+        rules.Add(Token.OPEN_PARANTHESIS, "\(")
+        rules.Add(Token.CLOSE_PARANTHESIS, "\)")
         rules.Add(Token.NEW_LINE, Environment.NewLine)
 
 		stream = new StreamReader(file)
