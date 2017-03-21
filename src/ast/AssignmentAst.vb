@@ -5,19 +5,13 @@ Option Strict On
 
 Imports System
 
-Public Class AssignmentAst
-    Implements AstInterface
+Public Class AssignmentAst 
+    Inherits AstNode
 
-    private parser as Parser
     private identifier as string
     private expression as Expression
 
-    Public Sub New(parser as Parser)
-        MyBase.New
-        me.parser = parser
-    End Sub
-
-    public sub parse() implements AstInterface.parse
+    public overrides sub parse() 
         if parser.lookAhead <> Token.IDENTIFIER then return
         identifier = parser.getLexer().tokenString
         parser.getNextToken()

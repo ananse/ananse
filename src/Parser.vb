@@ -11,16 +11,19 @@ public class Parser
 	public lookAhead as Token
 
 	public expressionParser as ExpressionParser
-    public assignmentAst as AstInterface
+    public assignmentAst as AstNode
 
 	'' Creates a new Parser by taking in a lexer
-	public sub new(Lexer as Lexer)
+	public sub new()
 		mybase.new
-		me.lexer = Lexer
-		expressionParser = new ExpressionParser(me)
-        assignmentAst = new AssignmentAst(me)
-		lookAhead = lexer.getToken
+		expressionParser = new ExpressionParser()
+        assignmentAst = new AssignmentAst()
 	end sub
+
+    Public sub loadFile(file As String)
+		lexer = new Lexer(file)
+		lookAhead = lexer.getToken
+    End sub
 
 	public function match(token as Token) as boolean
 		if lookAhead = token then 

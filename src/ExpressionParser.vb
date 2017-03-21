@@ -7,9 +7,7 @@ Imports System.Collections.Generic
 
 ' Parses expressions that are used throughout the language
 Public Class ExpressionParser
-
-    'An instance of the parser
-	private parser as Parser
+    Inherits AstNode
 
     'List of operators forming the operator heirachy
     private shared operators as List (of Token()) = new List (of Token())
@@ -20,10 +18,6 @@ Public Class ExpressionParser
         operators.add(new Token() {Token.ADD_OPERATOR, Token.SUBTRACT_OPERATOR})
         operators.Add(New Token() {Token.MULTIPLY_OPERATOR, Token.DIVIDE_OPERATOR, Token.MOD_OPERATOR})
     End sub
-
-	Public Sub New(parser as Parser)
-		me.parser = parser
-	End Sub
 
     'Run the expression parser and return an expression object
     public function run as Expression
@@ -76,6 +70,9 @@ Public Class ExpressionParser
         return expression
 	end function
 
+    Public Overrides Sub parse()
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
 Public Class Expression
