@@ -20,7 +20,7 @@ Public Class ExpressionParser
     End sub
 
     'Run the expression parser and return an expression object
-    public overrides function parse() as ExpressionNode
+    public overrides function parse() as AstNode
         return parseExpression(0)
     end function
 
