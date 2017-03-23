@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="src\Application.vb" />
     <Compile Include="src\AssemblyInfo.vb" />
+    <Compile Include="src\ast\nodes\AssignmentNode.vb" />
     <Compile Include="src\Lexer.vb" />
     <Compile Include="src\Parser.vb" />
     <Compile Include="src\Token.vb" />
@@ -50,9 +51,6 @@
   <ItemGroup>
     <Folder Include="src\generators\" />
     <Folder Include="src\interfaces\" />
-    <Folder Include="src\ast\" />
-    <Folder Include="src\ast\parsers\" />
-    <Folder Include="src\ast\nodes\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
