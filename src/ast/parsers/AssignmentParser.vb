@@ -5,11 +5,11 @@ Option Strict On
 
 Imports System
 
-Public Class AssignmentAst 
-    Inherits AstNode
+Public Class AssignmentParser
+    Inherits NodeParser
 
     private identifier as string
-    private expression as Expression
+    private expression as ExpressionNode
 
     public overrides sub parse() 
         if parser.lookAhead <> Token.IDENTIFIER then return
@@ -17,7 +17,7 @@ Public Class AssignmentAst
         parser.getNextToken()
         parser.match(Token.EQUALS_OPERATOR)
         parser.getNextToken()
-        expression = parser.parseExpression
+        expression = parser.getExpressionParser().parse()
     end sub
 End Class
 

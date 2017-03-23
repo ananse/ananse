@@ -7,7 +7,7 @@ Imports System.Collections.Generic
 
 ' Parses expressions that are used throughout the language
 Public Class ExpressionParser
-    Inherits AstNode
+    Inherits NodeParser
 
     'List of operators forming the operator heirachy
     private shared operators as List (of Token()) = new List (of Token())
@@ -20,13 +20,13 @@ Public Class ExpressionParser
     End sub
 
     'Run the expression parser and return an expression object
-    public function run as Expression
+    public overrides function parse() as ExpressionNode
         return parseExpression(0)
     end function
 
-    private function parseExpression(level as integer) as Expression
-        dim expression as Expression
-        dim tempExpression as Expression
+    private function parseExpression(level as integer) as ExpressionNode
+        dim expression as ExpressionNode
+        dim tempExpression as ExpressionNode
 
         if level = operators.Count Then
             ' Return a factor if we've exhausted all our operators
@@ -40,7 +40,7 @@ Public Class ExpressionParser
         'Loop through all the operators at the current heirachy and group them with their expressions
         do
             if Array.indexOf(operators(level), parser.lookAhead) <> -1 then
-                expression = new Expression
+                expression = new ExpressionNode
                 expression.left = tempExpression
                 expression.opr = parser.lookAhead
                 parser.getNextToken
@@ -54,8 +54,8 @@ Public Class ExpressionParser
     end function
 
     ' Factors are numbers, function calls, variables or other expressions contained in parantheses
-	private function parseFactor as Expression
-        dim expression as Expression = New Expression
+	private function parseFactor as ExpressionNode
+        dim expression as ExpressionNode = New ExpressionNode
 
 		Select Case  parser.lookAhead
 		    Case Token.NUMBER
@@ -69,19 +69,6 @@ Public Class ExpressionParser
 		End Select
         return expression
 	end function
-
-    Public Overrides Sub parse()
-        Throw New NotImplementedException()
-    End Sub
 End Class
 
-Public Class Expression
-
-    Public left As Expression
-    Public right As Expression
-    Public opr As Token
-    Public token As Token
-    Public value As String
-
-End Class
 

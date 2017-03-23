@@ -4,7 +4,7 @@ Option Strict On
 
 Imports System
 
-Public mustinherit Class AstNode
+Public mustinherit Class NodeParser
     Private shared _parser As Parser
 
     Public shared ReadOnly property parser() As Parser
@@ -16,6 +16,6 @@ Public mustinherit Class AstNode
         End Get
     end property
 
-    Public mustoverride sub parse()
+    Public mustoverride function parse() as AstNode
 End Class
 

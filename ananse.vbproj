@@ -39,15 +39,20 @@
     <Compile Include="src\Lexer.vb" />
     <Compile Include="src\Parser.vb" />
     <Compile Include="src\Token.vb" />
-    <Compile Include="src\ast\AssignmentAst.vb" />
-    <Compile Include="src\ExpressionParser.vb" />
-    <Compile Include="src\AstNode.vb" />
     <Compile Include="src\Generator.vb" />
+    <Compile Include="src\ast\NodeParser.vb" />
+    <Compile Include="src\ast\parsers\ExpressionParser.vb" />
+    <Compile Include="src\ast\nodes\ExpressionNode.vb" />
+    <Compile Include="src\ast\AstNode.vb" />
+    <Compile Include="src\ast\parsers\AssignmentParser.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <ItemGroup>
     <Folder Include="src\generators\" />
     <Folder Include="src\interfaces\" />
+    <Folder Include="src\ast\" />
+    <Folder Include="src\ast\parsers\" />
+    <Folder Include="src\ast\nodes\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

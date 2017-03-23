@@ -10,14 +10,14 @@ public class Parser
 	private lexer as Lexer
 	public lookAhead as Token
 
-	public expressionParser as ExpressionParser
-    public assignmentAst as AstNode
+	private expressionParser as ExpressionParser
+    private assignmentParser as AssignmentParser
 
 	'' Creates a new Parser by taking in a lexer
 	public sub new()
 		mybase.new
 		expressionParser = new ExpressionParser()
-        assignmentAst = new AssignmentAst()
+        assignmentParser = new AssignmentParser()
 	end sub
 
     Public sub loadFile(file As String)
@@ -47,14 +47,14 @@ public class Parser
         return lookAhead
     end function
 
-    public function parseExpression() as Expression
-        return expressionParser.run
+    public function getExpressionParser() as ExpressionParser
+        return expressionParser
     end function
 
     '' Parse the different statement types
 	public sub run()
         do 
-    	    assignmentAst.parse()
+    	    assignmentParser.parse()
 
             if lookAhead <> Token.NEW_LINE and lookAhead <> Token.EOF then
                 Console.WriteLine("Unexpected '" + lexer.tokenString + "'")
