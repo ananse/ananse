@@ -12,16 +12,15 @@ public class Lexer
 
 	private currentLine as string
 	private linePosition as integer
-	private characterPosition as integer
-	private rules as Dictionary(of Token, string)
-    private stream as StreamReader
-    public tokenString as string
+	private characterPosition as Integer
+    Private Shared rules As Dictionary(Of Token, String)
+    Private stream as StreamReader
+    Public tokenString As String
 
-	public sub new(file as string)
-		mybase.new
-		rules = new Dictionary(of Token, string)
+    Public Shared Sub initializeRules()
+        rules = New Dictionary(Of Token, String)
 
-		rules.Add(Token.NUMBER, "[0-9]+")
+        rules.Add(Token.NUMBER, "[0-9]+")
         rules.Add(Token.ADD_OPERATOR, "\+")
         rules.Add(Token.SUBTRACT_OPERATOR, "\-")
         rules.Add(Token.MULTIPLY_OPERATOR, "\*")
@@ -33,13 +32,16 @@ public class Lexer
         rules.Add(Token.OPEN_PARANTHESIS, "\(")
         rules.Add(Token.CLOSE_PARANTHESIS, "\)")
         rules.Add(Token.NEW_LINE, Environment.NewLine)
+    End Sub
 
-		stream = new StreamReader(file)
-		currentLine = stream.ReadLine
+    Public Sub New(file As String)
+        MyBase.New
+        stream = New StreamReader(file)
+        currentLine = stream.ReadLine
         linePosition = 1
-	end sub
+    End Sub
 
-	public function getToken() as Token
+    Public function getToken() as Token
 		dim regexMatch as Match
 
 		for each rule as KeyValuePair(of Token,string) in rules

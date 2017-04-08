@@ -37,11 +37,13 @@
     <Compile Include="src\Application.vb" />
     <Compile Include="src\AssemblyInfo.vb" />
     <Compile Include="src\ast\nodes\AssignmentNode.vb" />
+    <Compile Include="src\ast\nodes\ProgramNode.vb" />
+    <Compile Include="src\ast\parsers\ProgramParser.vb" />
     <Compile Include="src\Lexer.vb" />
     <Compile Include="src\Parser.vb" />
     <Compile Include="src\Token.vb" />
     <Compile Include="src\Generator.vb" />
-    <Compile Include="src\ast\NodeParser.vb" />
+    <Compile Include="src\ast\AstNodeParser.vb" />
     <Compile Include="src\ast\parsers\ExpressionParser.vb" />
     <Compile Include="src\ast\nodes\ExpressionNode.vb" />
     <Compile Include="src\ast\AstNode.vb" />

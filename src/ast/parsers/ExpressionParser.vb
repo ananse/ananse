@@ -7,10 +7,10 @@ Imports System.Collections.Generic
 
 ' Parses expressions that are used throughout the language
 Public Class ExpressionParser
-    Inherits NodeParser
+    Inherits AstNodeParser
 
     'List of operators forming the operator heirachy
-    private shared operators as List (of Token()) = new List (of Token())
+    Private shared operators as List (of Token()) = new List (of Token())
 
     'Initialize the expression parser and setup operator heirachy
     public shared sub init
@@ -59,14 +59,15 @@ Public Class ExpressionParser
 
 		Select Case  parser.lookAhead
 		    Case Token.NUMBER
-                expression.token = Token.Number
-                expression.value = parser.getLexer().tokenString
-                parser.getNextToken
+                expression.token = Token.NUMBER
+                expression.value = parser.token
+                parser.getNextToken()
             Case Token.OPEN_PARANTHESIS
                 parser.getNextToken
                 expression = parseExpression(0)
                 parser.match(Token.CLOSE_PARANTHESIS)
-		End Select
+                parser.getNextToken()
+        End Select
         return expression
 	end function
 End Class
