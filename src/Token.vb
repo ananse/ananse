@@ -2,11 +2,10 @@
 Option Explicit On
 Option Strict On
 
-Imports System
-
 Public Enum Token
+    '' General
     UNKNOWN
-	NUMBER
+    NUMBER
     IDENTIFIER
 
     '' Operators
@@ -21,6 +20,10 @@ Public Enum Token
     '' Common Symbols
     OPEN_PARANTHESIS
     CLOSE_PARANTHESIS
+
+    '' Type System
+    DECLARE_KEYWORD
+    AS_KEYWORD
 
     '' Terminators
     NEW_LINE

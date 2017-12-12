@@ -31,6 +31,8 @@ public class Lexer
         rules.Add(Token.IDENTIFIER, "[a-z][a-z0-9_]*")
         rules.Add(Token.OPEN_PARANTHESIS, "\(")
         rules.Add(Token.CLOSE_PARANTHESIS, "\)")
+        rules.Add(Token.DECLARE_KEYWORD, "DECLARE")
+        rules.Add(Token.AS_KEYWORD, "AS")
         rules.Add(Token.NEW_LINE, Environment.NewLine)
     End Sub
 

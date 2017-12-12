@@ -3,13 +3,18 @@ option strict on
 
 imports System
 
-public class Application
+' Main entry point for the compiler
+Public class Application
 
-	public shared sub Main()
+    Public Shared Sub Main()
+        ' Initialize the parser through the astnode
         Dim parser As Parser = AstNodeParser.init()
 
-        parser.loadFile(Environment.GetCommandLineArgs()(1))
-        parser.run()
-    End sub
+        ' Create a node for the entire program
+        Dim program As ProgramNode
 
-end class
+        parser.loadFile(Environment.GetCommandLineArgs()(1))
+        program = CType(parser.run(), ProgramNode)
+    End Sub
+
+End class

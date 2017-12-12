@@ -7,6 +7,7 @@ imports System
 '' Implements the parser for the ananse language
 public class Parser
 
+    ' Lexer for tokenizing strings
     Private lexer As Lexer
     Public lookAhead As Token
     Public token As String

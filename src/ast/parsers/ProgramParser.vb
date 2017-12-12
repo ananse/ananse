@@ -2,7 +2,9 @@
     Inherits AstNodeParser
 
     Private Sub add(node As AstNode, program As ProgramNode)
-        program.statements.Add(node)
+        If node IsNot Nothing Then
+            program.statements.Add(node)
+        End If
     End Sub
 
     Public Overrides Function parse() As AstNode

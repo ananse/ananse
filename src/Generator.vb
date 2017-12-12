@@ -4,7 +4,7 @@ option strict on
 
 imports System
 
-public class Generator
-     
-end class
+Public MustInherit Class Generator
+    Public MustOverride Sub generate()
+End Class
 
