@@ -13,6 +13,8 @@ Public MustInherit Class AstNodeParser
         End Get
     End Property
 
+    Public MustOverride ReadOnly Property lookAhead As Token
+
     Public Shared Function init() As Parser
         ExpressionParser.init()
         Lexer.initializeRules()

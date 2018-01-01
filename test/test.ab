@@ -1,1 +1,2 @@
+declare a as integer
 a=2*(3+2)

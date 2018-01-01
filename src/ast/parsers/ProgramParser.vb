@@ -1,9 +1,17 @@
-﻿Public Class ProgramParser
+﻿Imports ananse
+
+Public Class ProgramParser
     Inherits AstNodeParser
 
-    Private Sub add(node As AstNode, program As ProgramNode)
-        If node IsNot Nothing Then
-            program.statements.Add(node)
+    Public Overrides ReadOnly Property lookAhead As Token
+        Get
+            Throw New System.NotImplementedException()
+        End Get
+    End Property
+
+    Private Sub testandadd(nodeParser As AstNodeParser, program As ProgramNode)
+        If nodeParser.lookAhead = parser.lookAhead Then
+            program.statements.Add(nodeParser.parse())
         End If
     End Sub
 
@@ -11,10 +19,12 @@
         Dim program As ProgramNode = New ProgramNode
 
         Do
-            add(parser.assignmentParser.parse(), program)
+            testAndAdd(parser.declarationParser, program)
+            testAndAdd(parser.assignmentParser, program)
 
             If parser.lookAhead <> Token.NEW_LINE And parser.lookAhead <> Token.EOF Then
                 parser.writeUnexpectedError()
+                Exit Do
             End If
             If parser.lookAhead = Token.EOF Then Exit Do
             parser.getNextToken()

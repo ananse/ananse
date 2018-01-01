@@ -14,6 +14,7 @@ public class Parser
 
     Public ReadOnly expressionParser As ExpressionParser
     Public ReadOnly assignmentParser As AssignmentParser
+    Public ReadOnly declarationParser As DeclarationParser
     Public ReadOnly programParser As ProgramParser
 
     '' Creates a new Parser by taking in a lexer
@@ -22,6 +23,7 @@ public class Parser
         expressionParser = New ExpressionParser()
         assignmentParser = New AssignmentParser()
         programParser = New ProgramParser()
+        declarationParser = New DeclarationParser()
     End Sub
 
     Public sub loadFile(file As String)

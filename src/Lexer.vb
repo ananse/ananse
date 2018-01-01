@@ -25,13 +25,13 @@ public class Lexer
         rules.Add(Token.SUBTRACT_OPERATOR, "\-")
         rules.Add(Token.MULTIPLY_OPERATOR, "\*")
         rules.Add(Token.DIVIDE_OPERATOR, "/")
+        rules.Add(Token.EQUALS_OPERATOR, "=")
         rules.Add(Token.NOT_OPERATOR, "NOT")
         rules.Add(Token.MOD_OPERATOR, "MOD")
-        rules.Add(Token.EQUALS_OPERATOR, "=")
+        rules.Add(Token.DECLARE_KEYWORD, "DECLARE")
         rules.Add(Token.IDENTIFIER, "[a-z][a-z0-9_]*")
         rules.Add(Token.OPEN_PARANTHESIS, "\(")
         rules.Add(Token.CLOSE_PARANTHESIS, "\)")
-        rules.Add(Token.DECLARE_KEYWORD, "DECLARE")
         rules.Add(Token.AS_KEYWORD, "AS")
         rules.Add(Token.NEW_LINE, Environment.NewLine)
     End Sub
@@ -57,9 +57,9 @@ public class Lexer
                     linePosition += 1
                     return Token.NEW_LINE
                 end if
-            end if
-			regexMatch = Regex.Match(currentLine, "^" + rule.value)
-			if regexMatch.Success then
+            end If
+            regexMatch = Regex.Match(currentLine, "^" + rule.Value, RegexOptions.IgnoreCase)
+            If regexMatch.Success then
                 tokenString = regexMatch.Value
                 currentLine = currentLine.subString(regexMatch.length, currentLine.length - regexMatch.length)
 				return rule.key

@@ -4,12 +4,19 @@ Option Explicit On
 Option Strict On
 
 Imports System
+Imports ananse
 
 Public Class AssignmentParser
     Inherits AstNodeParser
 
-    Public overrides function parse() As AstNode
-        if parser.lookAhead <> Token.IDENTIFIER then return Nothing
+    Public Overrides ReadOnly Property lookAhead As Token
+        Get
+            Return Token.IDENTIFIER
+        End Get
+    End Property
+
+    Public Overrides Function parse() As AstNode
+        If parser.lookAhead <> Token.IDENTIFIER Then Return Nothing
 
         Dim node As AssignmentNode = New AssignmentNode
         node.identifier = parser.token
@@ -19,6 +26,6 @@ Public Class AssignmentParser
         node.expression = CType(parser.expressionParser.parse(), ExpressionNode)
 
         Return node
-    end function
+    End Function
 End Class
 

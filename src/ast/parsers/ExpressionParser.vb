@@ -4,16 +4,23 @@ Option Strict On
 
 Imports System
 Imports System.Collections.Generic
+Imports ananse
 
 ' Parses expressions that are used throughout the language
 Public Class ExpressionParser
     Inherits AstNodeParser
 
     'List of operators forming the operator heirachy
-    Private shared operators as List (of Token()) = new List (of Token())
+    Private Shared operators As List(Of Token()) = New List(Of Token())
+
+    Public Overrides ReadOnly Property lookAhead As Token
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
 
     'Initialize the expression parser and setup operator heirachy
-    public shared sub init
+    Public shared sub init
         operators.add(new Token() {Token.EQUALS_OPERATOR})
         operators.add(new Token() {Token.ADD_OPERATOR, Token.SUBTRACT_OPERATOR})
         operators.Add(New Token() {Token.MULTIPLY_OPERATOR, Token.DIVIDE_OPERATOR, Token.MOD_OPERATOR})

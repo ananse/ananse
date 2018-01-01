@@ -10,7 +10,7 @@ Public class Application
         ' Initialize the parser through the astnode
         Dim parser As Parser = AstNodeParser.init()
 
-        ' Create a node for the entire program
+        ' Create an AST node for the entire program
         Dim program As ProgramNode
 
         parser.loadFile(Environment.GetCommandLineArgs()(1))
