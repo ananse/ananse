@@ -16,8 +16,6 @@ Public Class AssignmentParser
     End Property
 
     Public Overrides Function parse() As AstNode
-        If parser.lookAhead <> Token.IDENTIFIER Then Return Nothing
-
         Dim node As AssignmentNode = New AssignmentNode
         node.identifier = parser.token
         parser.getNextToken()

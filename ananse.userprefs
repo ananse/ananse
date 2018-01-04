@@ -1,8 +1,21 @@
 ﻿<Properties StartupItem="ananse.vbproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="src/Parser.vb">
+    <Files>
+      <File FileName="src/ast/AstNode.vb" Line="1" Column="1" />
+      <File FileName="src/ast/AstNodeParser.vb" Line="1" Column="1" />
+      <File FileName="src/Application.vb" Line="1" Column="1" />
+      <File FileName="src/AssemblyInfo.vb" Line="1" Column="1" />
+      <File FileName="src/Generator.vb" Line="1" Column="1" />
+      <File FileName="src/Lexer.vb" Line="1" Column="1" />
+      <File FileName="src/Parser.vb" Line="1" Column="1" />
+      <File FileName="src/Token.vb" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/home/ekow/Projects/ananse/src/Application.vb" line="13" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

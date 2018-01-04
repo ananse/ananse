@@ -14,16 +14,15 @@ public class Parser
 
     Public ReadOnly expressionParser As ExpressionParser
     Public ReadOnly assignmentParser As AssignmentParser
-    Public ReadOnly declarationParser As DeclarationParser
+    Public ReadOnly variableDeclarationParser As VariableParser
     Public ReadOnly programParser As ProgramParser
 
-    '' Creates a new Parser by taking in a lexer
     Public Sub New()
         MyBase.new
         expressionParser = New ExpressionParser()
         assignmentParser = New AssignmentParser()
         programParser = New ProgramParser()
-        declarationParser = New DeclarationParser()
+        variableDeclarationParser = New VariableParser()
     End Sub
 
     Public sub loadFile(file As String)
@@ -36,18 +35,19 @@ public class Parser
         If lookAhead = token Then
             Return True
         Else
-            Console.WriteLine("Unexpected " + lookAhead.toString + " expecting " + (token.toString()))
+            Console.Error.WriteLine("Unexpected " + If(lookAhead = ananse.Token.UNKNOWN, lexer.tokenString, lookAhead.ToString()) + " expecting " + (token.toString()))
             Return False
         End If
     End Function
 
     Public Function getNextToken() As Token
         lookAhead = lexer.getToken
+        token = lexer.tokenString
         Return lookAhead
     End Function
 
     Public Sub writeUnexpectedError()
-        Console.WriteLine("Unexpected '" + lexer.tokenString + "'")
+        Console.Error.WriteLine("Unexpected '" + lexer.tokenString + "'")
     End Sub
 
     '' Parse the different statement types

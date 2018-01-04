@@ -41,6 +41,7 @@
     <Compile Include="src\ast\nodes\ProgramNode.vb" />
     <Compile Include="src\ast\parsers\ProgramParser.vb" />
     <Compile Include="src\ast\parsers\DeclarationParser.vb" />
+    <Compile Include="src\ast\parsers\VariableParser.vb" />
     <Compile Include="src\generators\CGenerator.vb" />
     <Compile Include="src\Lexer.vb" />
     <Compile Include="src\Parser.vb" />

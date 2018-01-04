@@ -22,7 +22,8 @@ Public Enum Token
     CLOSE_PARANTHESIS
 
     '' Type System
-    DECLARE_KEYWORD
+    VARIABLE_KEYWORD
+    CONSTANT_KEYWORD
     AS_KEYWORD
 
     '' Terminators

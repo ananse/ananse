@@ -28,11 +28,11 @@ public class Lexer
         rules.Add(Token.EQUALS_OPERATOR, "=")
         rules.Add(Token.NOT_OPERATOR, "NOT")
         rules.Add(Token.MOD_OPERATOR, "MOD")
-        rules.Add(Token.DECLARE_KEYWORD, "DECLARE")
+        rules.Add(Token.VARIABLE_KEYWORD, "VARIABLE")
+	    rules.Add(Token.AS_KEYWORD, "AS")
         rules.Add(Token.IDENTIFIER, "[a-z][a-z0-9_]*")
         rules.Add(Token.OPEN_PARANTHESIS, "\(")
         rules.Add(Token.CLOSE_PARANTHESIS, "\)")
-        rules.Add(Token.AS_KEYWORD, "AS")
         rules.Add(Token.NEW_LINE, Environment.NewLine)
     End Sub
 
@@ -41,11 +41,29 @@ public class Lexer
         stream = New StreamReader(file)
         currentLine = stream.ReadLine
         linePosition = 1
+	    characterPosition =1
     End Sub
-
+	
+	Private function matchRegex(regex as String) As Match
+		Dim regexMatch As Match = System.Text.RegularExpressions.Regex.Match(currentLine, "^" + regex, RegexOptions.IgnoreCase)
+		If regexMatch.Success Then
+			characterPosition += regexMatch.Length
+		End If
+		Return regexMatch
+	End function
+	
+	Private Sub removeLeadingWhitespace
+		Dim regexMatch As Match = matchRegex("\s*") 'Remove leading whitespaces
+		If regexMatch.Success Then
+			currentLine = currentLine.subString(regexMatch.length, currentLine.length - regexMatch.length)
+		End If
+	End Sub
+	
     Public function getToken() as Token
 		dim regexMatch as Match
-
+	    
+	    removeLeadingWhitespace()
+	    
 		for each rule as KeyValuePair(of Token,string) in rules
             if currentLine = "" then
                 currentLine = stream.ReadLine
@@ -55,10 +73,11 @@ public class Lexer
                 else
                     tokenString = "new line"
                     linePosition += 1
+	                characterPosition = 0
                     return Token.NEW_LINE
                 end if
             end If
-            regexMatch = Regex.Match(currentLine, "^" + rule.Value, RegexOptions.IgnoreCase)
+            regexMatch = matchRegex(rule.Value)
             If regexMatch.Success then
                 tokenString = regexMatch.Value
                 currentLine = currentLine.subString(regexMatch.length, currentLine.length - regexMatch.length)

@@ -1,2 +1,4 @@
-declare a as integer
+variable a as integer
+variable b as integer = 2
+variable c = 3
 a=2*(3+2)
