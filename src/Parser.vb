@@ -16,6 +16,7 @@ public class Parser
     Public ReadOnly assignmentParser As AssignmentParser
     Public ReadOnly variableDeclarationParser As VariableParser
     Public ReadOnly programParser As ProgramParser
+    Public ReadOnly symbolTable As SymbolTable
 
     Public Sub New()
         MyBase.new

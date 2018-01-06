@@ -10,5 +10,6 @@ Public Class ExpressionNode
     Public opr As Token
     Public token As Token
     Public value As String
+    Public type As String
 
 End Class
