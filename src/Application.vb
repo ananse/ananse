@@ -16,6 +16,7 @@ Public class Application
         setupBuiltInTypes(parser.symbolTable)
         parser.loadFile(Environment.GetCommandLineArgs()(1))
         program = CType(parser.run(), ProgramNode)
+
     End Sub
     
     Public Shared Sub setupBuiltInTypes(symbolTable As SymbolTable)

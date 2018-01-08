@@ -16,7 +16,7 @@ public class Parser
     Public ReadOnly assignmentParser As AssignmentParser
     Public ReadOnly variableDeclarationParser As VariableParser
     Public ReadOnly programParser As ProgramParser
-    Public ReadOnly symbolTable As SymbolTable
+    Public symbolTable As SymbolTable
 
     Public Sub New()
         MyBase.new
@@ -24,6 +24,7 @@ public class Parser
         assignmentParser = New AssignmentParser()
         programParser = New ProgramParser()
         variableDeclarationParser = New VariableParser()
+        symbolTable = New SymbolTable()
     End Sub
 
     Public sub loadFile(file As String)
@@ -36,10 +37,14 @@ public class Parser
         If lookAhead = token Then
             Return True
         Else
-            Console.Error.WriteLine("Unexpected " + If(lookAhead = ananse.Token.UNKNOWN, lexer.tokenString, lookAhead.ToString()) + " expecting " + (token.toString()))
-            Return False
+            writeError("There was an unexpected " + If(lookAhead = ananse.Token.UNKNOWN, lexer.tokenString, lookAhead.ToString()) + " instead of " + (token.ToString()))
         End If
     End Function
+
+    Public Sub writeError(errorMessage As String)
+        Console.Error.WriteLine($"{lexer.fileAddress}: {errorMessage}")
+        Environment.Exit(1)
+    End Sub
 
     Public Function getNextToken() As Token
         lookAhead = lexer.getToken
@@ -48,7 +53,7 @@ public class Parser
     End Function
 
     Public Sub writeUnexpectedError()
-        Console.Error.WriteLine("Unexpected '" + lexer.tokenString + "'")
+        writeError("There was an unexpected '" + lexer.tokenString + "'")
     End Sub
 
     '' Parse the different statement types

@@ -15,7 +15,14 @@ public class Lexer
 	private characterPosition as Integer
     Private Shared rules As Dictionary(Of Token, String)
     Private stream as StreamReader
-    Public tokenString As String
+    Public tokenString As String = ""
+    Private fileName As String
+
+    Public ReadOnly Property fileAddress As String
+        Get
+            Return $"On line {linePosition}, column {characterPosition - tokenString.Length} of {fileName}"
+        End Get
+    End Property
 
     Public Shared Sub initializeRules()
         rules = New Dictionary(Of Token, String)
@@ -39,26 +46,27 @@ public class Lexer
     Public Sub New(file As String)
         MyBase.New
         stream = New StreamReader(file)
+        fileName = file
         currentLine = stream.ReadLine
         linePosition = 1
-	    characterPosition =1
+        characterPosition = 1
     End Sub
 	
 	Private function matchRegex(regex as String) As Match
 		Dim regexMatch As Match = System.Text.RegularExpressions.Regex.Match(currentLine, "^" + regex, RegexOptions.IgnoreCase)
 		If regexMatch.Success Then
-			characterPosition += regexMatch.Length
-		End If
+            characterPosition += regexMatch.Length
+        End If
 		Return regexMatch
-	End function
-	
-	Private Sub removeLeadingWhitespace
-		Dim regexMatch As Match = matchRegex("\s*") 'Remove leading whitespaces
-		If regexMatch.Success Then
-			currentLine = currentLine.subString(regexMatch.length, currentLine.length - regexMatch.length)
-		End If
-	End Sub
-	
+	End Function
+
+    Private Sub removeLeadingWhitespace()
+        Dim regexMatch As Match = matchRegex("\s*") 'Remove leading whitespaces
+        If regexMatch.Success Then
+            currentLine = currentLine.subString(regexMatch.length, currentLine.length - regexMatch.length)
+        End If
+    End Sub
+
     Public function getToken() as Token
 		dim regexMatch as Match
 	    
@@ -73,8 +81,9 @@ public class Lexer
                 else
                     tokenString = "new line"
                     linePosition += 1
-	                characterPosition = 0
-                    return Token.NEW_LINE
+                    characterPosition = 1
+                    tokenString = ""
+                    Return Token.NEW_LINE
                 end if
             end If
             regexMatch = matchRegex(rule.Value)

@@ -55,9 +55,7 @@
     <Compile Include="src\ast\parsers\AssignmentParser.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <ItemGroup>
-    <Folder Include="src\interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
