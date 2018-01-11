@@ -8,5 +8,9 @@ Public Class DeclareNode
     Public name As String
     Public type As String
     Public initialization As ExpressionNode
-    
+
+    Public Function checkTypes() As Boolean
+        Return type = initialization.type
+    End Function
+
 End Class

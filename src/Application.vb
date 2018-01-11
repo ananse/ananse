@@ -21,6 +21,8 @@ Public class Application
     
     Public Shared Sub setupBuiltInTypes(symbolTable As SymbolTable)
         symbolTable.insert("integer", "type", "")
+        symbolTable.insert("string", "type", "")
+        symbolTable.insert("single", "type", "")
     End Sub
 
 End class

@@ -25,6 +25,15 @@ Public MustInherit Class DeclarationParser
         If parser.lookAhead = Token.EQUALS_OPERATOR Then
             parser.getNextToken()
             node.initialization = CType(parser.expressionParser.parse(), ExpressionNode)
+            If node.type <> "" And Not node.checkTypes Then
+                parser.writeError($"expression of type {node.initialization.type} cannot be assigned to variable '{node.name}' of type '{node.type}'")
+            ElseIf node.type = "" Then
+                node.type = node.initialization.type
+            End If
+        End If
+
+        If node.type = "" Then
+            parser.writeError($"variable '{node.name}' has not been assigned a datatype.")
         End If
 
         Return node
