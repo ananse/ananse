@@ -41,7 +41,7 @@ Public MustInherit Class DeclarationParser
     End Function
 
     Private Sub verifyType(type As String)
-        Dim symbol As Entry
+        Dim symbol As SymbolTable.Entry
         If Not parser.symbolTable.exists(type) Then
             parser.writeError($"datatype {type} is unknown")
             Return

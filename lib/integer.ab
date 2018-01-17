@@ -1,0 +1,10 @@
+import ananse.backend
+
+class integer
+    public operator add (right as integer) as integer from ananse.backend
+    public operator multiply (right as integer) as integer from ananse.backend
+    public operator devide (right as integer) as integer from ananse.backend
+    public operator subtract (right as integer) as integer from ananse.backend
+    public operator equals (right as integer) as boolean from ananse.backend
+    public operator mod (right as integer) as boolean from ananse.backend
+end class

@@ -5,20 +5,6 @@ Imports System
 Imports System.Collections.Generic
 Imports ananse
 
-Public Class Entry
-    Public ReadOnly Property name As String
-    Public ReadOnly Property type As String
-    Public ReadOnly Property ns As String
-    Public ReadOnly Property constant As Boolean
-
-    Public Sub New(name As String, type As String, ns As String, constant As Boolean)
-        Me.name = name
-        Me.type = type
-        Me.ns = ns
-        Me.constant = constant
-    End Sub
-End Class
-
 Public Class SymbolTable
 
     Private parent As SymbolTable
@@ -28,9 +14,11 @@ Public Class SymbolTable
         entries = New Dictionary(Of String, Entry)
     End Sub
 
-    Public Sub insert(name As String, type As String, ns As String, Optional constant As Boolean = False)
-        entries.Add(name, New Entry(name, type, ns, constant))
-    End Sub
+    Public Function insert(name As String, type As String, Optional ns As String = "", Optional constant As Boolean = False) As Entry
+        Dim entry As Entry = New Entry(name, type, ns, constant)
+        entries.Add(name, entry)
+        Return entry
+    End Function
 
     Public Function exists(name As String) As Boolean
         Return entries.ContainsKey(name)
@@ -39,4 +27,20 @@ Public Class SymbolTable
     Public Function lookup(type As String) As Entry
         Return entries(type)
     End Function
+
+    Public Class Entry
+        Public ReadOnly Property name As String
+        Public ReadOnly Property type As String
+        Public ReadOnly Property ns As String
+        Public ReadOnly Property constant As Boolean
+        Public Property typeInfo As TypeInfo
+
+        Public Sub New(name As String, type As String, ns As String, constant As Boolean)
+            Me.name = name
+            Me.type = type
+            Me.ns = ns
+            Me.constant = constant
+            typeInfo = New TypeInfo
+        End Sub
+    End Class
 End Class

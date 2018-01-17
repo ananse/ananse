@@ -20,14 +20,14 @@ Public Class ExpressionParser
     End Property
 
     'Initialize the expression parser and setup operator heirachy
-    Public shared sub init
-        operators.add(new Token() {Token.EQUALS_OPERATOR})
-        operators.add(new Token() {Token.ADD_OPERATOR, Token.SUBTRACT_OPERATOR})
+    Public Shared Sub setupOperations()
+        operators.Add(New Token() {Token.EQUALS_OPERATOR})
+        operators.Add(New Token() {Token.ADD_OPERATOR, Token.SUBTRACT_OPERATOR})
         operators.Add(New Token() {Token.MULTIPLY_OPERATOR, Token.DIVIDE_OPERATOR, Token.MOD_OPERATOR})
-    End sub
+    End Sub
 
     'Run the expression parser and return an expression object
-    public overrides function parse() as AstNode
+    Public overrides function parse() as AstNode
         return parseExpression(0)
     end function
 
@@ -36,10 +36,10 @@ Public Class ExpressionParser
         dim tempExpression as ExpressionNode
 
         if level = operators.Count Then
-            ' Return a factor if we've exhausted all our operators
+            ' Return a factor if we've exhausted all operators on our heirachy
             Return parseFactor()
         Else
-            ' if not, parse the next level of expressions
+            ' if not, parse the next level of operators for our expression
             tempExpression = parseExpression(level + 1)
             expression = tempExpression
         end if

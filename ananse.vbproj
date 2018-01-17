@@ -53,6 +53,7 @@
     <Compile Include="src\ast\nodes\ExpressionNode.vb" />
     <Compile Include="src\ast\AstNode.vb" />
     <Compile Include="src\ast\parsers\AssignmentParser.vb" />
+    <Compile Include="src\TypeInfo.vb" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <ItemGroup />

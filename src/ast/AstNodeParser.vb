@@ -16,7 +16,7 @@ Public MustInherit Class AstNodeParser
     Public MustOverride ReadOnly Property lookAhead As Token
 
     Public Shared Function init() As Parser
-        ExpressionParser.init()
+        ExpressionParser.setupOperations()
         Lexer.initializeRules()
         _parser = New Parser()
         Return _parser
