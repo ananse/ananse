@@ -29,5 +29,6 @@ Public Enum Token
     '' Terminators
     NEW_LINE
     EOF
+    CLASS_KEYWORD
 End Enum
 

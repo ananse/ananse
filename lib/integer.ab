@@ -1,10 +1,23 @@
-import ananse.backend
+'A shell class for the native integer implementations
 
 class integer
-    public operator add (right as integer) as integer from ananse.backend
-    public operator multiply (right as integer) as integer from ananse.backend
-    public operator devide (right as integer) as integer from ananse.backend
-    public operator subtract (right as integer) as integer from ananse.backend
-    public operator equals (right as integer) as boolean from ananse.backend
-    public operator mod (right as integer) as boolean from ananse.backend
+
+    public operator add (right as integer) as integer 
+    end operator
+
+    public operator multiply (right as integer) as integer
+    end operator 
+
+    public operator devide (right as integer) as integer 
+    end operator 
+
+    public operator subtract (right as integer) as integer 
+    end operator 
+    
+    public operator equals (right as integer) as boolean
+    end operator 
+
+    public operator mod (right as integer) as integer
+    end operator
+    
 end class
