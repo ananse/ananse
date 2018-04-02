@@ -1,70 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{50C21CB8-566A-4AA1-9440-A8E9A1A2DB07}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ananse</RootNamespace>
-    <AssemblyName>ananse</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <UseMSBuildEngine>False</UseMSBuildEngine>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <DefineTrace>false</DefineTrace>
-    <DefineDebug>false</DefineDebug>
-    <AdditionalParameters>
-    </AdditionalParameters>
-    <Commandlineparameters>../../test/test.ab</Commandlineparameters>
-    <Externalconsole>true</Externalconsole>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <Externalconsole>true</Externalconsole>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>false</DefineTrace>
-    <AdditionalParameters>
-    </AdditionalParameters>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="src\Application.vb" />
-    <Compile Include="src\AssemblyInfo.vb" />
-    <Compile Include="src\ast\nodes\AssignmentNode.vb" />
-    <Compile Include="src\ast\nodes\DeclareNode.vb" />
-    <Compile Include="src\ast\nodes\ProgramNode.vb" />
-    <Compile Include="src\ast\parsers\ClassParser.vb" />
-    <Compile Include="src\ast\parsers\ProgramParser.vb" />
-    <Compile Include="src\ast\parsers\DeclarationParser.vb" />
-    <Compile Include="src\ast\parsers\VariableParser.vb" />
-    <Compile Include="src\generators\CGenerator.vb" />
-    <Compile Include="src\Lexer.vb" />
-    <Compile Include="src\Parser.vb" />
-    <Compile Include="src\SymbolTable.vb" />
-    <Compile Include="src\Token.vb" />
-    <Compile Include="src\Generator.vb" />
-    <Compile Include="src\ast\AstNodeParser.vb" />
-    <Compile Include="src\ast\parsers\ExpressionParser.vb" />
-    <Compile Include="src\ast\nodes\ExpressionNode.vb" />
-    <Compile Include="src\ast\AstNode.vb" />
-    <Compile Include="src\ast\parsers\AssignmentParser.vb" />
-    <Compile Include="src\TypeInfo.vb" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <ItemGroup />
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <TextStylePolicy FileWidth="120" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-vb" />
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
 </Project>
