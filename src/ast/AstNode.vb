@@ -2,9 +2,8 @@
 Option Explicit On
 Option Strict On
 
-Imports System
-
 Public Interface AstNode
-    Public Function getChildren() as List(of AstNode)
+    ' Returns the children of the current AST node
+    Function getChildren() As List(Of AstNode)
 End Interface
 

@@ -2,8 +2,6 @@
 Option Explicit On
 Option Strict On
 
-Imports System
-
 Public MustInherit Class AstNodeParser
     Private Shared _parser As Parser
 
