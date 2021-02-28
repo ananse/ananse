@@ -1,5 +1,4 @@
 variable a as integer
 variable b as integer = 2
 variable c = 3
-variable d
 a=2*(3+2)
