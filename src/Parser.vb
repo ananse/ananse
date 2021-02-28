@@ -38,6 +38,7 @@ public class Parser
             Return True
         Else
             writeError("There was an unexpected " + If(lookAhead = ananse.Token.UNKNOWN, lexer.tokenString, lookAhead.ToString()) + " instead of " + (token.ToString()))
+            Return False
         End If
     End Function
 

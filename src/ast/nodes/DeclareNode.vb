@@ -13,4 +13,7 @@ Public Class DeclareNode
         Return type = initialization.type
     End Function
 
+    Public Function getChildren() As List(Of AstNode) Implements AstNode.getChildren
+        return New List(Of AstNode)({initialization})
+    End Function
 End Class
