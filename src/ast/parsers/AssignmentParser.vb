@@ -17,7 +17,7 @@ Public Class AssignmentParser
 
     Public Overrides Function parse() As AstNode
         Dim node As AssignmentNode = New AssignmentNode
-        node.identifier = parser.token
+        node.identifier = parser.tokenString
         parser.getNextToken()
         parser.match(Token.EQUALS_OPERATOR)
         parser.getNextToken()

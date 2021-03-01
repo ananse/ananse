@@ -10,7 +10,7 @@ public class Parser
     ' Lexer for tokenizing strings
     Private lexer As Lexer
     Public lookAhead As Token
-    Public token As String
+    Public tokenString As String
 
     Public ReadOnly expressionParser As ExpressionParser
     Public ReadOnly assignmentParser As AssignmentParser
@@ -30,7 +30,7 @@ public class Parser
     Public sub loadFile(file As String)
         lexer = New Lexer(file)
         lookAhead = lexer.getToken
-        token = lexer.tokenString
+        tokenString = lexer.tokenString
     End Sub
 
     Public Function match(token As Token) As Boolean
@@ -49,7 +49,7 @@ public class Parser
 
     Public Function getNextToken() As Token
         lookAhead = lexer.getToken
-        token = lexer.tokenString
+        tokenString = lexer.tokenString
         Return lookAhead
     End Function
 

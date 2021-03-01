@@ -67,7 +67,7 @@ Public Class ExpressionParser
 		Select Case  parser.lookAhead
 		    Case Token.NUMBER
                 expression.token = Token.NUMBER
-                expression.value = parser.token
+                expression.value = parser.tokenString
                 expression.type = "integer"
                 parser.getNextToken()
             Case Token.OPEN_PARANTHESIS

@@ -11,14 +11,14 @@ Public MustInherit Class DeclarationParser
         node.declaration = parser.lookAhead
         parser.getNextToken()
         parser.match(Token.IDENTIFIER)
-        node.name = parser.token
+        node.name = parser.tokenString
         parser.getNextToken()
 
         If parser.lookAhead = Token.AS_KEYWORD Then
             parser.getNextToken()
             parser.match(Token.IDENTIFIER)
-            node.type = parser.token
-            verifyType(parser.token)
+            node.type = parser.tokenString
+            verifyType(parser.tokenString)
             parser.getNextToken()
         End If
 

@@ -1,6 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
 
+''' Base class for all nodes that declare values
 Public Class DeclareNode
     Implements AstNode
     
